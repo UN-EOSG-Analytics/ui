@@ -11,7 +11,7 @@ const preview: Preview = {
           ["Palette", "Typography"],
           "Concepts",
           "Components",
-          ["SiteHeader", "Button", "Chip", "DataTable", "Filtering & Search", "Modal"],
+          ["SiteHeader", "SiteFooter", "Button", "Chip", "DataTable", "Filtering & Search", "Modal", "ExternalLink"],
         ],
       },
     },

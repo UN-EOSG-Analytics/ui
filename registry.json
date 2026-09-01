@@ -150,6 +150,71 @@
       ]
     },
     {
+      "name": "social-icons",
+      "type": "registry:component",
+      "title": "Social icons",
+      "description": "Brand glyphs (Simple Icons, CC0) inlined as paths so they tint via currentColor.",
+      "files": [
+        {
+          "path": "components/social-icons.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "external-link",
+      "type": "registry:component",
+      "title": "External link",
+      "description": "Anchor that opens a new tab and announces it to assistive tech.",
+      "files": [
+        {
+          "path": "components/external-link.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "un-links",
+      "type": "registry:lib",
+      "title": "UN link helpers",
+      "description": "Locale-aware un.org and webtv.un.org URL builders.",
+      "files": [
+        {
+          "path": "components/un-links.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "site-footer",
+      "type": "registry:component",
+      "title": "Site footer",
+      "description": "Pixel replica of the official www.un.org footer, per-locale.",
+      "files": [
+        {
+          "path": "components/site-footer.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "external-link",
+        "social-icons",
+        "un-links"
+      ]
+    },
+    {
+      "name": "animated-corner-logo",
+      "type": "registry:component",
+      "title": "Animated corner logo",
+      "description": "The UN 2.0 corner mark, with reduced-motion support built in.",
+      "files": [
+        {
+          "path": "components/animated-corner-logo.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
       "name": "agents-md",
       "type": "registry:file",
       "title": "Agent rules",
