@@ -42,16 +42,6 @@ export const Primary: Story = {
   render: () => (
     <div className="p-10">
       <h1 className={cn(typography.pageTitle, "mb-2")}>Palette</h1>
-      <p className="mb-3 max-w-2xl text-base leading-relaxed text-foreground">
-        Sourced from the UN Brand Quick Guide and the Visual Identity colour
-        palette, then reconciled with what the six products actually use.
-      </p>
-      <blockquote className="mb-10 max-w-2xl border-s-2 border-un-blue ps-4 text-sm leading-relaxed text-muted-foreground">
-        “To ensure the clarity and dignity of our brand, UN Blue, white and black
-        should be the most prominent colours used in materials throughout the UN
-        system.”
-        <span className="mt-1 block text-xs">— UN Visual Identity, Colour</span>
-      </blockquote>
 
       <Section
         title="Primary brand colours"

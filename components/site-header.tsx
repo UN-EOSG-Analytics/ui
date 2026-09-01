@@ -53,7 +53,17 @@ export interface SiteHeaderProps {
   className?: string;
   /** Container width/padding, matched to the app's <main> column. */
   containerClassName?: string;
+  /**
+   * Where the emblem SVG lives. Defaults to the root-absolute path a Next app
+   * serves from `public/`. Override when the app is served from a subpath —
+   * a GitHub project Pages site, for instance — where a root-absolute asset
+   * would 404.
+   */
+  emblemSrc?: string;
 }
+
+/** The path a Next app serves the emblem from by default. */
+export const DEFAULT_EMBLEM_SRC = "/images/un-emblem-colour.svg";
 
 /**
  * The UN emblem.
@@ -66,10 +76,10 @@ export interface SiteHeaderProps {
  * A plain <img> rather than next/image: it is a fixed-size SVG, so there is no
  * optimisation to gain, and it keeps the package usable outside Next.
  */
-function Emblem({ className }: { className?: string }) {
+function Emblem({ className, src }: { className?: string; src: string }) {
   return (
     <img
-      src="/images/un-emblem-colour.svg"
+      src={src}
       alt=""
       width={152}
       height={127}
@@ -101,6 +111,7 @@ export function SiteHeader({
   children,
   className,
   containerClassName = "max-w-4xl px-8 sm:px-12 lg:max-w-6xl lg:px-16",
+  emblemSrc = DEFAULT_EMBLEM_SRC,
 }: SiteHeaderProps) {
   const outboard = emblemPlacement === "outboard";
 
@@ -127,7 +138,7 @@ export function SiteHeader({
             className="absolute top-1/2 hidden h-10 w-emblem-w -translate-y-1/2 transition-opacity hover:opacity-75 min-[1408px]:block"
             style={{ insetInlineEnd: `calc(100% - ${outboardOffset})` }}
           >
-            <Emblem />
+            <Emblem src={emblemSrc} />
           </a>
         )}
 
@@ -136,7 +147,7 @@ export function SiteHeader({
           aria-label={homeLabel}
           className="inline-flex items-center gap-emblem-gap transition-opacity hover:opacity-75"
         >
-          <Emblem className={outboard ? "min-[1408px]:hidden" : undefined} />
+          <Emblem src={emblemSrc} className={outboard ? "min-[1408px]:hidden" : undefined} />
           {/* Mobile stacks wordmark over badge so the title can shrink without
               competing with the right-hand slot for row width. */}
           <span className="flex flex-col items-start gap-1 md:flex-row md:items-center md:gap-2.5">

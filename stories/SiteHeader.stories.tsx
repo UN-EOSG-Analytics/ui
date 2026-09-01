@@ -2,6 +2,16 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { Globe, Landmark } from "lucide-react";
 import { SiteHeader } from "../components/site-header";
 
+/**
+ * Under GitHub project Pages the site is served from `/<repo>/`, so a
+ * root-absolute asset path 404s. Vite exposes the deployed base as
+ * `import.meta.env.BASE_URL`, which is "/" in dev.
+ */
+const emblemSrc = `${import.meta.env.BASE_URL}images/un-emblem-colour.svg`.replace(
+  "//images",
+  "/images",
+);
+
 const meta = {
   title: "Components/SiteHeader",
   component: SiteHeader,
@@ -19,6 +29,7 @@ const meta = {
     descriptor: "Mandate Source Registry",
     homeLabel: "Mandate Source Registry — home",
     href: "#",
+    emblemSrc,
   },
 } satisfies Meta<typeof SiteHeader>;
 
