@@ -1,0 +1,166 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "un-eosg",
+  "homepage": "https://github.com/UN-EOSG-Analytics/ui",
+  "items": [
+    {
+      "name": "typography",
+      "type": "registry:lib",
+      "title": "Typography scale",
+      "description": "Twelve named type tiers with a documented display ceiling.",
+      "files": [
+        {
+          "path": "lib/typography.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "site-header",
+      "type": "registry:component",
+      "title": "Site header",
+      "description": "UN emblem + wordmark lockup, nav, and a right-hand slot. All copy arrives as props.",
+      "registryDependencies": [
+        "typography"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "components/site-header.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "data-table",
+      "type": "registry:component",
+      "title": "Data table",
+      "description": "Table primitives with the tokenised column-header treatment built in.",
+      "registryDependencies": [
+        "typography"
+      ],
+      "files": [
+        {
+          "path": "components/data-table.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "modal",
+      "type": "registry:component",
+      "title": "Modal",
+      "description": "Accessible dialog composition with a required title and a mobile inset.",
+      "registryDependencies": [
+        "typography"
+      ],
+      "dependencies": [
+        "@radix-ui/react-dialog",
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "components/modal.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "chip",
+      "type": "registry:component",
+      "title": "Chip",
+      "description": "One primitive for every small rounded label. Density \u00d7 tone.",
+      "files": [
+        {
+          "path": "components/chip.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "typography"
+      ]
+    },
+    {
+      "name": "button",
+      "type": "registry:component",
+      "title": "Button",
+      "description": "Button with the full size set and the 3px focus-ring token.",
+      "files": [
+        {
+          "path": "components/button.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "class-variance-authority"
+      ]
+    },
+    {
+      "name": "search-input",
+      "type": "registry:component",
+      "title": "Search input",
+      "description": "Full-text search field with icon, clear affordance and three variants.",
+      "files": [
+        {
+          "path": "components/search-input.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "dependencies": [
+        "lucide-react"
+      ]
+    },
+    {
+      "name": "filter-popover",
+      "type": "registry:component",
+      "title": "Filter popover",
+      "description": "Facet list with counts, proportional bars and conditional search.",
+      "files": [
+        {
+          "path": "components/filter-popover.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "button",
+        "search-input",
+        "typography"
+      ],
+      "dependencies": [
+        "@radix-ui/react-popover",
+        "lucide-react"
+      ]
+    },
+    {
+      "name": "concepts",
+      "type": "registry:component",
+      "title": "Domain concepts",
+      "description": "EntityRef, DocumentSymbol, BudgetFigure and Count \u2014 the layer above the primitives.",
+      "files": [
+        {
+          "path": "components/concepts.tsx",
+          "type": "registry:component"
+        }
+      ],
+      "registryDependencies": [
+        "chip",
+        "typography"
+      ]
+    },
+    {
+      "name": "agents-md",
+      "type": "registry:file",
+      "title": "Agent rules",
+      "description": "Design-system rules for coding agents, with good/bad pairs.",
+      "files": [
+        {
+          "path": "AGENTS.md",
+          "type": "registry:file",
+          "target": "AGENTS.md"
+        }
+      ]
+    }
+  ]
+}

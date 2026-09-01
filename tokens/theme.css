@@ -1,0 +1,171 @@
+/**
+ * @un-eosg/ui — design tokens
+ *
+ *   @import "tailwindcss";
+ *   @import "@un-eosg/ui/theme.css";
+ *
+ * Same mechanism every EOSG product already runs for `tw-animate-css` — a
+ * versioned CSS package from node_modules. Tailwind v4's `@theme` generates the
+ * utilities straight from these custom properties, so the token file is just
+ * CSS: no Style Dictionary, no second toolchain.
+ *
+ * SOURCES, in order of authority:
+ *   1. docs/un_brand_quick_guide.pdf     — UN Blue / 100% Black / 100% White, Roboto
+ *   2. docs/un_brand_colour_palette.pdf  — true values, tints, shades, accessible text
+ *   3. ui/AUDIT.md                        — what the six products actually converged on
+ */
+
+@theme {
+  /* ===============================================================
+     PRIMARY BRAND — these three carry the brand
+     ===============================================================
+     The brand guide is explicit: "To ensure the clarity and dignity of our
+     brand, UN Blue, white and black should be the most prominent colours
+     used in materials throughout the UN system."
+
+     So: black text on white ground, UN Blue as the single accent. Note this
+     is TRUE black (#000000, 100% K) — not shadcn's near-black default, which
+     four of the six products inherited without deciding. */
+  --color-un-blue: #009edb;
+  --color-un-black: #000000;
+  --color-un-white: #ffffff;
+
+  /* UN Blue's full ramp. This is the only accent that earns a complete set,
+     because it is the only one used at any volume. */
+  --color-un-blue-tint: #c5dfef; /* Pantone 290 — background washes */
+  --color-un-blue-tint-50: #e3edf6; /* 50% Pantone 290 — lightest wash */
+  --color-un-blue-shade: #004987; /* Pantone 301 — text on light, deep fills */
+  --color-un-blue-text: #0077b8; /* AA on white */
+  --color-un-blue-text-aaa: #005392; /* AAA on white */
+
+  /* ===============================================================
+     ACCENTS — used sparingly, per the brand guide
+     ===============================================================
+     "Our accent colours should be used sparingly … They are primarily used in
+     instances when large amounts of information need to be differentiated by
+     colour, such as in charts, graphs or maps."
+
+     And explicitly: do NOT colour-code them to represent specific ideas or
+     entities. They are not a semantic palette.
+
+     Each ships as true value / tint / shade / accessible text colour. The
+     `-text` value is the one that clears WCAG AA as text on white — the true
+     value usually does not. Yellow has no accessible text value in the guide
+     at all; `--color-un-yellow-shade` is the darkest the brand offers, so use
+     that and check contrast yourself. */
+  --color-un-green: #72bf44;
+  --color-un-green-tint: #cee3a0;
+  --color-un-green-shade: #006747;
+  --color-un-green-text: #27833a; /* AA */
+
+  --color-un-yellow: #ffc800;
+  --color-un-yellow-tint: #f8e66b;
+  --color-un-yellow-shade: #b16d03; /* no AA text value exists — verify contrast */
+
+  --color-un-orange: #f58220;
+  --color-un-orange-tint: #fedcbd;
+  --color-un-orange-shade: #d4582a;
+  --color-un-orange-text: #cf3f0b; /* AA */
+
+  --color-un-red: #ed1847;
+  --color-un-red-tint: #f9c0c5;
+  --color-un-red-shade: #a71f36;
+  --color-un-red-text: #ab1d37; /* AAA (AA is #eb0045) */
+
+  --color-un-purple: #a05fb4;
+  --color-un-purple-tint: #d5b4d6;
+  --color-un-purple-shade: #5b2c86;
+  --color-un-purple-text: #733d96; /* AAA (AA is #9a58af) */
+
+  --color-un-gray: #aea29a;
+  --color-un-gray-tint: #ded9d5;
+  --color-un-gray-shade: #6e6259;
+  --color-un-gray-text: #7c7067; /* AA */
+
+  /* ===============================================================
+     UN80 WORKING PALETTE
+     ===============================================================
+     The low-chroma set the products actually reach for when they need
+     categorical grouping — entity groups, secretariat groupings, subject
+     domains. Not from the DGC brand palette; this is ours.
+
+     Only the tokens the audit found ALIVE are here. `shuttle-gray` resolves
+     the one live collision: #5a6c7d (four products) over system-chart's
+     #596b7d, which is namespaced below. */
+  --color-trout: #495057;
+  --color-shuttle-gray: #5a6c7d;
+  --color-camouflage-green: #7d8471;
+  --color-smoky: #6c5b7b;
+  --color-au-chico: #a0665c;
+  --color-faded-jade: #4a7c7e;
+  --color-dusty-gray: #969696;
+
+  /* ===============================================================
+     SYSTEM CHART PALETTE — namespaced, not merged
+     ===============================================================
+     From the UN System Chart PDF: a different source document, neither the
+     DGC brand palette nor UN80's. Included because it is a genuinely useful
+     reference for pale categorical fills with darker paired keylines — the
+     pattern is worth stealing even where the values are not.
+
+     Namespaced so it stops colliding with shared names: in its own repo these
+     were called `un-red` and `un-gray`, which is why `text-un-red` there
+     renders terracotta. */
+  --color-syschart-yellow: #fce281;
+  --color-syschart-yellow-dark: #d7aa17;
+  --color-syschart-purple: #d3b6d7;
+  --color-syschart-purple-dark: #b17fb8;
+  --color-syschart-green: #d1e39b;
+  --color-syschart-green-dark: #72bf44;
+  --color-syschart-red: #fdc99b;
+  --color-syschart-red-dark: #f58220;
+  --color-syschart-blue: #c7e1f5;
+  --color-syschart-blue-dark: #4aace1;
+  --color-syschart-brown: #e5ceaa;
+  --color-syschart-brown-dark: #c08a32;
+  --color-syschart-gray: #ededee;
+  --color-syschart-gray-dark: #d1d3d4;
+
+  /* ===============================================================
+     TYPE
+     ===============================================================
+     Roboto, always. The brand quick guide names it the primary typeface and
+     there is no second face — not for headings, not for code, not for
+     display. Per-locale stacks keep Roboto as the Latin fallback. */
+  --font-sans: Roboto, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* The micro tier. Tailwind's floor is 12px and all six products
+     independently hand-rolled below it — 127 uses of 9/10/11px. 9px is
+     deliberately absent: it failed legibility review. */
+  --text-micro: 0.625rem; /* 10px */
+  --text-micro--line-height: 1.4;
+  --text-mini: 0.6875rem; /* 11px */
+  --text-mini--line-height: 1.45;
+
+  /* ===============================================================
+     EMBLEM GEOMETRY
+     ===============================================================
+     The emblem is 1.198:1 (152×127). At the h-10 lockup both transcripts and
+     mandates use, that is 47.9px — which is why `w-[47.9px]` appears in both.
+     Derived, not magic. The gap reproduces the official horizontal logo's own
+     proportion: 23.01/126.89 ≈ 18.14% of emblem height → 7.26px at h-10. */
+  --spacing-emblem-w: 47.9px;
+  --spacing-emblem-gap: 7.26px;
+  --text-wordmark: 23.83px;
+
+  /* Focus ring width — repeated 23 times across the estate as `ring-[3px]`. */
+  --spacing-focus-ring: 3px;
+}
+
+/**
+ * Deliberately absent — do not add back:
+ *
+ * · `pale-oyster` and the dead half of the UN80 block (8/8 unused in
+ *   un80-actions, 7/8 in housekeeping, 6/7 in system-chart).
+ * · shadcn's stock `--chart-1..5` — shipped unmodified in four products with
+ *   zero references. A real data-viz scale should be seeded from mandates'
+ *   CVD-validated categorical palette; that work is open.
+ * · SDG colours. They are a separate brand system and the guide is explicit:
+ *   use them only in SDG contexts.
+ * · A second typeface. It is Roboto.
+ */

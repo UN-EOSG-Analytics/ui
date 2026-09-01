@@ -1,0 +1,143 @@
+/**
+ * Storybook preview stylesheet.
+ *
+ * This file plays the part of a CONSUMING APP'S globals.css. It shows exactly
+ * what an app has to do to adopt the system — two imports, then its own
+ * semantic layer:
+ *
+ *   @import "tailwindcss";
+ *   @import "@un-eosg/ui/theme.css";
+ *
+ * (Here the second import is a relative path because we are inside the package
+ * itself. In an app it is the bare package specifier — the same shape as the
+ * `@import "tw-animate-css"` line all six products already ship.)
+ */
+
+@import "tailwindcss";
+@import "../tokens/theme.css";
+@import "tw-animate-css";
+
+/* Tailwind scans upward from this stylesheet, but be explicit about where the
+   component and story classes live so nothing is missed. */
+@source "../components";
+@source "../stories";
+
+/**
+ * The shadcn semantic layer — DELIBERATELY NOT part of the token package.
+ *
+ * These stay per-app: they are the legitimate per-product surface. The values
+ * below are a neutral reference set so the workshop renders, and they document
+ * the contract — an adopting app must define these, and the components below
+ * consume them rather than hardcoding greys.
+ *
+ * (The audit found four products disagreeing on `--primary` because nobody
+ * decided, not because they needed to differ. That decision is still open.)
+ */
+/**
+ * The shadcn semantic layer — the per-app surface.
+ *
+ * These are NOT in the token package: they are the legitimate place a product
+ * differs. But the values below are the brand's, not shadcn's defaults, and
+ * they are what an adopting app should start from:
+ *
+ *   foreground = TRUE BLACK (#000). The brand guide specifies 100% K. Four of
+ *   the six products shipped shadcn's near-black `oklch(0.145 0 0)` instead,
+ *   because nobody decided — and a fifth used `text-slate-950`.
+ *
+ *   background = pure white (#fff).
+ *
+ *   primary = UN Blue. It is the accent for everything interactive. The other
+ *   brand accents are for differentiating information in charts, not for UI.
+ */
+:root {
+  --radius: 0.5rem;
+
+  --background: var(--color-un-white);
+  --foreground: var(--color-un-black);
+
+  --card: var(--color-un-white);
+  --card-foreground: var(--color-un-black);
+  --popover: var(--color-un-white);
+  --popover-foreground: var(--color-un-black);
+
+  --primary: var(--color-un-blue);
+  --primary-foreground: var(--color-un-white);
+
+  /* Neutrals are pure greys — the brand's ground is white and black, so the
+     scale between them carries no hue. */
+  --secondary: #f4f4f5;
+  --secondary-foreground: #27272a;
+  --muted: #f4f4f5;
+  --muted-foreground: #52525b;
+
+  /* The accent surface is a UN Blue wash, from the brand's own tint ramp. */
+  --accent: var(--color-un-blue-tint-50);
+  --accent-foreground: var(--color-un-blue-text);
+
+  --destructive: var(--color-un-red-text);
+  --destructive-foreground: var(--color-un-white);
+
+  --border: #e4e4e7;
+  --input: #e4e4e7;
+  --ring: var(--color-un-blue);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  body {
+    background: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+  }
+
+  /* Per-locale stack, mirroring what transcripts declares in production:
+     each locale keeps Roboto as the Latin-script fallback. */
+  :lang(ar),
+  [dir="rtl"] {
+    font-family: "Noto Sans Arabic", Roboto, system-ui, sans-serif;
+  }
+
+  /**
+   * Baseline keyboard focus ring.
+   *
+   * Carried from transcripts, the only audited product with a deliberate WCAG
+   * baseline. Three of the six remove the focus indicator outright with
+   * `outline: none !important` — a chosen trade-off, but one the shared layer
+   * should not inherit by default.
+   *
+   * `:where()` keeps specificity at zero, so any component's own
+   * `focus-visible:` utilities override this without `!important`.
+   */
+  :where(button, a, [role="button"], [role="menuitem"], [tabindex]):focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+}

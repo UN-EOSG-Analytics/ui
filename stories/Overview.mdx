@@ -1,0 +1,79 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Overview" />
+
+# EOSG / UN80 design system
+
+A shared token layer and a small set of compositions for the EOSG data-team
+products. Scope is deliberately narrow: **UN80 / UN 2.0 / EOSG products**. DGC
+owns the UN visual identity; nothing here reaches their web work.
+
+---
+
+## Why this exists
+
+An audit of six products found the same things invented six times over:
+
+| Finding | Measured |
+| --- | --- |
+| Products with a named type scale | **1 of 6** |
+| Hand-rolled text sizes below Tailwind's 12px floor | **127**, in all six independently |
+| Distinct table-header treatments | **4** — one product ships two internally |
+| Bespoke site headers | **6**, ~846 lines doing one job |
+| Ways the one written design doc drifted from its own code | **6** |
+
+The pattern is not carelessness. It is high build throughput with no detector —
+so nothing pulls the six implementations back together.
+
+## What propagates, and what doesn't
+
+Two layers, shipped two different ways on purpose.
+
+**Tokens are a versioned dependency.** They have to propagate, because a copy
+rots — the audit found one eight-token palette block copied into four products
+and then dying differently in each. Apps consume them with one line:
+
+```css
+@import "tailwindcss";
+@import "@un-eosg/ui/theme.css";
+```
+
+That is the same mechanism all six products already run for `tw-animate-css`, so
+it introduces nothing new. Tailwind v4's `@theme` generates the utilities
+straight from CSS custom properties — the token file is just CSS. No Style
+Dictionary, no second toolchain.
+
+**Compositions are copy-in**, via a shadcn registry. That matches how the team
+already treats primitives: vendored, unedited, upgradable. The audit confirmed
+the policy works — three products ship byte-identical `dialog.tsx`. So the shared
+layer sits *above* the primitives and distributes the compositions, not
+re-vendored copies of Radix.
+
+## How a design change actually lands
+
+Storybook controls are ephemeral; they change nothing durable. The loop is:
+
+1. Review here, say what is wrong
+2. The change lands in `tokens/theme.css` — usually a one-line diff
+3. Version bump; each app picks it up on its own schedule
+
+**Storybook is the review surface. The token package is the propagation
+mechanism.** Neither works alone, which is why tokens came first even though
+Storybook is the visible half.
+
+## For agents as well as people
+
+The same artifacts serve both. Agents get the token names, the `typography.*`
+tiers, and `AGENTS.md` — rules written as good/bad code pairs, because examples
+work better than adjectives. Plus a drift checker, which is the part that
+matters: **an agent with a detector converges; an agent without one drifts.**
+
+## Adoption
+
+Nothing is being pushed into production. The live apps have users and no test
+capacity, so tokens were seeded by convergence from the audit and are adopted
+going forward. `mandates/website` is the first real consumer.
+
+Everything in the palette traces to an audited product — nothing here is
+invented, and the tokens the audit found dead or repo-specific were deliberately
+left out. The token file says why, inline, so they don't come back by reflex.
