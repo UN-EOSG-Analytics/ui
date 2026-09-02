@@ -15,3 +15,8 @@ In this VS Code workspace there are the following repos:
 **Internal:**
 
 - `un-mandate-housekeeping/` –– [mandate-housekeeping.un-two-zero.org](https://mandate-housekeeping.un-two-zero.org/about/) | Streamline Your Mandate Citation Review / The Mandate Housekeeping Platform is being tested as a pilot tool to support UN Secretariat entities review and update mandate citations for the 2027 Proposed Programme Budget (PPB) – Programme Plan.
+- `focal-points/` –– internal directory of Secretariat focal points for mandate creation, pursuant to A/RES/80/251.
+
+---
+
+- all repos pulled from `un-website-boilerplate` [different branches]
