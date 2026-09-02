@@ -4,7 +4,7 @@ import { Download, Filter, Plus, Search } from "lucide-react";
 import { Button } from "../components/button";
 
 const meta = {
-  title: "Components/Button",
+  title: "UI Elements/Button",
   component: Button,
   parameters: {
     layout: "padded",

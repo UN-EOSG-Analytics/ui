@@ -3,7 +3,7 @@ import * as React from "react";
 import { Chip, ChipCount } from "../components/chip";
 
 const meta = {
-  title: "Components/Chip",
+  title: "UI Elements/Chip",
   component: Chip,
   parameters: {
     layout: "padded",

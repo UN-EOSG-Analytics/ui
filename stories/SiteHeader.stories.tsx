@@ -13,7 +13,7 @@ const emblemSrc = `${import.meta.env.BASE_URL}images/un-emblem-colour.svg`.repla
 );
 
 const meta = {
-  title: "Components/SiteHeader",
+  title: "UI Elements/SiteHeader",
   component: SiteHeader,
   parameters: {
     layout: "fullscreen",

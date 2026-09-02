@@ -4,18 +4,15 @@ Design tokens, a type scale and shared components for the EOSG / UN80 products.
 
 **Catalogue → https://un-eosg-analytics.github.io/ui/**
 
-Scope is deliberately narrow: UN80 / UN 2.0 / EOSG products. DGC owns the UN
-visual identity; nothing here reaches their web work.
-
 ---
 
 ## The short version
 
-| Layer | Ships as | Changes reach you… |
-| --- | --- | --- |
-| **Tokens** (colour, type, spacing) | a versioned dependency you `@import` | on version bump |
-| **Components** | files copied into your repo | never — they're yours once copied |
-| **Stories** | stay here, they are the catalogue | you never install them |
+| Layer                              | Ships as                             | Changes reach you…                |
+| ---------------------------------- | ------------------------------------ | --------------------------------- |
+| **Tokens** (colour, type, spacing) | a versioned dependency you `@import` | on version bump                   |
+| **Components**                     | files copied into your repo          | never — they're yours once copied |
+| **Stories**                        | stay here, they are the catalogue    | you never install them            |
 
 Two mechanisms, on purpose. Tokens must propagate — a copied palette rots (the
 audit found one eight-token block copied into four products and dead in three).
@@ -36,7 +33,7 @@ before you build it. The workflow is:
 3. Install it into your app (below)
 4. Your app renders it — no Storybook, no stories, no extra dependency
 
-Your app never runs Storybook. If you later contribute a component *back*, you
+Your app never runs Storybook. If you later contribute a component _back_, you
 write a story for it here — see [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ---
@@ -47,7 +44,7 @@ One import, once, in your `globals.css`:
 
 ```css
 @import "tailwindcss";
-@import "@un-eosg/ui/theme.css";   /* ← the whole token layer */
+@import "@un-eosg/ui/theme.css"; /* ← the whole token layer */
 ```
 
 Install it pinned:
@@ -79,16 +76,16 @@ You choose when.
 ### Also define your semantic layer
 
 Tokens are brand facts. The shadcn semantic layer (`--primary`, `--muted`, …)
-stays in *your* `globals.css`, because that is the legitimate per-product
+stays in _your_ `globals.css`, because that is the legitimate per-product
 surface. Start from the brand:
 
 ```css
 :root {
-  --background: var(--color-un-white);   /* white */
-  --foreground: var(--color-un-black);   /* TRUE black, #000 — not near-black */
-  --primary:    var(--color-un-blue);    /* UN Blue is the accent for everything */
-  --ring:       var(--color-un-blue);
-  --accent:     var(--color-un-blue-tint-50);
+  --background: var(--color-un-white); /* white */
+  --foreground: var(--color-un-black); /* TRUE black, #000 — not near-black */
+  --primary: var(--color-un-blue); /* UN Blue is the accent for everything */
+  --ring: var(--color-un-blue);
+  --accent: var(--color-un-blue-tint-50);
   --accent-foreground: var(--color-un-blue-text);
 }
 ```
@@ -106,12 +103,12 @@ byte-identical `dialog.tsx`. Hand-editing them means you can never run
 
 So:
 
-| You want to… | Do this |
-| --- | --- |
-| Change how a primitive looks everywhere | Change a **token**, not the primitive |
-| Add behaviour or structure | Write a **composition** that wraps the primitive |
-| Update an out-of-date primitive | `pnpm dlx shadcn@latest add dialog` |
-| Reuse something across products | Promote it here (see CONTRIBUTING.md) |
+| You want to…                            | Do this                                          |
+| --------------------------------------- | ------------------------------------------------ |
+| Change how a primitive looks everywhere | Change a **token**, not the primitive            |
+| Add behaviour or structure              | Write a **composition** that wraps the primitive |
+| Update an out-of-date primitive         | `pnpm dlx shadcn@latest add dialog`              |
+| Reuse something across products         | Promote it here (see CONTRIBUTING.md)            |
 
 This system ships **compositions**, never re-vendored primitives. `Modal` wraps
 Radix's dialog; it does not replace your `ui/dialog.tsx`.
@@ -162,7 +159,7 @@ export function LoginDialog({ open, onOpenChange }) {
     <Modal
       open={open}
       onOpenChange={onOpenChange}
-      title="Sign in"                            // required — the accessible name
+      title="Sign in" // required — the accessible name
       description="We'll email you a sign-in link."
       footer={<Button type="submit">Send link</Button>}
     >

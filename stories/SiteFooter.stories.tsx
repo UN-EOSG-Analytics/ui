@@ -49,7 +49,7 @@ const ar: FooterLabels = {
 };
 
 const meta = {
-  title: "Components/SiteFooter",
+  title: "UI Elements/SiteFooter",
   component: SiteFooter,
   parameters: {
     layout: "fullscreen",

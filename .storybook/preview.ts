@@ -7,11 +7,19 @@ const preview: Preview = {
     options: {
       storySort: {
         order: [
+          "Overview",
           "Foundations",
           ["Palette", "Typography"],
+          // Relational: a domain thing mapped to a visual.
           "Concepts",
-          "Components",
-          ["SiteHeader", "SiteFooter", "Button", "Chip", "DataTable", "Filtering & Search", "Modal", "ExternalLink"],
+          ["Overview", "PointMeter"],
+          // The UI kit itself.
+          "UI Elements",
+          [
+            "Button", "Chip", "StatTile", "DataTable", "Filtering & Search",
+            "Modal", "DetailPanel", "SignInCard",
+            "SiteHeader", "SiteFooter", "AnimatedCornerLogo",
+          ],
         ],
       },
     },

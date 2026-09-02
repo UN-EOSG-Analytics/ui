@@ -5,7 +5,7 @@ import { cn } from "../lib/utils";
 import { typography } from "../lib/typography";
 
 const meta = {
-  title: "Components/Modal",
+  title: "UI Elements/Modal",
   component: Modal,
   parameters: {
     layout: "centered",

@@ -11,7 +11,7 @@ import { typography } from "../lib/typography";
 import { cn } from "../lib/utils";
 
 const meta = {
-  title: "Components/Filtering & Search",
+  title: "UI Elements/Filtering & Search",
   parameters: {
     layout: "padded",
     docs: {

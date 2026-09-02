@@ -127,6 +127,22 @@
   --color-syschart-gray-dark: #d1d3d4;
 
   /* ===============================================================
+     ORDINAL TIER RAMP — the one validated data-viz scale
+     ===============================================================
+     A four-step traffic-light ramp, worst to best, from mandates' system
+     registry. CVD-validated as a SET: protan/deutan/tritan deltaE >= 10 between
+     adjacent steps, and >= 3:1 against white. Change only as a set, and only
+     after re-validating.
+
+     Never colour-alone: always paired with a count, a shape or a label. The
+     audit left "a real data-viz scale" as an open item — this is it, and it is
+     the only accent ramp in here that carries magnitude rather than category. */
+  --color-tier-1: #ab3a2c;
+  --color-tier-2: #c9820f;
+  --color-tier-3: #2aa392;
+  --color-tier-4: #276b35;
+
+  /* ===============================================================
      TYPE
      ===============================================================
      Roboto, always. The brand quick guide names it the primary typeface and

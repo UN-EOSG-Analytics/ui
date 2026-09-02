@@ -10,7 +10,7 @@ import {
 } from "../components/data-table";
 
 const meta = {
-  title: "Components/DataTable",
+  title: "UI Elements/DataTable",
   parameters: {
     layout: "padded",
     docs: {
