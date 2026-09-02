@@ -1,6 +1,6 @@
 {
   "name": "@un-eosg/ui",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "private": false,
   "description": "EOSG / UN80 design system — tokens, type scale and shared compositions.",
   "type": "module",

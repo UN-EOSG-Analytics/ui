@@ -12,42 +12,42 @@
         {
           "path": "public/images/un-emblem-colour.svg",
           "type": "registry:file",
-          "target": "public/images/un-emblem-colour.svg"
+          "target": "~/public/images/un-emblem-colour.svg"
         },
         {
           "path": "public/images/un-logo-en-reverse.svg",
           "type": "registry:file",
-          "target": "public/images/un-logo-en-reverse.svg"
+          "target": "~/public/images/un-logo-en-reverse.svg"
         },
         {
           "path": "public/images/un-logo-fr-reverse.svg",
           "type": "registry:file",
-          "target": "public/images/un-logo-fr-reverse.svg"
+          "target": "~/public/images/un-logo-fr-reverse.svg"
         },
         {
           "path": "public/images/un-logo-es-reverse.svg",
           "type": "registry:file",
-          "target": "public/images/un-logo-es-reverse.svg"
+          "target": "~/public/images/un-logo-es-reverse.svg"
         },
         {
           "path": "public/images/un-logo-ar-reverse.svg",
           "type": "registry:file",
-          "target": "public/images/un-logo-ar-reverse.svg"
+          "target": "~/public/images/un-logo-ar-reverse.svg"
         },
         {
           "path": "public/images/un-logo-zh-reverse.svg",
           "type": "registry:file",
-          "target": "public/images/un-logo-zh-reverse.svg"
+          "target": "~/public/images/un-logo-zh-reverse.svg"
         },
         {
           "path": "public/images/un-logo-ru-reverse.svg",
           "type": "registry:file",
-          "target": "public/images/un-logo-ru-reverse.svg"
+          "target": "~/public/images/un-logo-ru-reverse.svg"
         },
         {
           "path": "public/images/un-two-zero-corner.svg",
           "type": "registry:file",
-          "target": "public/images/un-two-zero-corner.svg"
+          "target": "~/public/images/un-two-zero-corner.svg"
         }
       ]
     },
