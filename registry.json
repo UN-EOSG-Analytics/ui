@@ -7,29 +7,108 @@
       "name": "typography",
       "type": "registry:lib",
       "title": "Typography scale",
-      "description": "Twelve named type tiers with a documented display ceiling.",
+      "description": "Fourteen named type tiers with a documented display ceiling.",
       "files": [
         {
           "path": "lib/typography.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "lib/utils.ts",
           "type": "registry:lib"
         }
       ]
     },
     {
-      "name": "site-header",
+      "name": "chip",
       "type": "registry:component",
-      "title": "Site header",
-      "description": "UN emblem + wordmark lockup, nav, and a right-hand slot. All copy arrives as props.",
-      "registryDependencies": [
-        "typography"
+      "title": "Chip",
+      "description": "One primitive for every small rounded label. Density x tone.",
+      "files": [
+        {
+          "path": "components/chip.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "lib/typography.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "button",
+      "type": "registry:component",
+      "title": "Button",
+      "description": "Button with the full size set and the 3px focus-ring token.",
+      "dependencies": [
+        "class-variance-authority",
+        "clsx",
+        "tailwind-merge"
       ],
+      "files": [
+        {
+          "path": "components/button.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "search-input",
+      "type": "registry:component",
+      "title": "Search input",
+      "description": "Full-text search field with icon, clear affordance and three variants.",
       "dependencies": [
         "lucide-react"
       ],
       "files": [
         {
-          "path": "components/site-header.tsx",
+          "path": "components/search-input.tsx",
           "type": "registry:component"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "filter-popover",
+      "type": "registry:component",
+      "title": "Filter popover",
+      "description": "Facet list with counts, proportional bars and conditional search.",
+      "dependencies": [
+        "@radix-ui/react-popover",
+        "lucide-react",
+        "class-variance-authority"
+      ],
+      "files": [
+        {
+          "path": "components/filter-popover.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "components/search-input.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "components/button.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "lib/typography.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
         }
       ]
     },
@@ -38,13 +117,18 @@
       "type": "registry:component",
       "title": "Data table",
       "description": "Table primitives with the tokenised column-header treatment built in.",
-      "registryDependencies": [
-        "typography"
-      ],
       "files": [
         {
           "path": "components/data-table.tsx",
           "type": "registry:component"
+        },
+        {
+          "path": "lib/typography.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
         }
       ]
     },
@@ -53,9 +137,6 @@
       "type": "registry:component",
       "title": "Modal",
       "description": "Accessible dialog composition with a required title and a mobile inset.",
-      "registryDependencies": [
-        "typography"
-      ],
       "dependencies": [
         "@radix-ui/react-dialog",
         "lucide-react"
@@ -64,100 +145,14 @@
         {
           "path": "components/modal.tsx",
           "type": "registry:component"
-        }
-      ]
-    },
-    {
-      "name": "chip",
-      "type": "registry:component",
-      "title": "Chip",
-      "description": "One primitive for every small rounded label. Density \u00d7 tone.",
-      "files": [
+        },
         {
-          "path": "components/chip.tsx",
-          "type": "registry:component"
-        }
-      ],
-      "registryDependencies": [
-        "typography"
-      ]
-    },
-    {
-      "name": "button",
-      "type": "registry:component",
-      "title": "Button",
-      "description": "Button with the full size set and the 3px focus-ring token.",
-      "files": [
+          "path": "lib/typography.ts",
+          "type": "registry:lib"
+        },
         {
-          "path": "components/button.tsx",
-          "type": "registry:component"
-        }
-      ],
-      "dependencies": [
-        "class-variance-authority"
-      ]
-    },
-    {
-      "name": "search-input",
-      "type": "registry:component",
-      "title": "Search input",
-      "description": "Full-text search field with icon, clear affordance and three variants.",
-      "files": [
-        {
-          "path": "components/search-input.tsx",
-          "type": "registry:component"
-        }
-      ],
-      "dependencies": [
-        "lucide-react"
-      ]
-    },
-    {
-      "name": "filter-popover",
-      "type": "registry:component",
-      "title": "Filter popover",
-      "description": "Facet list with counts, proportional bars and conditional search.",
-      "files": [
-        {
-          "path": "components/filter-popover.tsx",
-          "type": "registry:component"
-        }
-      ],
-      "registryDependencies": [
-        "button",
-        "search-input",
-        "typography"
-      ],
-      "dependencies": [
-        "@radix-ui/react-popover",
-        "lucide-react"
-      ]
-    },
-    {
-      "name": "concepts",
-      "type": "registry:component",
-      "title": "Domain concepts",
-      "description": "EntityRef, DocumentSymbol, BudgetFigure and Count \u2014 the layer above the primitives.",
-      "files": [
-        {
-          "path": "components/concepts.tsx",
-          "type": "registry:component"
-        }
-      ],
-      "registryDependencies": [
-        "chip",
-        "typography"
-      ]
-    },
-    {
-      "name": "social-icons",
-      "type": "registry:component",
-      "title": "Social icons",
-      "description": "Brand glyphs (Simple Icons, CC0) inlined as paths so they tint via currentColor.",
-      "files": [
-        {
-          "path": "components/social-icons.tsx",
-          "type": "registry:component"
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
         }
       ]
     },
@@ -174,13 +169,32 @@
       ]
     },
     {
-      "name": "un-links",
-      "type": "registry:lib",
-      "title": "UN link helpers",
-      "description": "Locale-aware un.org and webtv.un.org URL builders.",
+      "name": "social-icons",
+      "type": "registry:component",
+      "title": "Social icons",
+      "description": "Brand glyphs (Simple Icons, CC0) inlined so they tint via currentColor.",
       "files": [
         {
-          "path": "components/un-links.ts",
+          "path": "components/social-icons.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "site-header",
+      "type": "registry:component",
+      "title": "Site header",
+      "description": "UN emblem + wordmark lockup, nav and a right-hand slot. All copy via props.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "components/site-header.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "lib/utils.ts",
           "type": "registry:lib"
         }
       ]
@@ -194,12 +208,23 @@
         {
           "path": "components/site-footer.tsx",
           "type": "registry:component"
+        },
+        {
+          "path": "components/external-link.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "components/social-icons.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "components/un-links.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
         }
-      ],
-      "registryDependencies": [
-        "external-link",
-        "social-icons",
-        "un-links"
       ]
     },
     {
@@ -211,6 +236,30 @@
         {
           "path": "components/animated-corner-logo.tsx",
           "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "concepts",
+      "type": "registry:component",
+      "title": "Domain concepts",
+      "description": "EntityRef, DocumentSymbol, BudgetFigure and Count \u2014 the layer above the primitives.",
+      "files": [
+        {
+          "path": "components/concepts.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "components/chip.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "lib/typography.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
         }
       ]
     },
