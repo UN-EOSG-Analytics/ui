@@ -4,6 +4,54 @@
   "homepage": "https://github.com/UN-EOSG-Analytics/ui",
   "items": [
     {
+      "name": "brand-assets",
+      "type": "registry:file",
+      "title": "Brand assets",
+      "description": "UN emblem, the six per-locale reverse lockups, and the UN 2.0 corner mark. Required by site-header, site-footer and animated-corner-logo.",
+      "files": [
+        {
+          "path": "public/images/un-emblem-colour.svg",
+          "type": "registry:file",
+          "target": "public/images/un-emblem-colour.svg"
+        },
+        {
+          "path": "public/images/un-logo-en-reverse.svg",
+          "type": "registry:file",
+          "target": "public/images/un-logo-en-reverse.svg"
+        },
+        {
+          "path": "public/images/un-logo-fr-reverse.svg",
+          "type": "registry:file",
+          "target": "public/images/un-logo-fr-reverse.svg"
+        },
+        {
+          "path": "public/images/un-logo-es-reverse.svg",
+          "type": "registry:file",
+          "target": "public/images/un-logo-es-reverse.svg"
+        },
+        {
+          "path": "public/images/un-logo-ar-reverse.svg",
+          "type": "registry:file",
+          "target": "public/images/un-logo-ar-reverse.svg"
+        },
+        {
+          "path": "public/images/un-logo-zh-reverse.svg",
+          "type": "registry:file",
+          "target": "public/images/un-logo-zh-reverse.svg"
+        },
+        {
+          "path": "public/images/un-logo-ru-reverse.svg",
+          "type": "registry:file",
+          "target": "public/images/un-logo-ru-reverse.svg"
+        },
+        {
+          "path": "public/images/un-two-zero-corner.svg",
+          "type": "registry:file",
+          "target": "public/images/un-two-zero-corner.svg"
+        }
+      ]
+    },
+    {
       "name": "typography",
       "type": "registry:lib",
       "title": "Typography scale",
@@ -156,7 +204,7 @@
       "name": "site-header",
       "type": "registry:component",
       "title": "Site header",
-      "description": "UN emblem + wordmark lockup, nav and a right-hand slot. All copy via props.",
+      "description": "UN emblem + wordmark lockup, nav and a right-hand slot. All copy via props. Needs `brand-assets`.",
       "dependencies": [
         "lucide-react"
       ],
@@ -171,7 +219,7 @@
       "name": "site-footer",
       "type": "registry:component",
       "title": "Site footer",
-      "description": "Pixel replica of the official www.un.org footer, per-locale.",
+      "description": "Pixel replica of the official www.un.org footer, per-locale. Needs `brand-assets`.",
       "files": [
         {
           "path": "components/site-footer.tsx",
@@ -195,7 +243,7 @@
       "name": "animated-corner-logo",
       "type": "registry:component",
       "title": "Animated corner logo",
-      "description": "The UN 2.0 corner mark, with reduced-motion support built in.",
+      "description": "The UN 2.0 corner mark, with reduced-motion support built in. Needs `brand-assets`.",
       "files": [
         {
           "path": "components/animated-corner-logo.tsx",
