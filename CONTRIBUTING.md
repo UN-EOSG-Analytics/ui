@@ -105,3 +105,22 @@ Current candidates over the bar, in order:
 | `header` (stub variants) | 3 | The three 11-line footers/headers in un80-actions, system-chart and housekeeping should just adopt `SiteHeader`/`SiteFooter`. |
 
 Run the script rather than trusting this table — it goes stale.
+
+---
+
+## Appendix: integration bugs the first adoption found
+
+Every one of these was invisible in the manifest and only surfaced by installing
+into a real app (`focal-points`). Worth repeating the exercise for each new item.
+
+| Bug | Symptom | Fix |
+| --- | --- | --- |
+| Runtime deps in `dependencies` | Adding the package pulled 66 packages / 368MB — React and Next duplicated | Optional `peerDependencies`; the published surface imports nothing. 140KB, 1 package. |
+| Bare `registryDependencies` | `add site-footer` looked for `external-link` on **ui.shadcn.com** and failed | Items are self-contained — each ships every file it needs |
+| `lib/utils.ts` shipped by every item | Interactive "overwrite?" prompt, defeating `--yes`, risking a clobbered `cn` | Dropped — every shadcn app already has it |
+| `un-links.ts` in `components/`, typed `registry:lib` | Installed to `src/lib/`, imported from `src/components/` — broken module | Moved to `lib/`, import updated |
+| Assets not shipped | Components pointed at SVGs the app didn't have | `brand-assets` registry item |
+| Asset `target` without `~/` | Landed in `src/public/images` — Next serves `public/` at the root, so all 404 | `~/` prefixes the project root |
+
+The lesson generalises: **a registry item is not done when it validates, it is
+done when it installs into a clean app and typechecks there.**
