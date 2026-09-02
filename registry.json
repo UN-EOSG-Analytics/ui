@@ -12,10 +12,6 @@
         {
           "path": "lib/typography.ts",
           "type": "registry:lib"
-        },
-        {
-          "path": "lib/utils.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -31,10 +27,6 @@
         },
         {
           "path": "lib/typography.ts",
-          "type": "registry:lib"
-        },
-        {
-          "path": "lib/utils.ts",
           "type": "registry:lib"
         }
       ]
@@ -53,10 +45,6 @@
         {
           "path": "components/button.tsx",
           "type": "registry:component"
-        },
-        {
-          "path": "lib/utils.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -72,10 +60,6 @@
         {
           "path": "components/search-input.tsx",
           "type": "registry:component"
-        },
-        {
-          "path": "lib/utils.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -105,10 +89,6 @@
         {
           "path": "lib/typography.ts",
           "type": "registry:lib"
-        },
-        {
-          "path": "lib/utils.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -124,10 +104,6 @@
         },
         {
           "path": "lib/typography.ts",
-          "type": "registry:lib"
-        },
-        {
-          "path": "lib/utils.ts",
           "type": "registry:lib"
         }
       ]
@@ -148,10 +124,6 @@
         },
         {
           "path": "lib/typography.ts",
-          "type": "registry:lib"
-        },
-        {
-          "path": "lib/utils.ts",
           "type": "registry:lib"
         }
       ]
@@ -192,10 +164,6 @@
         {
           "path": "components/site-header.tsx",
           "type": "registry:component"
-        },
-        {
-          "path": "lib/utils.ts",
-          "type": "registry:lib"
         }
       ]
     },
@@ -218,11 +186,7 @@
           "type": "registry:component"
         },
         {
-          "path": "components/un-links.ts",
-          "type": "registry:lib"
-        },
-        {
-          "path": "lib/utils.ts",
+          "path": "lib/un-links.ts",
           "type": "registry:lib"
         }
       ]
@@ -255,10 +219,6 @@
         },
         {
           "path": "lib/typography.ts",
-          "type": "registry:lib"
-        },
-        {
-          "path": "lib/utils.ts",
           "type": "registry:lib"
         }
       ]

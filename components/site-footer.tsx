@@ -2,7 +2,7 @@ import * as React from "react";
 import { cn } from "../lib/utils";
 import { ExternalLink } from "./external-link";
 import { SOCIAL_LABELS, SocialIcon, type SocialNetwork } from "./social-icons";
-import { unUrl, normalizeUnLocale } from "./un-links";
+import { unUrl, normalizeUnLocale } from "../lib/un-links";
 
 /**
  * The official www.un.org footer.
