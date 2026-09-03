@@ -8,16 +8,16 @@ Design tokens, a type scale and shared components for the EOSG / UN80 products.
 
 ## The short version
 
-| Layer                              | Ships as                             | Changes reach you…                |
-| ---------------------------------- | ------------------------------------ | --------------------------------- |
-| **Tokens** (colour, type, spacing) | a versioned dependency you `@import` | on version bump                   |
-| **Components**                     | files copied into your repo          | never — they're yours once copied |
-| **Stories**                        | stay here, they are the catalogue    | you never install them            |
+| Layer                              | Ships as                             | Changes reach you…              |
+| ---------------------------------- | ------------------------------------ | ------------------------------- |
+| **Tokens** (colour, type, spacing) | a versioned dependency you `@import` | when you update the dependency  |
+| **Components**                     | versioned TypeScript imports         | when you update the dependency  |
+| **Stories**                        | stay here, they are the catalogue    | they do not ship to applications |
 
-Two mechanisms, on purpose. Tokens must propagate — a copied palette rots (the
-audit found one eight-token block copied into four products and dead in three).
-Components must **not** propagate, because you will need to adapt them, and an
-update that silently rewrote your component would be worse than no system.
+Tokens and components are centrally defined and imported by default. A copied
+palette rots (the audit found one eight-token block copied into four products
+and dead in three), and copied components miss shared fixes for the same reason.
+Applications choose when to update the dependency and review those changes.
 
 ---
 
@@ -30,7 +30,7 @@ before you build it. The workflow is:
 
 1. Browse https://un-eosg-analytics.github.io/ui/
 2. Find the thing you need
-3. Install it into your app (below)
+3. Import it into your app (below)
 4. Your app renders it — no Storybook, no stories, no extra dependency
 
 Your app never runs Storybook. If you later contribute a component _back_, you
@@ -115,17 +115,45 @@ Radix's dialog; it does not replace your `ui/dialog.tsx`.
 
 ---
 
-## Installing a component
+## Importing a component
+
+The package exports TypeScript component source. Next applications compile it
+alongside their own source:
+
+```ts
+// next.config.ts
+const nextConfig = {
+  transpilePackages: ["@un-eosg/ui"],
+};
+```
+
+Import components from the shared namespace:
+
+```tsx
+import { SiteFooter } from "@un-eosg/ui/components/site-footer";
+import { EntityRef } from "@un-eosg/ui/components/concepts";
+```
+
+The imported theme registers the package component sources with Tailwind, so
+no additional content path is required. Customize components with props, slots,
+and application-local composition first.
+
+If an application genuinely needs an unsupported variant, copying a component
+is an explicit escape hatch. The existing shadcn command is a convenient way
+to write the component and its supporting files into the application:
 
 ```bash
 pnpm dlx shadcn@latest add UN-EOSG-Analytics/ui/site-footer --yes
 ```
 
-Files are copied into your repo. They are yours: edit them freely. Each item is
-self-contained, so it brings everything it needs and needs no configuration in
-`components.json`.
+Manual copying is also fine. Either way, the local copy does not receive shared
+fixes when the package is updated. Keep the reason for divergence clear. If the
+change is reusable, contribute it here as a prop, slot or shared behaviour, then
+return the originating application to the imported component. Other applications
+adopt the improvement when they update their dependency.
 
-Components that use imagery also need the assets, once per app:
+Components that use imagery also need the assets served by the application.
+Copy them once per app (and again when shared assets change):
 
 ```bash
 pnpm dlx shadcn@latest add UN-EOSG-Analytics/ui/brand-assets --yes
@@ -134,7 +162,7 @@ pnpm dlx shadcn@latest add UN-EOSG-Analytics/ui/brand-assets --yes
 That puts the emblem, the six per-locale reverse lockups and the UN 2.0 corner
 mark into `public/images/`.
 
-Browse `registry.json`, or the catalogue, for the full list.
+Browse the catalogue for the full component list.
 
 ---
 
@@ -151,8 +179,8 @@ one product that did has 739 lines, no `role="dialog"`, no focus trap and no
 accessible name.
 
 ```tsx
-import { Modal } from "@/components/modal";
-import { Button } from "@/components/button";
+import { Modal } from "@un-eosg/ui/components/modal";
+import { Button } from "@un-eosg/ui/components/button";
 
 export function LoginDialog({ open, onOpenChange }) {
   return (
@@ -173,12 +201,15 @@ export function LoginDialog({ open, onOpenChange }) {
 }
 ```
 
-**3. Leave it in your app.** One product using it is not a system component.
+**3. Keep product-specific composition in the app.** Promote an improvement
+when its contract is reusable and central ownership will reduce drift; there is
+no fixed adoption-count rule. Once the shared component supports the need, the
+originating app should return to importing it.
 
-**4. When it reaches a third product, promote it.** `login-form` is already in
-four products and `user-menu` in three — the auth cluster is the next thing due
-for extraction, and it needs a shared contract agreed first because it couples
-to a backend. Run the finder rather than guessing:
+`login-form` is already in four products and `user-menu` in three — the auth
+cluster is the next thing due for extraction, and it needs a shared contract
+agreed first because it couples to a backend. Run the finder rather than
+guessing:
 
 ```bash
 node scripts/find-candidates.mjs ../transcripts ../mandates/website ../open \

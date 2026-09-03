@@ -185,3 +185,6 @@
  *   use them only in SDG contexts.
  * · A second typeface. It is Roboto.
  */
+/* Tailwind ignores node_modules by default. Register the exported component
+   sources so consumers importing this stylesheet generate their utilities. */
+@source "../components";
