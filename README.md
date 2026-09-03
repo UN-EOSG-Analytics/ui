@@ -134,6 +134,24 @@ import { SiteFooter } from "@un-eosg/ui/components/site-footer";
 import { EntityRef } from "@un-eosg/ui/components/concepts";
 ```
 
+For local development against an unpublished UI checkout, keep the consumer's
+`package.json` and lockfile pointed at the normal GitHub ref. Install
+dependencies in the UI checkout or worktree, then replace the installed package
+in the consumer's local `node_modules` with a live symlink:
+
+```bash
+cd path/to/ui
+pnpm install
+
+cd path/to/consumer
+pnpm link ../path/to/ui
+```
+
+Changes in the UI checkout are then picked up by the consumer's normal dev or
+build process; a regular reload or rebuild may be needed. To return to the
+declared GitHub dependency, run `pnpm unlink` from the consumer and reinstall.
+This is a local `node_modules` toggle only, not a dependency change to commit.
+
 The imported theme registers the package component sources with Tailwind, so
 no additional content path is required. Customize components with props, slots,
 and application-local composition first.
@@ -152,15 +170,16 @@ change is reusable, contribute it here as a prop, slot or shared behaviour, then
 return the originating application to the imported component. Other applications
 adopt the improvement when they update their dependency.
 
-Components that use imagery also need the assets served by the application.
-Copy them once per app (and again when shared assets change):
+`SiteHeader` resolves its default emblem from package assets, and `SiteFooter`
+does the same for its six reverse UN wordmarks. Components that still use public
+imagery, such as `AnimatedCornerLogo`, need those assets served by the
+application. Copy them once per app:
 
 ```bash
 pnpm dlx shadcn@latest add UN-EOSG-Analytics/ui/brand-assets --yes
 ```
 
-That puts the emblem, the six per-locale reverse lockups and the UN 2.0 corner
-mark into `public/images/`.
+That puts the UN 2.0 corner mark into `public/images/`.
 
 Browse the catalogue for the full component list.
 

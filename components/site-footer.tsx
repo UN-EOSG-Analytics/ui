@@ -2,6 +2,7 @@ import * as React from "react";
 import { cn } from "../lib/utils";
 import { ExternalLink } from "./external-link";
 import { SOCIAL_LABELS, SocialIcon, type SocialNetwork } from "./social-icons";
+import { UnReverseWordmark } from "./un-logos";
 import { unUrl, normalizeUnLocale } from "../lib/un-links";
 
 /**
@@ -120,7 +121,10 @@ export interface SiteFooterProps {
   labels: FooterLabels;
   /** Extra links appended to the bottom row — e.g. an /llms.txt index. */
   extraLinks?: { label: string; href: string }[];
-  /** Where the lockup SVGs live. Override when served from a subpath. */
+  /**
+   * @deprecated Footer wordmarks are bundled in the component. This prop is
+   * accepted as a no-op so existing consumers do not break.
+   */
   logoBasePath?: string;
   containerClassName?: string;
   className?: string;
@@ -130,7 +134,7 @@ export function SiteFooter({
   locale = "en",
   labels,
   extraLinks = [],
-  logoBasePath = "/images",
+  logoBasePath: _logoBasePath,
   containerClassName = "max-w-4xl px-4 sm:px-8 lg:max-w-6xl",
   className,
 }: SiteFooterProps) {
@@ -153,9 +157,8 @@ export function SiteFooter({
             newTabLabel={labels.newTab}
             className="shrink-0 transition-opacity hover:opacity-80"
           >
-            <img
-              src={`${logoBasePath}/un-logo-${lang}-reverse.svg`}
-              alt=""
+            <UnReverseWordmark
+              locale={lang}
               width={logoWidth}
               height={52}
               className="h-[52px] w-auto select-none"

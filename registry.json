@@ -6,44 +6,9 @@
     {
       "name": "brand-assets",
       "type": "registry:file",
-      "title": "Brand assets",
-      "description": "UN emblem, the six per-locale reverse lockups, and the UN 2.0 corner mark. Required by site-header, site-footer and animated-corner-logo.",
+      "title": "UN 2.0 corner asset",
+      "description": "UN 2.0 corner mark for animated-corner-logo. Header and footer logos are bundled by their component registry items.",
       "files": [
-        {
-          "path": "public/images/un-emblem-colour.svg",
-          "type": "registry:file",
-          "target": "~/public/images/un-emblem-colour.svg"
-        },
-        {
-          "path": "public/images/un-logo-en-reverse.svg",
-          "type": "registry:file",
-          "target": "~/public/images/un-logo-en-reverse.svg"
-        },
-        {
-          "path": "public/images/un-logo-fr-reverse.svg",
-          "type": "registry:file",
-          "target": "~/public/images/un-logo-fr-reverse.svg"
-        },
-        {
-          "path": "public/images/un-logo-es-reverse.svg",
-          "type": "registry:file",
-          "target": "~/public/images/un-logo-es-reverse.svg"
-        },
-        {
-          "path": "public/images/un-logo-ar-reverse.svg",
-          "type": "registry:file",
-          "target": "~/public/images/un-logo-ar-reverse.svg"
-        },
-        {
-          "path": "public/images/un-logo-zh-reverse.svg",
-          "type": "registry:file",
-          "target": "~/public/images/un-logo-zh-reverse.svg"
-        },
-        {
-          "path": "public/images/un-logo-ru-reverse.svg",
-          "type": "registry:file",
-          "target": "~/public/images/un-logo-ru-reverse.svg"
-        },
         {
           "path": "public/images/un-two-zero-corner.svg",
           "type": "registry:file",
@@ -189,6 +154,57 @@
       ]
     },
     {
+      "name": "un-logos",
+      "type": "registry:component",
+      "title": "UN logos",
+      "description": "Official UN emblem and localized reverse wordmarks as reusable image components.",
+      "files": [
+        {
+          "path": "components/un-logos.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "lib/un-links.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "assets/un-emblem-colour.svg",
+          "type": "registry:file",
+          "target": "~/src/assets/un-emblem-colour.svg"
+        },
+        {
+          "path": "assets/un-logo-ar-reverse.svg",
+          "type": "registry:file",
+          "target": "~/src/assets/un-logo-ar-reverse.svg"
+        },
+        {
+          "path": "assets/un-logo-en-reverse.svg",
+          "type": "registry:file",
+          "target": "~/src/assets/un-logo-en-reverse.svg"
+        },
+        {
+          "path": "assets/un-logo-es-reverse.svg",
+          "type": "registry:file",
+          "target": "~/src/assets/un-logo-es-reverse.svg"
+        },
+        {
+          "path": "assets/un-logo-fr-reverse.svg",
+          "type": "registry:file",
+          "target": "~/src/assets/un-logo-fr-reverse.svg"
+        },
+        {
+          "path": "assets/un-logo-ru-reverse.svg",
+          "type": "registry:file",
+          "target": "~/src/assets/un-logo-ru-reverse.svg"
+        },
+        {
+          "path": "assets/un-logo-zh-reverse.svg",
+          "type": "registry:file",
+          "target": "~/src/assets/un-logo-zh-reverse.svg"
+        }
+      ]
+    },
+    {
       "name": "social-icons",
       "type": "registry:component",
       "title": "Social icons",
@@ -204,7 +220,7 @@
       "name": "site-header",
       "type": "registry:component",
       "title": "Site header",
-      "description": "UN emblem + wordmark lockup, responsive nav and a right-hand slot. All copy via props. Needs `brand-assets`.",
+      "description": "UN emblem + wordmark lockup, responsive nav and a right-hand slot. All copy via props.",
       "dependencies": [
         "@radix-ui/react-dropdown-menu",
         "lucide-react"
@@ -213,6 +229,19 @@
         {
           "path": "components/site-header.tsx",
           "type": "registry:component"
+        },
+        {
+          "path": "components/un-logos.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "lib/un-links.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "assets/un-emblem-colour.svg",
+          "type": "registry:file",
+          "target": "~/src/assets/un-emblem-colour.svg"
         }
       ]
     },
@@ -220,10 +249,14 @@
       "name": "site-footer",
       "type": "registry:component",
       "title": "Site footer",
-      "description": "Pixel replica of the official www.un.org footer, per-locale. Needs `brand-assets`.",
+      "description": "Pixel replica of the official www.un.org footer, per-locale, with bundled package wordmark assets.",
       "files": [
         {
           "path": "components/site-footer.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "components/un-logos.tsx",
           "type": "registry:component"
         },
         {
@@ -237,6 +270,36 @@
         {
           "path": "lib/un-links.ts",
           "type": "registry:lib"
+        },
+        {
+          "path": "assets/un-logo-ar-reverse.svg",
+          "type": "registry:file",
+          "target": "~/src/assets/un-logo-ar-reverse.svg"
+        },
+        {
+          "path": "assets/un-logo-en-reverse.svg",
+          "type": "registry:file",
+          "target": "~/src/assets/un-logo-en-reverse.svg"
+        },
+        {
+          "path": "assets/un-logo-es-reverse.svg",
+          "type": "registry:file",
+          "target": "~/src/assets/un-logo-es-reverse.svg"
+        },
+        {
+          "path": "assets/un-logo-fr-reverse.svg",
+          "type": "registry:file",
+          "target": "~/src/assets/un-logo-fr-reverse.svg"
+        },
+        {
+          "path": "assets/un-logo-ru-reverse.svg",
+          "type": "registry:file",
+          "target": "~/src/assets/un-logo-ru-reverse.svg"
+        },
+        {
+          "path": "assets/un-logo-zh-reverse.svg",
+          "type": "registry:file",
+          "target": "~/src/assets/un-logo-zh-reverse.svg"
         }
       ]
     },
@@ -249,6 +312,11 @@
         {
           "path": "components/animated-corner-logo.tsx",
           "type": "registry:component"
+        },
+        {
+          "path": "public/images/un-two-zero-corner.svg",
+          "type": "registry:file",
+          "target": "~/public/images/un-two-zero-corner.svg"
         }
       ]
     },
@@ -256,7 +324,7 @@
       "name": "concepts",
       "type": "registry:component",
       "title": "Domain concepts",
-      "description": "EntityRef, DocumentSymbol, BudgetFigure and Count \u2014 the layer above the primitives.",
+      "description": "EntityRef, DocumentSymbol, BudgetFigure and Count — the layer above the primitives.",
       "files": [
         {
           "path": "components/concepts.tsx",

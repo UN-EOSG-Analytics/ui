@@ -1,8 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { SiteFooter, type FooterLabels } from "../components/site-footer";
 
-const logoBasePath = `${import.meta.env.BASE_URL}images`.replace("//images", "/images");
-
 const en: FooterLabels = {
   home: "United Nations — un.org",
   donate: "Donate",
@@ -60,7 +58,7 @@ const meta = {
       },
     },
   },
-  args: { labels: en, logoBasePath },
+  args: { labels: en },
 } satisfies Meta<typeof SiteFooter>;
 
 export default meta;

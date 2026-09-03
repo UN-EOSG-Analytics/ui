@@ -4,6 +4,7 @@ import * as React from "react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { Menu } from "lucide-react";
 import { cn } from "../lib/utils";
+import { UN_EMBLEM_SRC, UnEmblem } from "./un-logos";
 
 export interface NavItem {
   href: string;
@@ -65,16 +66,14 @@ export interface SiteHeaderProps {
   /** Container width/padding, matched to the app's <main> column. */
   containerClassName?: string;
   /**
-   * Where the emblem SVG lives. Defaults to the root-absolute path a Next app
-   * serves from `public/`. Override when the app is served from a subpath —
-   * a GitHub project Pages site, for instance — where a root-absolute asset
-   * would 404.
+   * Optional emblem override for exceptional hosts. The default is bundled,
+   * so ordinary consumers do not need to serve a local emblem asset.
    */
   emblemSrc?: string;
 }
 
-/** The path a Next app serves the emblem from by default. */
-export const DEFAULT_EMBLEM_SRC = "/images/un-emblem-colour.svg";
+/** Official UN emblem bundled as a package asset. */
+export const DEFAULT_EMBLEM_SRC = UN_EMBLEM_SRC;
 
 /**
  * The UN emblem.
@@ -87,14 +86,12 @@ export const DEFAULT_EMBLEM_SRC = "/images/un-emblem-colour.svg";
  * A plain <img> rather than next/image: it is a fixed-size SVG, so there is no
  * optimisation to gain, and it keeps the package usable outside Next.
  */
-function Emblem({ className, src }: { className?: string; src: string }) {
+function Emblem({ className, src }: { className?: string; src?: string }) {
   return (
-    <img
+    <UnEmblem
       src={src}
-      alt=""
       width={152}
       height={127}
-      draggable={false}
       className={cn("h-10 w-emblem-w shrink-0 select-none", className)}
     />
   );

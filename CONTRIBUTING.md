@@ -119,7 +119,7 @@ into a real app (`focal-points`). Worth repeating the exercise for each new item
 | Bare `registryDependencies` | `add site-footer` looked for `external-link` on **ui.shadcn.com** and failed | Items are self-contained — each ships every file it needs |
 | `lib/utils.ts` shipped by every item | Interactive "overwrite?" prompt, defeating `--yes`, risking a clobbered `cn` | Dropped — every shadcn app already has it |
 | `un-links.ts` in `components/`, typed `registry:lib` | Installed to `src/lib/`, imported from `src/components/` — broken module | Moved to `lib/`, import updated |
-| Assets not shipped | Components pointed at SVGs the app didn't have | `brand-assets` registry item |
+| Assets not shipped | Corner component pointed at an SVG the app didn't have | `brand-assets` registry item; header emblem and footer wordmarks resolve package assets |
 | Asset `target` without `~/` | Landed in `src/public/images` — Next serves `public/` at the root, so all 404 | `~/` prefixes the project root |
 
 The lesson generalises: **a registry item is not done when it validates, it is

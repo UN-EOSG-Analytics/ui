@@ -7,9 +7,11 @@
   "exports": {
     "./theme.css": "./tokens/theme.css",
     "./typography": "./lib/typography.ts",
-    "./components/*": "./components/*.tsx"
+    "./components/*": "./components/*.tsx",
+    "./assets/*": "./assets/*"
   },
   "files": [
+    "assets",
     "tokens",
     "lib",
     "components",
