@@ -6,6 +6,15 @@ import { Menu } from "lucide-react";
 import { cn } from "../lib/utils";
 import { UN_EMBLEM_SRC, UnEmblem } from "./un-logos";
 
+export type HeaderTransparency = "none" | "low" | "high";
+
+const siteHeaderTransparencyClasses: Record<HeaderTransparency, string> = {
+  none: "bg-background",
+  low: "bg-background/95 backdrop-blur-sm",
+  high:
+    "bg-background/95 backdrop-blur-sm supports-backdrop-filter:bg-background/60",
+};
+
 export interface NavItem {
   href: string;
   /** Already-translated label. Never hardcode copy inside this component. */
@@ -65,6 +74,8 @@ export interface SiteHeaderProps {
   className?: string;
   /** Container width/padding, matched to the app's <main> column. */
   containerClassName?: string;
+  /** Background transparency. Defaults to the original treatment. */
+  transparency?: HeaderTransparency;
   /**
    * Optional emblem override for exceptional hosts. The default is bundled,
    * so ordinary consumers do not need to serve a local emblem asset.
@@ -121,6 +132,7 @@ export function SiteHeader({
   children,
   className,
   containerClassName = "max-w-4xl px-8 sm:px-12 lg:max-w-6xl lg:px-16",
+  transparency = "high",
   emblemSrc = DEFAULT_EMBLEM_SRC,
 }: SiteHeaderProps) {
   const outboard = emblemPlacement === "outboard";
@@ -128,7 +140,8 @@ export function SiteHeader({
   return (
     <header
       className={cn(
-        "sticky top-0 z-40 w-full border-b border-border bg-background/95 py-3 backdrop-blur-sm supports-backdrop-filter:bg-background/60",
+        "sticky top-0 z-40 w-full border-b border-border py-3",
+        siteHeaderTransparencyClasses[transparency],
         className,
       )}
     >
@@ -168,7 +181,7 @@ export function SiteHeader({
               <span className="font-light">{descriptor}</span>
             </span>
             {badge && (
-              <span className="rounded-md bg-un-blue/10 px-1.5 py-0.5 text-micro leading-none font-semibold whitespace-nowrap text-un-blue-text md:px-2 md:py-1 md:text-xs">
+              <span className="rounded-md bg-un-blue/10 px-1.5 py-0.5 text-micro leading-none font-semibold whitespace-nowrap text-un-blue md:px-2 md:py-1 md:text-xs">
                 {badge}
               </span>
             )}
@@ -186,10 +199,10 @@ export function SiteHeader({
                     href={itemHref}
                     aria-current={active ? "page" : undefined}
                     className={cn(
-                      "inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                      "inline-flex items-center gap-2 rounded-md px-3 py-1.5 text-sm whitespace-nowrap transition-colors",
                       active
-                        ? "bg-un-blue/10 text-un-blue-text"
-                        : "text-foreground hover:bg-un-blue/10 hover:text-un-blue-text",
+                        ? "bg-un-blue/10 font-medium text-un-blue"
+                        : "text-foreground/80 hover:bg-muted hover:text-foreground",
                     )}
                   >
                     {Icon && <Icon className="size-4" />}

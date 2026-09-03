@@ -7,7 +7,7 @@ const src = `${import.meta.env.BASE_URL}images/un-two-zero-corner.svg`.replace(
 );
 
 const meta = {
-  title: "UI Elements/AnimatedCornerLogo",
+  title: "Page Structure/AnimatedCornerLogo",
   component: AnimatedCornerLogo,
   parameters: {
     layout: "fullscreen",

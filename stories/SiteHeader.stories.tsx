@@ -3,7 +3,7 @@ import { Globe, Landmark } from "lucide-react";
 import { SiteHeader } from "../components/site-header";
 
 const meta = {
-  title: "UI Elements/SiteHeader",
+  title: "Page Structure/SiteHeader",
   component: SiteHeader,
   parameters: {
     layout: "fullscreen",

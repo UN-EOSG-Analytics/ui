@@ -13,12 +13,14 @@ const preview: Preview = {
           // Relational: a domain thing mapped to a visual.
           "Concepts",
           ["Overview", "PointMeter"],
+          // Shared page chrome and structural furniture.
+          "Page Structure",
+          ["SiteHeader", "SecondaryHeader", "DetailPanel", "SiteFooter", "AnimatedCornerLogo"],
           // The UI kit itself.
           "UI Elements",
           [
             "Button", "Chip", "StatTile", "DataTable", "Filtering & Search",
-            "Modal", "DetailPanel", "SignInCard",
-            "SiteHeader", "SiteFooter", "AnimatedCornerLogo",
+            "Modal", "SignInCard",
           ],
         ],
       },

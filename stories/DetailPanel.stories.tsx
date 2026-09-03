@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import * as React from "react";
-import { Maximize2, X } from "lucide-react";
+import { Maximize2, Share2, X } from "lucide-react";
 import { DetailPanel, DetailHeader, DetailSection } from "../components/detail-panel";
+import { DetailPanelControls } from "../components/detail-panel-controls";
 import { Chip } from "../components/chip";
 import { DocumentSymbol, EntityRef } from "../components/concepts";
 import { typography } from "../lib/typography";
 import { cn } from "../lib/utils";
 
 const meta = {
-  title: "UI Elements/DetailPanel",
+  title: "Page Structure/DetailPanel",
   parameters: {
     layout: "fullscreen",
     docs: {
@@ -25,16 +25,6 @@ type Story = StoryObj;
 
 const ENTITIES = ["DESA","DGC","DOS","DPO","DPPA","ECA","ECE","ECLAC","ESCAP","ESCWA","ITC","OCHA"];
 const SUBJECTS = ["Artificial Intelligence","Declarations (Text)","Development Finance","Digital Divide","Digital Technology","Governance","International Cooperation","International Security","Multilateralism","Organizational Reform","Sustainable Development","Youth"];
-
-const Ctrl = ({ children, label }: { children: React.ReactNode; label: string }) => (
-  <button
-    type="button"
-    aria-label={label}
-    className="flex size-9 items-center justify-center rounded-sm text-foreground opacity-70 transition-opacity hover:bg-secondary hover:opacity-100 focus-visible:ring-focus-ring focus-visible:ring-un-blue/50 focus-visible:outline-none"
-  >
-    {children}
-  </button>
-);
 
 /** The panel content — identical wording in both columns below. */
 function Body() {
@@ -100,10 +90,23 @@ export const Restyled: Story = {
         eyebrow="Mandate document"
         title="The Pact for the Future"
         controls={
-          <>
-            <Ctrl label="Open full page"><Maximize2 className="size-4" /></Ctrl>
-            <Ctrl label="Close"><X className="size-4" /></Ctrl>
-          </>
+          <DetailPanelControls
+            share={{
+              label: "Share",
+              onClick: () => {},
+              icon: <Share2 className="size-4" />,
+            }}
+            expand={{
+              label: "Open full page",
+              onClick: () => {},
+              icon: <Maximize2 className="size-4" />,
+            }}
+            close={{
+              label: "Close",
+              onClick: () => {},
+              icon: <X className="size-4" />,
+            }}
+          />
         }
       >
         <Body />
