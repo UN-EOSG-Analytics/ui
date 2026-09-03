@@ -204,8 +204,9 @@
       "name": "site-header",
       "type": "registry:component",
       "title": "Site header",
-      "description": "UN emblem + wordmark lockup, nav and a right-hand slot. All copy via props. Needs `brand-assets`.",
+      "description": "UN emblem + wordmark lockup, responsive nav and a right-hand slot. All copy via props. Needs `brand-assets`.",
       "dependencies": [
+        "@radix-ui/react-dropdown-menu",
         "lucide-react"
       ],
       "files": [

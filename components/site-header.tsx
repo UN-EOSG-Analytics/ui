@@ -1,4 +1,8 @@
+"use client";
+
 import * as React from "react";
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import { Menu } from "lucide-react";
 import { cn } from "../lib/utils";
 
 export interface NavItem {
@@ -36,6 +40,13 @@ export interface SiteHeaderProps {
    * routing, where the pathname does not match the href directly.
    */
   activeHref?: string;
+  /** Accessible name for the built-in mobile-menu trigger. Translate it. */
+  mobileMenuLabel?: string;
+  /**
+   * Disable when supplying custom mobile navigation through `children`.
+   * Defaults to true whenever `navItems` are present.
+   */
+  showMobileMenu?: boolean;
   /**
    * `outboard` tucks the emblem into the page margin on wide viewports, so the
    * wordmark aligns with the main column. `inline` keeps it beside the
@@ -106,6 +117,8 @@ export function SiteHeader({
   homeLabel,
   navItems = [],
   activeHref,
+  mobileMenuLabel = "Open navigation menu",
+  showMobileMenu = true,
   emblemPlacement = "inline",
   outboardOffset = "56.74px",
   children,
@@ -148,10 +161,10 @@ export function SiteHeader({
           className="inline-flex items-center gap-emblem-gap transition-opacity hover:opacity-75"
         >
           <Emblem src={emblemSrc} className={outboard ? "min-[1408px]:hidden" : undefined} />
-          {/* Mobile stacks wordmark over badge so the title can shrink without
-              competing with the right-hand slot for row width. */}
+          {/* Mobile stacks wordmark over badge to preserve room beside the
+              right-hand slot. */}
           <span className="flex flex-col items-start gap-1 md:flex-row md:items-center md:gap-2.5">
-            <span className="text-lg leading-none tracking-tight text-foreground md:text-wordmark">
+            <span className="text-wordmark leading-none tracking-tight text-foreground">
               {/* Both halves are real text so the baseline lines up exactly;
                   same size, only the weight differs. */}
               <span className="hidden font-bold md:inline">{brand} </span>
@@ -179,7 +192,7 @@ export function SiteHeader({
                       "inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors",
                       active
                         ? "bg-un-blue/10 text-un-blue-text"
-                        : "text-muted-foreground hover:bg-un-blue/10 hover:text-un-blue-text",
+                        : "text-foreground hover:bg-un-blue/10 hover:text-un-blue-text",
                     )}
                   >
                     {Icon && <Icon className="size-4" />}
@@ -188,6 +201,54 @@ export function SiteHeader({
                 );
               })}
             </nav>
+          )}
+          {showMobileMenu && navItems.length > 0 && (
+            <DropdownMenu.Root modal={false}>
+              <DropdownMenu.Trigger asChild>
+                <button
+                  type="button"
+                  aria-label={mobileMenuLabel}
+                  className="inline-flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-md text-foreground/80 transition-colors hover:text-foreground focus-visible:ring-focus-ring focus-visible:ring-un-blue/50 focus-visible:outline-none lg:hidden"
+                >
+                  <Menu aria-hidden className="size-6" />
+                </button>
+              </DropdownMenu.Trigger>
+              <DropdownMenu.Portal>
+                <DropdownMenu.Content
+                  align="end"
+                  sideOffset={4}
+                  className="z-50 min-w-48 overflow-hidden rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95"
+                >
+                  {navItems.map(({ href: itemHref, label, icon: Icon }) => {
+                    const active = activeHref === itemHref;
+                    return (
+                      <DropdownMenu.Item
+                        key={itemHref}
+                        asChild={!active}
+                        aria-current={active ? "page" : undefined}
+                        className={cn(
+                          "relative flex cursor-default items-center rounded-sm px-2 py-1.5 text-sm text-foreground outline-none select-none focus:bg-accent focus:text-accent-foreground",
+                          active &&
+                            "bg-un-blue/10 font-medium text-un-blue-text focus:bg-un-blue/10 focus:text-un-blue-text",
+                        )}
+                      >
+                        {active ? (
+                          <span className="flex items-center gap-2">
+                            {Icon && <Icon aria-hidden className="size-4" />}
+                            {label}
+                          </span>
+                        ) : (
+                          <a href={itemHref} className="flex items-center gap-2">
+                            {Icon && <Icon aria-hidden className="size-4" />}
+                            {label}
+                          </a>
+                        )}
+                      </DropdownMenu.Item>
+                    );
+                  })}
+                </DropdownMenu.Content>
+              </DropdownMenu.Portal>
+            </DropdownMenu.Root>
           )}
           {children}
         </div>

@@ -46,6 +46,19 @@ export const Default: Story = {
   args: { navItems: nav, activeHref: "#secretariat" },
 };
 
+/** The right-hand slot remains available beside the built-in navigation. */
+export const WithAction: Story = {
+  args: {
+    navItems: nav,
+    activeHref: "#secretariat",
+    children: (
+      <a className="text-sm font-medium text-un-blue-text hover:underline" href="#sign-in">
+        Sign in
+      </a>
+    ),
+  },
+};
+
 /** With a status pill. transcripts ships this as "Public Preview". */
 export const WithBadge: Story = {
   args: { navItems: nav, activeHref: "#secretariat", badge: "Public Preview" },
@@ -62,6 +75,7 @@ export const French: Story = {
     descriptor: "Registre des mandats",
     badge: "Aperçu public",
     homeLabel: "Registre des mandats — accueil",
+    mobileMenuLabel: "Ouvrir le menu de navigation",
     navItems: [
       { href: "#secretariat", label: "Mandats du Secrétariat", icon: Landmark },
       { href: "#system", label: "Mandats du système", icon: Globe },
@@ -79,6 +93,7 @@ export const Arabic: Story = {
     brand: "الأمم المتحدة",
     descriptor: "سجل الولايات",
     homeLabel: "سجل الولايات — الصفحة الرئيسية",
+    mobileMenuLabel: "فتح قائمة التنقل",
     navItems: [
       { href: "#secretariat", label: "ولايات الأمانة العامة", icon: Landmark },
       { href: "#system", label: "ولايات المنظومة", icon: Globe },
