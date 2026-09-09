@@ -19,9 +19,12 @@ const preview: Preview = {
           // The UI kit itself.
           "UI Elements",
           [
-            "Button", "Chip", "StatTile", "DataTable", "Filtering & Search",
+            "Button", "Chip", "StatTile", "DataTable", "GroupedTreemap", "Filtering & Search",
             "Modal", "SignInCard",
           ],
+          // Product-specific catalogues follow the shared design system.
+          "open.un.org",
+          ["Tokens", ["Funding sources", "System categories"]],
         ],
       },
     },

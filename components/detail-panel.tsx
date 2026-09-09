@@ -198,6 +198,7 @@ export function DetailFields({
  */
 export function DetailPanel({
   title,
+  titleId,
   eyebrow,
   controls,
   children,
@@ -205,6 +206,8 @@ export function DetailPanel({
 }: {
   /** The record's name. VISIBLE, and it stays visible while the body scrolls. */
   title: React.ReactNode;
+  /** ID for the visible title, so the product's outer dialog can reference it. */
+  titleId?: string;
   eyebrow?: string;
   /** Close, expand — anything acting on the panel itself. */
   controls?: React.ReactNode;
@@ -221,7 +224,7 @@ export function DetailPanel({
           )}
           {/* Truncates rather than wrapping: the header is a fixed anchor, so
               a long title must not change its height as you scroll. */}
-          <h2 className={cn(typography.subTitle, "truncate")}>{title}</h2>
+          <h2 id={titleId} className={cn(typography.subTitle, "truncate")}>{title}</h2>
         </div>
         {/* pe-1 leaves room for a focus ring. Flush against the edge, a 2px
             ring with a 2px offset is clipped by the panel boundary. */}
