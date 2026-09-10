@@ -38,9 +38,13 @@ export interface GroupedTreemapLeaf<TLeaf = unknown, TSegment = unknown> {
   key: string;
   label: string;
   value: number;
+  /** Optional area weight; displayed values remain the published value. */
+  layoutValue?: number;
   color?: string;
   /** CSS text colour for pale or otherwise exceptional fills; defaults to white. */
   textColor?: string;
+  /** Optional inset outline for leaves with pale fills. */
+  borderColor?: string;
   /** Localized context appended only to the assistive leaf description. */
   accessibleDescription?: string;
   data?: TLeaf;
@@ -59,6 +63,9 @@ export interface GroupedTreemapSubgroup<TSubgroup = unknown, TLeaf = unknown, TS
 export interface GroupedTreemapRow<TRow = unknown, TSubgroup = unknown, TLeaf = unknown, TSegment = unknown> {
   key: string;
   label: string;
+  labelColor?: string;
+  /** Published group total when it differs from the sum of displayed leaves. */
+  value?: number;
   data?: TRow;
   color?: string;
   subgroups?: readonly GroupedTreemapSubgroup<TSubgroup, TLeaf, TSegment>[];
@@ -117,6 +124,8 @@ export interface GroupedTreemapProps<TRow = unknown, TSubgroup = unknown, TLeaf 
   search?: GroupedTreemapSearch;
   /** Optional compact control rendered beside search in the plot toolbar. */
   searchAccessory?: React.ReactNode;
+  /** Extra label space above each row; use with input order and no consolidation. */
+  rowLabelSpace?: number;
   summaries?: readonly GroupedTreemapSummary[];
   /** Label for the automatically derived total used when summaries are absent. */
   totalLabel: React.ReactNode;
@@ -223,7 +232,7 @@ function Tooltip({ children, target }: { children: React.ReactNode; target: DOMR
       role="tooltip"
       className={cn(
         typography.caption,
-        "pointer-events-none fixed z-50 max-w-72 rounded-md bg-foreground px-3 py-2 text-background shadow-lg",
+        "pointer-events-none fixed z-50 max-w-72 rounded-md border border-border bg-un-white px-3 py-2 text-un-black shadow-lg",
       )}
       style={{
         left,
@@ -271,6 +280,7 @@ export function GroupedTreemap<TRow = unknown, TSubgroup = unknown, TLeaf = unkn
   plotStyle,
   search,
   searchAccessory,
+  rowLabelSpace = 0,
   summaries,
   totalLabel,
   sources,
@@ -306,20 +316,38 @@ export function GroupedTreemap<TRow = unknown, TSubgroup = unknown, TLeaf = unkn
       layoutLeafKey(row.key, subgroup.key, leaf.key),
       { row, subgroup, leaf },
     ] as const)))), [normalized]);
-  const geometry = React.useMemo(() => layoutGroupedTreemap(
+  const geometry = React.useMemo(() => {
+    const labelSpace = Math.max(0, rowLabelSpace);
+    const rows = layoutGroupedTreemap(
     normalized.map((row) => ({
       key: row.key,
       subgroups: row.subgroups.map((subgroup) => ({
         key: subgroup.key,
         leaves: subgroup.leaves.map((leaf) => ({
           key: layoutLeafKey(row.key, subgroup.key, leaf.key),
-          value: leaf.value,
+          value: leaf.layoutValue ?? leaf.value,
         })),
       })),
     })),
-    { x: 0, y: 0, width: size.width, height: size.height },
+    { x: 0, y: 0, width: size.width, height: Math.max(0, size.height - labelSpace * normalized.length) },
     layout,
-  ), [layout, normalized, size.height, size.width]);
+    );
+    return rows.map((row, index) => {
+      const offset = labelSpace * (index + 1);
+      return {
+        ...row,
+        rect: { ...row.rect, y: row.rect.y + labelSpace * index },
+        subgroups: row.subgroups.map((subgroup) => ({
+          ...subgroup,
+          rect: { ...subgroup.rect, y: subgroup.rect.y + offset },
+          leaves: subgroup.leaves.map((leaf) => ({
+            ...leaf,
+            rect: { ...leaf.rect, y: leaf.rect.y + offset },
+          })),
+        })),
+      };
+    });
+  }, [layout, normalized, rowLabelSpace, size.height, size.width]);
 
   const showTooltip = React.useCallback((
     event: React.MouseEvent<HTMLElement> | React.FocusEvent<HTMLElement> | React.PointerEvent<HTMLElement>,
@@ -370,7 +398,7 @@ export function GroupedTreemap<TRow = unknown, TSubgroup = unknown, TLeaf = unkn
       <div
         ref={containerRef}
         className={cn(
-          "relative h-[var(--grouped-treemap-height)] w-full overflow-hidden bg-gray-100",
+          "relative h-[var(--grouped-treemap-height)] w-full overflow-hidden bg-un-white",
           plotClassName,
         )}
         style={{
@@ -388,14 +416,15 @@ export function GroupedTreemap<TRow = unknown, TSubgroup = unknown, TLeaf = unkn
               className="contents"
             >
               <div
-                className="pointer-events-none absolute start-0 top-0 z-20 max-w-[60%] truncate bg-white/90 px-1.5 py-1 text-[10px] font-bold shadow-sm sm:text-xs"
+                className={cn("pointer-events-none absolute start-0 top-0 z-20 bg-white/90 px-1.5 py-1 text-[10px] font-bold sm:text-xs", rowLabelSpace > 0 ? "flex w-full items-center" : "max-w-[60%] truncate shadow-sm")}
                 style={{
                   insetInlineStart: rowLayout.rect.x,
                   top: rowLayout.rect.y,
-                  color: row.color ?? "var(--color-un-blue)",
+                  minHeight: rowLabelSpace || undefined,
+                  color: row.labelColor ?? row.color ?? "var(--color-un-blue)",
                 }}
               >
-                {row.label}
+                {row.label} <span className="font-normal tabular-nums">{formatValue(row.value ?? row.subgroups.reduce((sum, subgroup) => sum + subgroup.leaves.reduce((subtotal, leaf) => subtotal + leaf.value, 0), 0))}</span>
               </div>
               {rowLayout.subgroups.map((subgroupLayout) => {
                 const subgroup = row.subgroups.find((candidate) => candidate.key === subgroupLayout.key);
@@ -417,7 +446,7 @@ export function GroupedTreemap<TRow = unknown, TSubgroup = unknown, TLeaf = unkn
                           color: row.color ?? "var(--color-un-blue)",
                         }}
                       >
-                        {subgroup.label}
+                        {subgroup.label} <span className="font-normal tabular-nums">{formatValue(subgroup.leaves.reduce((sum, leaf) => sum + leaf.value, 0))}</span>
                       </div>
                     )}
                     {subgroupLayout.leaves.map((leafLayout) => {
@@ -447,9 +476,19 @@ export function GroupedTreemap<TRow = unknown, TSubgroup = unknown, TLeaf = unkn
                       const descriptionId = `${componentId}-${encodeURIComponent(row.key)}-${encodeURIComponent(subgroup.key)}-${encodeURIComponent(leaf.key)}`;
                       const canShowLabel = leafLayout.rect.width > (leafLabelMinWidth ?? size.width * 0.04)
                         && leafLayout.rect.height > (leafLabelMinHeight ?? size.height * 0.03);
-                      const canShowValue = showLeafValues
-                        && leafLayout.rect.width > (leafValueMinWidth ?? size.width * 0.08)
-                        && leafLayout.rect.height > (leafValueMinHeight ?? size.height * 0.06);
+                      // A short row's heading overlays its leading tile. Reserve
+                      // one bottom-aligned line for that tile's name and value.
+                      // 72px accommodates the heading, two text lines and padding.
+                      const compactLeadingLabel = rowLayout.rect.height < 72
+                        && Math.abs(leafLayout.rect.x - rowLayout.rect.x) < 1
+                        && Math.abs(leafLayout.rect.y - rowLayout.rect.y) < 1;
+                      // Once the name fits, a value needs another line, not twice
+                      // the tile width. Allow truncation on narrow tiles, and use
+                      // the desktop text footprint: 15px per line + 16px padding.
+                      const valueLabelHeight = (compactLeadingLabel ? 1 : 2) * 15 + 16;
+                      const canShowValue = showLeafValues && canShowLabel
+                        && leafLayout.rect.width > (leafValueMinWidth ?? 0)
+                        && leafLayout.rect.height >= (leafValueMinHeight ?? valueLabelHeight);
                       return (
                         <Element
                           key={leafLayout.key}
@@ -469,7 +508,7 @@ export function GroupedTreemap<TRow = unknown, TSubgroup = unknown, TLeaf = unkn
                             "group absolute isolate overflow-hidden p-0 text-start text-white",
                             "motion-safe:transition-[filter] motion-safe:duration-150",
                             "focus-visible:z-20 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-inset focus-visible:outline-none",
-                            leaf.onActivate && "hover:z-10 hover:brightness-90",
+                            leaf.onActivate && "hover:brightness-90",
                           )}
                           style={{
                             ...rectStyle(leafLayout.rect),
@@ -478,12 +517,12 @@ export function GroupedTreemap<TRow = unknown, TSubgroup = unknown, TLeaf = unkn
                           }}
                         >
                           {segmentDenominator > 0 && (
-                            <span aria-hidden className="absolute inset-0 flex">
+                            <span aria-hidden className="absolute inset-0 flex flex-col">
                               {visibleSegments.map((segment) => (
                                 <span
                                   key={segment.key}
                                   className="shrink-0"
-                                  style={{ width: `${segment.value / segmentDenominator * 100}%`, backgroundColor: segment.color }}
+                                  style={{ height: `${segment.value / segmentDenominator * 100}%`, backgroundColor: segment.color }}
                                 />
                               ))}
                             </span>
@@ -491,16 +530,21 @@ export function GroupedTreemap<TRow = unknown, TSubgroup = unknown, TLeaf = unkn
                           <span
                             aria-hidden="true"
                             className="pointer-events-none absolute inset-0 z-[1] shadow-[inset_0_0_0_0.5px_rgba(255,255,255,0.8)]"
+                            style={leaf.borderColor ? { boxShadow: `inset 0 0 0 1px ${leaf.borderColor}` } : undefined}
                           />
                           {canShowLabel && (
                             <span
                               aria-hidden="true"
                               className="pointer-events-none relative z-[2] flex h-full items-end overflow-hidden p-1.5 text-[10px] leading-tight drop-shadow-sm sm:p-2 sm:text-xs"
                             >
-                              <span className="block min-w-0">
-                                <span className="block truncate font-semibold">{leaf.label}</span>
+                              <span
+                                className={cn("min-w-0", compactLeadingLabel ? "flex items-baseline gap-1" : "block")}
+                              >
+                                <span className="block min-w-0 truncate font-semibold">{leaf.label}</span>
                                 {canShowValue ? (
-                                  <span className="block truncate tabular-nums">{formatValue(leaf.value)}</span>
+                                  <span className={cn("block tabular-nums", compactLeadingLabel ? "shrink-0" : "truncate")}>
+                                    {formatValue(leaf.value)}
+                                  </span>
                                 ) : null}
                               </span>
                             </span>

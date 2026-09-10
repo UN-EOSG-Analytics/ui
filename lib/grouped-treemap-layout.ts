@@ -23,6 +23,8 @@ export interface TreemapLayoutRow {
 export interface GroupedTreemapLayoutOptions {
   /** Sort rows by value (default), or preserve the caller's semantic order. */
   rowOrder?: "value-desc" | "input";
+  /** Pack consecutive input rows into bands, minimizing skinny rectangles. */
+  orderedBands?: boolean;
   /** Secretariat Overview preserves semantic subgroup order by default. */
   subgroupOrder?: "value-desc" | "input";
   /** Pixel override. The canonical default is 0.4% of plot height. */
@@ -57,6 +59,7 @@ export interface GroupedTreemapRowLayout {
 
 const DEFAULT_OPTIONS: Required<GroupedTreemapLayoutOptions> = {
   rowOrder: "value-desc",
+  orderedBands: false,
   subgroupOrder: "input",
   rowGap: 0,
   subgroupGap: 0,
@@ -262,6 +265,7 @@ export function layoutGroupedTreemap(
 ): GroupedTreemapRowLayout[] {
   const settings: Required<GroupedTreemapLayoutOptions> = {
     rowOrder: options.rowOrder === "input" ? "input" : DEFAULT_OPTIONS.rowOrder,
+    orderedBands: options.orderedBands ?? false,
     subgroupOrder: options.subgroupOrder === "value-desc" ? "value-desc" : DEFAULT_OPTIONS.subgroupOrder,
     rowGap: finiteNonNegativeOption(options.rowGap, DEFAULT_OPTIONS.rowGap),
     subgroupGap: finiteNonNegativeOption(options.subgroupGap, DEFAULT_OPTIONS.subgroupGap),
@@ -312,7 +316,52 @@ export function layoutGroupedTreemap(
   let y = virtualBounds.y;
   const rowRects: Array<(typeof orderedRows)[number] & { rect: TreemapRect }> = [];
 
-  if (settings.rowOrder === "value-desc" && settings.consolidateSmallRows) {
+  if (settings.rowOrder === "input" && settings.orderedBands) {
+    // Dynamic programming chooses contiguous bands using on-screen aspect ratios.
+    const count = orderedRows.length;
+    const costs = Array<number>(count + 1).fill(Infinity);
+    const breaks = Array<number>(count).fill(count);
+    costs[count] = 0;
+    for (let start = count - 1; start >= 0; start--) {
+      let bandValue = 0;
+      for (let end = start; end < count; end++) {
+        bandValue += orderedRows[end].value;
+        const bandHeight = bandValue / total * safeBounds.height;
+        let cost = costs[end + 1];
+        for (let index = start; index <= end; index++) {
+          const width = orderedRows[index].value / bandValue * safeBounds.width;
+          cost += Math.log(width / bandHeight) ** 2;
+        }
+        if (cost < costs[start]) {
+          costs[start] = cost;
+          breaks[start] = end + 1;
+        }
+      }
+    }
+    const gapX = rowGap * safeBounds.height / safeBounds.width;
+    for (let start = 0; start < count;) {
+      const end = breaks[start];
+      const band = orderedRows.slice(start, end);
+      const bandValue = band.reduce((sum, row) => sum + row.value, 0);
+      const bandHeight = bandValue / total * 100;
+      let x = 0;
+      band.forEach((row, index) => {
+        const width = row.value / bandValue * 100;
+        const leftInset = index > 0 ? gapX / 2 : 0;
+        const rightInset = index < band.length - 1 ? gapX / 2 : 0;
+        const topInset = start > 0 ? rowGap / 2 : 0;
+        const bottomInset = end < count ? rowGap / 2 : 0;
+        rowRects.push({ ...row, rect: cleanRect({
+          x: x + leftInset, y: y + topInset,
+          width: Math.max(0, width - leftInset - rightInset),
+          height: Math.max(0, bandHeight - topInset - bottomInset),
+        }) });
+        x += width;
+      });
+      y += bandHeight;
+      start = end;
+    }
+  } else if (settings.rowOrder === "value-desc" && settings.consolidateSmallRows) {
     const regularRows = orderedRows.filter((row) => nominalHeight(row) >= smallRowThreshold);
     const smallRows = orderedRows.filter((row) => nominalHeight(row) < smallRowThreshold);
     regularRows.slice(0, -1).forEach((row) => {

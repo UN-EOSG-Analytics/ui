@@ -24,7 +24,7 @@ const preview: Preview = {
           ],
           // Product-specific catalogues follow the shared design system.
           "open.un.org",
-          ["Tokens", ["Funding sources", "System categories"]],
+          ["Tokens", ["Funding sources"]],
         ],
       },
     },

@@ -154,21 +154,6 @@
   --color-open-funding-other: var(--color-un-blue-tint);
 
   /* ===============================================================
-     OPEN.UN.ORG — UN SYSTEM ENTITY CATEGORIES
-     ===============================================================
-     Semantic aliases for the organization taxonomy used by open.un.org.
-     Entity categories use the UN accent palette; the separate System Chart
-     palette remains available for UN Principal Organ relationships. */
-  --color-open-system-category-funds-programmes: var(--color-un-green);
-  --color-open-system-category-research-training: var(--color-un-purple);
-  --color-open-system-category-peacekeeping: var(--color-un-blue);
-  --color-open-system-category-secretariat: var(--color-un-blue);
-  --color-open-system-category-regional-commissions: var(--color-syschart-blue);
-  --color-open-system-category-specialized-agencies: var(--color-un-yellow);
-  --color-open-system-category-related-organizations: var(--color-un-orange);
-  --color-open-system-category-other-entities: var(--color-un-red);
-  --color-open-system-category-neutral: var(--color-syschart-gray-dark);
-  /* ===============================================================
      TYPE
      ===============================================================
      Roboto, always. The brand quick guide names it the primary typeface and
