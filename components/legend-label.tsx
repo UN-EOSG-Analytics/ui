@@ -8,6 +8,8 @@ import { typography } from "../lib/typography";
 
 export interface LegendLabelProps {
   color: string;
+  /** Optional patterned swatch, such as a striped CSS gradient. */
+  swatchBackground?: string;
   label: string;
   explanation?: React.ReactNode;
   /** Pills for chart legends/filters; inline labels for sidebar rows. */
@@ -22,6 +24,7 @@ export interface LegendLabelProps {
 
 export function LegendLabel({
   color,
+  swatchBackground,
   label,
   explanation,
   variant = "pill",
@@ -49,7 +52,7 @@ export function LegendLabel({
           variant === "pill" ? "size-2.5" : "size-2",
           onToggle && !selected && "opacity-35",
         )}
-        style={{ backgroundColor: color }}
+        style={{ backgroundColor: color, backgroundImage: swatchBackground }}
       />
       <span
         className={cn(
