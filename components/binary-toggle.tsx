@@ -31,7 +31,7 @@ export function BinaryToggle({
     return (
       <fieldset
         disabled={disabled}
-        className="m-0 inline-flex min-w-0 overflow-hidden rounded-md border border-border bg-secondary p-0"
+        className="m-0 inline-flex min-w-0 overflow-hidden rounded-md border border-border bg-secondary p-0.5"
       >
         <legend className="sr-only">{label}</legend>
         {options.map((option) => (
@@ -47,7 +47,7 @@ export function BinaryToggle({
             <span
               className={cn(
                 typography.caption,
-                "block px-3 py-1 text-foreground peer-checked:bg-un-white peer-checked:font-medium peer-checked:shadow-sm peer-focus-visible:outline-2 peer-focus-visible:-outline-offset-2 peer-focus-visible:outline-un-blue peer-disabled:cursor-not-allowed peer-disabled:opacity-50",
+                "block rounded-sm px-3 py-1 text-muted-foreground peer-checked:bg-un-white peer-checked:text-foreground peer-checked:shadow-sm peer-checked:font-medium peer-focus-visible:outline-2 peer-focus-visible:-outline-offset-2 peer-focus-visible:outline-un-blue peer-disabled:cursor-not-allowed peer-disabled:opacity-50",
               )}
             >
               {option.label}

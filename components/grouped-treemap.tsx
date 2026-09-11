@@ -156,6 +156,8 @@ export interface GroupedTreemapProps<
   searchAccessory?: React.ReactNode;
   yearControl?: React.ReactNode;
   controls?: React.ReactNode;
+  /** Additional controls below the main toolbar. */
+  secondaryControls?: React.ReactNode;
   hideHeader?: boolean;
   footer?: React.ReactNode;
   /** Extra label space above each row; use with input order and no consolidation. */
@@ -356,6 +358,7 @@ export function GroupedTreemap<
   searchAccessory,
   yearControl,
   controls,
+  secondaryControls,
   hideHeader = false,
   footer,
   rowLabelSpace = 0,
@@ -500,32 +503,35 @@ export function GroupedTreemap<
       footer={footer}
       header={
         !hideHeader && (
-          <ChartHeader
-            yearControl={yearControl}
-            controls={
-              <>
-                {controls}
-                {searchAccessory}
-              </>
-            }
-            summaries={displayedSummaries}
-            search={
-              search ? (
-                <SearchInput
-                  variant="border-bottom"
-                  aria-label={search.label}
-                  placeholder={search.placeholder}
-                  value={search.value}
-                  onChange={(event) =>
-                    search.onChange(event.currentTarget.value)
-                  }
-                  showClear
-                  onClear={() => search.onChange("")}
-                  className="w-full sm:w-48"
-                />
-              ) : undefined
-            }
-          />
+          <>
+            <ChartHeader
+              yearControl={yearControl}
+              controls={
+                <>
+                  {controls}
+                  {searchAccessory}
+                </>
+              }
+              summaries={displayedSummaries}
+              search={
+                search ? (
+                  <SearchInput
+                    variant="border-bottom"
+                    aria-label={search.label}
+                    placeholder={search.placeholder}
+                    value={search.value}
+                    onChange={(event) =>
+                      search.onChange(event.currentTarget.value)
+                    }
+                    showClear
+                    onClear={() => search.onChange("")}
+                    className="w-full sm:w-48"
+                  />
+                ) : undefined
+              }
+            />
+            {secondaryControls}
+          </>
         )
       }
     >
@@ -559,7 +565,7 @@ export function GroupedTreemap<
                   {showRowLabels && (
                     <div
                       className={cn(
-                        "pointer-events-none absolute start-0 top-0 z-20 bg-white/90 px-1.5 py-1 text-xs font-bold",
+                        "pointer-events-none absolute start-0 top-0 z-20 bg-white/90 px-1.5 py-1 text-xs font-bold motion-safe:transition-[inset-inline-start,top] motion-safe:duration-500 motion-safe:ease-in-out",
                         rowLabelSpace > 0
                           ? "flex w-full items-center"
                           : "max-w-[60%] truncate shadow-sm",
@@ -736,7 +742,7 @@ export function GroupedTreemap<
                               }
                               className={cn(
                                 "group absolute isolate overflow-hidden p-0 text-start text-white",
-                                "motion-safe:transition-[filter] motion-safe:duration-150",
+                                "motion-safe:transition-[inset-inline-start,top,width,height,background-color,filter] motion-safe:duration-500 motion-safe:ease-in-out",
                                 "focus-visible:z-20 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-inset focus-visible:outline-none",
                                 leaf.onActivate && "hover:brightness-90",
                               )}
@@ -757,7 +763,7 @@ export function GroupedTreemap<
                                   {visibleSegments.map((segment) => (
                                     <span
                                       key={segment.key}
-                                      className="shrink-0"
+                                      className="shrink-0 motion-safe:transition-[height,background-color] motion-safe:duration-500 motion-safe:ease-in-out"
                                       style={{
                                         height: `${(segment.value / segmentDenominator) * 100}%`,
                                         backgroundColor: segment.color,
