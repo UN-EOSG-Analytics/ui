@@ -13,8 +13,10 @@ import { cn } from "../lib/utils";
  * `type="search"` and an `aria-label` are not optional: a search field with a
  * placeholder but no label is invisible to screen readers once it has content.
  */
-export interface SearchInputProps
-  extends Omit<React.ComponentProps<"input">, "type"> {
+export interface SearchInputProps extends Omit<
+  React.ComponentProps<"input">,
+  "type"
+> {
   /**
    * · `bordered`      — standard boxed field (default)
    * · `border-bottom` — sidebar/underline treatment
@@ -55,7 +57,8 @@ export function SearchInput({
         type="search"
         value={value}
         className={cn(
-          "h-9 w-full ps-8 pe-8 text-sm text-foreground transition-colors",
+          "h-9 w-full ps-8 text-sm text-foreground transition-colors",
+          showClear && hasValue ? "pe-8" : "pe-2",
           "placeholder:text-muted-foreground",
           "focus-visible:ring-focus-ring focus-visible:ring-un-blue/50 focus-visible:outline-none",
           // The UA's own clear affordance would sit next to ours.

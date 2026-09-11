@@ -15,16 +15,33 @@ const preview: Preview = {
           ["Overview", "PointMeter"],
           // Shared page chrome and structural furniture.
           "Page Structure",
-          ["SiteHeader", "SecondaryHeader", "DetailPanel", "SiteFooter", "AnimatedCornerLogo"],
+          [
+            "SiteHeader",
+            "SecondaryHeader",
+            "DetailPanel",
+            "SiteFooter",
+            "AnimatedCornerLogo",
+          ],
           // The UI kit itself.
           "UI Elements",
           [
-            "Button", "Chip", "StatTile", "DataTable", "GroupedTreemap", "Filtering & Search",
-            "Modal", "SignInCard",
+            "Button",
+            "Chip",
+            "StatTile",
+            "DataTable",
+            "Filtering & Search",
+            "Modal",
+            "SignInCard",
           ],
           // Product-specific catalogues follow the shared design system.
           "open.un.org",
-          ["Tokens", ["Funding sources"]],
+          [
+            "Tokens",
+            ["Funding sources"],
+            "Treemap",
+            "Funding source labels",
+            "Page Structure",
+          ],
         ],
       },
     },

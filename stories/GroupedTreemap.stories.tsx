@@ -37,8 +37,18 @@ const rows: GroupedTreemapRow[] = [
             value: 54,
             onActivate: () => {},
             segments: [
-              { key: "assessed", label: "Assessed", value: 34, color: "var(--color-open-funding-assessed)" },
-              { key: "voluntary", label: "Voluntary", value: 20, color: "var(--color-open-funding-voluntary-earmarked)" },
+              {
+                key: "assessed",
+                label: "Assessed",
+                value: 34,
+                color: "var(--color-open-funding-assessed)",
+              },
+              {
+                key: "voluntary",
+                label: "Voluntary",
+                value: 20,
+                color: "var(--color-open-funding-voluntary-earmarked)",
+              },
             ],
           },
           {
@@ -80,7 +90,7 @@ const rows: GroupedTreemapRow[] = [
 ];
 
 const meta = {
-  title: "UI Elements/GroupedTreemap",
+  title: "open.un.org/Treemap",
   component: GroupedTreemap,
   args: { rows, totalLabel: "Total" },
   parameters: {
@@ -97,7 +107,11 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-function InteractiveExample({ multipleTotals = false }: { multipleTotals?: boolean }) {
+function InteractiveExample({
+  multipleTotals = false,
+}: {
+  multipleTotals?: boolean;
+}) {
   const [query, setQuery] = React.useState("");
   const [grouping, setGrouping] = React.useState<"type" | "region">("type");
   return (
@@ -110,8 +124,12 @@ function InteractiveExample({ multipleTotals = false }: { multipleTotals?: boole
         label: "Search contributors",
         placeholder: "Search contributors",
       }}
-      searchAccessory={(
-        <div role="group" aria-label="Group contributors" className="inline-flex rounded-md border border-border bg-background p-0.5">
+      searchAccessory={
+        <div
+          role="group"
+          aria-label="Group contributors"
+          className="inline-flex rounded-md border border-border bg-background p-0.5"
+        >
           <Button
             type="button"
             size="xs"
@@ -131,13 +149,23 @@ function InteractiveExample({ multipleTotals = false }: { multipleTotals?: boole
             Region
           </Button>
         </div>
-      )}
-      summaries={multipleTotals
-        ? [
-            { key: "assessed", label: "Assessed", value: currency.format(120_000_000) },
-            { key: "voluntary", label: "Voluntary", value: currency.format(120_000_000) },
-          ]
-        : undefined}
+      }
+      summaries={
+        multipleTotals
+          ? [
+              {
+                key: "assessed",
+                label: "Assessed",
+                value: currency.format(120_000_000),
+              },
+              {
+                key: "voluntary",
+                label: "Voluntary",
+                value: currency.format(120_000_000),
+              },
+            ]
+          : undefined
+      }
       totalLabel="Total"
       formatValue={(value) => currency.format(value * 1_000_000)}
       formatAccessibleValue={(value) => `${value} million US dollars`}
@@ -151,9 +179,17 @@ function InteractiveExample({ multipleTotals = false }: { multipleTotals?: boole
           openInNewTab: true,
           newTabLabel: "opens in a new tab",
         },
-        { key: "reporting-entities", label: "Reporting entities", description: "2024 submissions" },
+        {
+          key: "reporting-entities",
+          label: "Reporting entities",
+          description: "2024 submissions",
+        },
       ]}
-      emptyContent={<div className="grid h-full place-items-center text-sm text-muted-foreground">No contributors match this search.</div>}
+      emptyContent={
+        <div className="grid h-full place-items-center text-sm text-muted-foreground">
+          No contributors match this search.
+        </div>
+      }
     />
   );
 }
@@ -211,7 +247,12 @@ const secretariatRows: GroupedTreemapRow[] = [
     leaves: [
       { key: "DESA", label: "DESA", value: 39, onActivate: () => {} },
       { key: "UNCTAD", label: "UNCTAD", value: 24, onActivate: () => {} },
-      { key: "STA", label: "Staff Assessment", value: 11, onActivate: () => {} },
+      {
+        key: "STA",
+        label: "Staff Assessment",
+        value: 11,
+        onActivate: () => {},
+      },
     ],
   },
 ];
@@ -236,7 +277,9 @@ export const SemanticRowOrder: Story = {
       rows={[rows[1], rows[0]]}
       height={480}
       layout={{ rowOrder: "input" }}
-      summaries={[{ key: "total", label: "Total", value: currency.format(240_000_000) }]}
+      summaries={[
+        { key: "total", label: "Total", value: currency.format(240_000_000) },
+      ]}
       totalLabel="Total"
       formatValue={(value) => currency.format(value * 1_000_000)}
     />
