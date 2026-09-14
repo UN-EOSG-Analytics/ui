@@ -150,6 +150,12 @@ ln -sfn /absolute/path/to/ui node_modules/@un-eosg/ui
 Changes in the UI checkout are then picked up by the consumer's normal dev or
 build process; a regular reload or rebuild may be needed. To return to the
 declared GitHub dependency, reinstall with `pnpm install --force --ignore-scripts`.
+Turbopack limits files to its configured project root. If a sibling-worktree
+symlink is outside that root, verify against `pnpm pack` output installed under
+the consumer's generated `node_modules` instead. Its source then resolves inside
+the app, as a published dependency would. Clear only disposable build caches
+from the failed linked build if they retain the old external path.
+
 This is a local `node_modules` toggle only, not a dependency change to commit.
 Use the symlink command after installing the declared dependency: recent pnpm
 versions can rewrite the manifest and lockfile when running `pnpm link`.
