@@ -99,54 +99,7 @@ export function EntityRef({
   );
 }
 
-/* ---------------------------------------------------------------------------
- * DOCUMENT SYMBOL — "A/RES/79/1".
- *
- * Deliberately NOT a Chip. A symbol is not a facet you filter by, it is the
- * document's identifier, and it reads as a code rather than a label: square
- * corners, a blue ground, monospaced. Keeping it visually distinct from the
- * pill vocabulary is the point — scanning a list, you can tell "this IS the
- * document" from "this is something ABOUT the document" without reading either.
- *
- * Carried from mandates, where it replaced four different renderings of the
- * same symbol (blue block, mono chip, bare mono in blue, bare mono in grey).
- * ------------------------------------------------------------------------- */
-
-export interface DocumentSymbolProps {
-  children: React.ReactNode;
-  href?: string;
-  /** The document you are already on — present, but not somewhere to go. */
-  subdued?: boolean;
-  className?: string;
-  title?: string;
-}
-
-export function DocumentSymbol({
-  children,
-  href,
-  subdued,
-  className,
-  ...rest
-}: DocumentSymbolProps) {
-  const classes = cn(
-    "inline-block rounded-sm px-2 py-0.5 font-mono text-xs font-medium",
-    subdued
-      ? "bg-secondary text-muted-foreground"
-      : "bg-un-blue-tint-50 text-un-blue-text",
-    href &&
-      "transition-colors hover:bg-un-blue-tint focus-visible:ring-focus-ring focus-visible:ring-un-blue/50 focus-visible:outline-none",
-    className,
-  );
-  return href ? (
-    <a href={href} className={classes} {...rest}>
-      {children}
-    </a>
-  ) : (
-    <span className={classes} {...rest}>
-      {children}
-    </span>
-  );
-}
+export { DocumentSymbol, type DocumentSymbolProps } from "./document-symbol";
 
 /* ---------------------------------------------------------------------------
  * BUDGET FIGURE — money.
@@ -166,7 +119,11 @@ export interface BudgetFigureProps {
   className?: string;
 }
 
-export function formatBudget(amount: number, currency = "USD", compact = false) {
+export function formatBudget(
+  amount: number,
+  currency = "USD",
+  compact = false,
+) {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency,

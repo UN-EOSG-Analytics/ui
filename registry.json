@@ -324,7 +324,7 @@
       "name": "concepts",
       "type": "registry:component",
       "title": "Domain concepts",
-      "description": "EntityRef, DocumentSymbol, BudgetFigure and Count — the layer above the primitives.",
+      "description": "EntityRef, DocumentSymbol, BudgetFigure and Count \u2014 the layer above the primitives.",
       "files": [
         {
           "path": "components/concepts.tsx",
@@ -337,6 +337,10 @@
         {
           "path": "lib/typography.ts",
           "type": "registry:lib"
+        },
+        {
+          "path": "components/document-symbol.tsx",
+          "type": "registry:component"
         }
       ]
     },
@@ -350,6 +354,22 @@
           "path": "AGENTS.md",
           "type": "registry:file",
           "target": "AGENTS.md"
+        }
+      ]
+    },
+    {
+      "name": "document-symbol",
+      "type": "registry:component",
+      "title": "Document symbol",
+      "description": "The light Mandates document identifier, linked or subdued.",
+      "files": [
+        {
+          "path": "components/document-symbol.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "lib/typography.ts",
+          "type": "registry:lib"
         }
       ]
     }

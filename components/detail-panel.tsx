@@ -94,11 +94,19 @@ export function DetailHeader({
       {(title || actions) && (
         <div className="mb-3 flex items-start justify-between gap-4">
           {/* 20px, not 24: a panel is not a page. */}
-          {title && <h2 className={cn(typography.sectionTitle, "leading-tight")}>{title}</h2>}
-          {actions && <div className="flex shrink-0 items-center gap-1">{actions}</div>}
+          {title && (
+            <h2 className={cn(typography.sectionTitle, "leading-tight")}>
+              {title}
+            </h2>
+          )}
+          {actions && (
+            <div className="flex shrink-0 items-center gap-1">{actions}</div>
+          )}
         </div>
       )}
-      {children && <div className="flex flex-wrap items-center gap-2">{children}</div>}
+      {children && (
+        <div className="flex flex-wrap items-center gap-2">{children}</div>
+      )}
     </header>
   );
 }
@@ -158,7 +166,9 @@ export function DetailField({
 }) {
   return (
     <div className={cn("min-w-0", className)}>
-      <dt className={cn(typography.eyebrow, "mb-0.5 text-muted-foreground")}>{label}</dt>
+      <dt className={cn(typography.eyebrow, "mb-0.5 text-muted-foreground")}>
+        {label}
+      </dt>
       <dd className={typography.body}>{children}</dd>
     </div>
   );
@@ -201,6 +211,8 @@ export function DetailPanel({
   titleId,
   eyebrow,
   controls,
+  headerMetadata,
+  bodyClassName,
   children,
   className,
 }: {
@@ -211,6 +223,10 @@ export function DetailPanel({
   eyebrow?: string;
   /** Close, expand — anything acting on the panel itself. */
   controls?: React.ReactNode;
+  /** Identifier and source links kept visible beneath the title. */
+  headerMetadata?: React.ReactNode;
+  /** Consumer scrollbars or body spacing, on the single scroll container. */
+  bodyClassName?: string;
   children: React.ReactNode;
   className?: string;
 }) {
@@ -220,17 +236,37 @@ export function DetailPanel({
       <header className="flex shrink-0 items-start gap-3 border-b border-border px-4 py-2.5">
         <div className="min-w-0 flex-1">
           {eyebrow && (
-            <p className={cn(typography.eyebrow, "text-muted-foreground")}>{eyebrow}</p>
+            <p className={cn(typography.eyebrow, "text-muted-foreground")}>
+              {eyebrow}
+            </p>
           )}
           {/* Truncates rather than wrapping: the header is a fixed anchor, so
               a long title must not change its height as you scroll. */}
-          <h2 id={titleId} className={cn(typography.subTitle, "truncate")}>{title}</h2>
+          <h2 id={titleId} className={cn(typography.subTitle, "truncate")}>
+            {title}
+          </h2>
+          {headerMetadata && (
+            <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
+              {headerMetadata}
+            </div>
+          )}
         </div>
         {/* pe-1 leaves room for a focus ring. Flush against the edge, a 2px
             ring with a 2px offset is clipped by the panel boundary. */}
-        {controls && <div className="flex shrink-0 items-center gap-1 pe-1">{controls}</div>}
+        {controls && (
+          <div className="flex shrink-0 items-center gap-1 pe-1">
+            {controls}
+          </div>
+        )}
       </header>
-      <div className="min-h-0 flex-1 overflow-y-auto px-6 py-5">{children}</div>
+      <div
+        className={cn(
+          "min-h-0 flex-1 overflow-y-auto px-6 py-5",
+          bodyClassName,
+        )}
+      >
+        {children}
+      </div>
     </div>
   );
 }

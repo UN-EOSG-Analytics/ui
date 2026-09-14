@@ -45,8 +45,13 @@ const LINK_PATHS: Record<FooterLinkKey, string> = {
 };
 
 const DEFAULT_LINK_ORDER: FooterLinkKey[] = [
-  "siteIndex", "contact", "copyright", "faq",
-  "fraudAlert", "privacyNotice", "termsOfUse",
+  "siteIndex",
+  "contact",
+  "copyright",
+  "faq",
+  "fraudAlert",
+  "privacyNotice",
+  "termsOfUse",
 ];
 
 /**
@@ -55,8 +60,24 @@ const DEFAULT_LINK_ORDER: FooterLinkKey[] = [
  * semantic order.
  */
 const LINK_ORDER: Partial<Record<string, FooterLinkKey[]>> = {
-  fr: ["termsOfUse", "privacyNotice", "contact", "fraudAlert", "copyright", "faq", "siteIndex"],
-  es: ["fraudAlert", "contact", "termsOfUse", "faq", "privacyNotice", "copyright", "siteIndex"],
+  fr: [
+    "termsOfUse",
+    "privacyNotice",
+    "contact",
+    "fraudAlert",
+    "copyright",
+    "faq",
+    "siteIndex",
+  ],
+  es: [
+    "fraudAlert",
+    "contact",
+    "termsOfUse",
+    "faq",
+    "privacyNotice",
+    "copyright",
+    "siteIndex",
+  ],
 };
 
 /** Each un.org locale links its own accounts. The Chinese edition shows none. */
@@ -103,13 +124,21 @@ const SOCIAL_ACCOUNTS: Record<string, [SocialNetwork, string][]> = {
  * un.org renders them 52px tall, so display width = round(w / 91.1 × 52).
  */
 const LOGO_WIDTHS: Record<string, number> = {
-  en: 170, fr: 171, es: 192, ar: 165, zh: 194, ru: 177,
+  en: 170,
+  fr: 171,
+  es: 192,
+  ar: 165,
+  zh: 194,
+  ru: 177,
 };
 
 export interface FooterLabels {
   /** Accessible name for the lockup back-link to un.org. */
   home: string;
   donate: string;
+  /** Optional translated names for navigation landmarks. */
+  socialNavigation?: string;
+  linksNavigation?: string;
   newTab: string;
   links: Record<FooterLinkKey, string>;
 }
@@ -121,6 +150,8 @@ export interface SiteFooterProps {
   labels: FooterLabels;
   /** Extra links appended to the bottom row — e.g. an /llms.txt index. */
   extraLinks?: { label: string; href: string }[];
+  /** Override when the application uses another official donation destination. */
+  donateHref?: string;
   /**
    * @deprecated Footer wordmarks are bundled in the component. This prop is
    * accepted as a no-op so existing consumers do not break.
@@ -134,6 +165,7 @@ export function SiteFooter({
   locale = "en",
   labels,
   extraLinks = [],
+  donateHref = "https://www.un.org/en/donate",
   logoBasePath: _logoBasePath,
   containerClassName = "max-w-4xl px-4 sm:px-8 lg:max-w-6xl",
   className,
@@ -145,7 +177,10 @@ export function SiteFooter({
 
   return (
     <footer
-      className={cn("mt-auto border-t-4 border-un-blue bg-[#333333] text-white", className)}
+      className={cn(
+        "mt-auto border-t-4 border-un-blue bg-[#333333] text-white",
+        className,
+      )}
     >
       <div className={cn("mx-auto pt-8 pb-[33px]", containerClassName)}>
         <div className="flex flex-wrap items-center gap-y-6">
@@ -167,23 +202,25 @@ export function SiteFooter({
 
           <div className="ms-auto flex items-center ps-4">
             {social.length > 0 && (
-              <ul className="flex items-center gap-7">
-                {social.map(([network, href]) => (
-                  <li key={network}>
-                    <ExternalLink
-                      href={href}
-                      aria-label={SOCIAL_LABELS[network]}
-                      newTabLabel={labels.newTab}
-                      className="text-[#c4c4c4] transition-colors hover:text-white"
-                    >
-                      <SocialIcon network={network} className="h-6 w-6" />
-                    </ExternalLink>
-                  </li>
-                ))}
-              </ul>
+              <nav aria-label={labels.socialNavigation}>
+                <ul className="flex items-center gap-7">
+                  {social.map(([network, href]) => (
+                    <li key={network}>
+                      <ExternalLink
+                        href={href}
+                        aria-label={SOCIAL_LABELS[network]}
+                        newTabLabel={labels.newTab}
+                        className="text-[#c4c4c4] transition-colors hover:text-white"
+                      >
+                        <SocialIcon network={network} className="h-6 w-6" />
+                      </ExternalLink>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
             )}
             <ExternalLink
-              href="https://www.un.org/en/donate"
+              href={donateHref}
               newTabLabel={labels.newTab}
               className="ms-7 inline-block rounded border border-un-blue bg-white px-5 pt-[9px] pb-[10px] text-xs leading-3 font-bold tracking-[1.27px] whitespace-nowrap text-[#454545] uppercase transition-colors hover:bg-[#e6e6e6]"
             >
@@ -194,7 +231,7 @@ export function SiteFooter({
 
         <div aria-hidden className="mt-4 mb-[19px] border-t border-[#5b5b5b]" />
 
-        <nav>
+        <nav aria-label={labels.linksNavigation}>
           <ul className="flex flex-wrap justify-end gap-y-2 text-xs leading-[14px] font-medium tracking-[0.77px] uppercase">
             {order.map((key) => (
               <li
@@ -215,7 +252,9 @@ export function SiteFooter({
                 key={href}
                 className="border-e-[3px] border-[#808080] ps-2.5 pe-[13px] last:border-e-0 last:pe-0"
               >
-                <a href={href} className="hover:underline">{label}</a>
+                <a href={href} className="hover:underline">
+                  {label}
+                </a>
               </li>
             ))}
           </ul>
