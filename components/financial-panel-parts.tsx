@@ -23,11 +23,8 @@ export function FinancialPanelHeading({
     <div className={cn("flex items-center justify-between gap-2", className)}>
       <Tag
         className={cn(
-          subheading ? typography.meta : typography.sectionTitle,
-          "font-normal uppercase",
-          subheading
-            ? "tracking-wide text-gray-600"
-            : "tracking-wider text-gray-900",
+          subheading ? typography.subTitle : typography.sectionTitle,
+          "normal-case",
         )}
       >
         {children}

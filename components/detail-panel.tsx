@@ -241,7 +241,7 @@ export function DetailPanel({
           <h2
             id={titleId}
             className={cn(
-              typography.subTitle,
+              typography.sectionTitle,
               "min-w-0 flex-1 whitespace-normal break-words",
               controls && "pt-1",
             )}

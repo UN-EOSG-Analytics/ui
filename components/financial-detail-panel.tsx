@@ -129,7 +129,7 @@ function YearControl({ year }: { year: FinancialDetailPanelYear }) {
   if (year.kind === "static") {
     return (
       <div className="sm:text-end">
-        <div className={cn(typography.eyebrow, "mb-0.5 text-muted-foreground")}>
+        <div className={cn(typography.subTitle, "mb-0.5 text-foreground")}>
           {year.label}
         </div>
         <div
@@ -145,8 +145,8 @@ function YearControl({ year }: { year: FinancialDetailPanelYear }) {
     <label className="block min-w-32">
       <span
         className={cn(
-          typography.eyebrow,
-          "mb-1 block text-muted-foreground sm:text-end",
+          typography.subTitle,
+          "mb-1 block text-foreground sm:text-end",
         )}
       >
         {year.label}
@@ -191,7 +191,7 @@ function Summary({
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
       <div className="min-w-0">
-        <div className={cn(typography.eyebrow, "mb-0.5 text-muted-foreground")}>
+        <div className={cn(typography.subTitle, "mb-0.5 text-foreground")}>
           {total.label}
         </div>
         <div className={cn(typography.sectionTitle, "tabular-nums")}>
