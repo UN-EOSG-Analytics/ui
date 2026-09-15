@@ -211,3 +211,5 @@
 /* Tailwind ignores node_modules by default. Register the exported component
    sources so consumers importing this stylesheet generate their utilities. */
 @source "../components";
+/* Semantic token catalogues include complete utility names used by consumers. */
+@source "../lib";
