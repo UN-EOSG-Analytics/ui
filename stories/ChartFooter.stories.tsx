@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { ChartFooter } from "../components/chart-footer";
 const meta = {
-  title: "open.un.org/Chart footer",
+  title: "open.un.org/Charts/Chart footer",
   component: ChartFooter,
   parameters: { layout: "padded" },
   args: {

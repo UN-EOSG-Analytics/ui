@@ -4,7 +4,7 @@ import { BinaryToggle } from "../components/binary-toggle";
 import { typography } from "../lib/typography";
 
 const meta = {
-  title: "open.un.org/Two-option toggle",
+  title: "UI Elements/Two-option toggle",
   component: BinaryToggle,
   parameters: { layout: "padded" },
 } satisfies Meta<typeof BinaryToggle>;

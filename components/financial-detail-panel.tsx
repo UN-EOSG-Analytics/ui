@@ -1,3 +1,9 @@
+import {
+  FinancialPanelSection,
+  FinancialPanelHeading,
+  FinancialPanelYearSelector,
+  type FinancialPanelYearSelectorProps,
+} from "./financial-panel-parts";
 import * as React from "react";
 import { DetailHeader, DetailPanel, DetailSection } from "./detail-panel";
 import { ExternalLink } from "./external-link";
@@ -47,6 +53,8 @@ export interface FinancialDetailPanelFundingBreakdown {
   heading: string;
   hint?: React.ReactNode;
   items: readonly FinancialDetailPanelFundingItem[];
+  /** Optional chart or supporting content sharing the funding-source labels. */
+  content?: React.ReactNode;
   note?: React.ReactNode;
   state?: FinancialDetailPanelRegionState;
   /** Localized visible/screen-reader status for this region. */
@@ -91,14 +99,20 @@ export interface FinancialDetailPanelNotice {
 }
 
 export interface FinancialDetailPanelProps {
+  overviewHeading?: string;
+  yearSelectorPlacement?: "content" | "header";
+  yearSelector?: FinancialPanelYearSelectorProps;
   title: React.ReactNode;
   /** Reference this ID from the product-owned dialog's aria-labelledby. */
   titleId: string;
   eyebrow?: string;
   controls?: React.ReactNode;
   metadata?: React.ReactNode;
-  total: FinancialDetailPanelTotal;
-  year: FinancialDetailPanelYear;
+  /** Omit both total and year when supplying an existing summary through children. */
+  total?: FinancialDetailPanelTotal;
+  year?: FinancialDetailPanelYear;
+  subtitle?: React.ReactNode;
+  contentClassName?: string;
   fundingBreakdown?: FinancialDetailPanelFundingBreakdown;
   trend?: FinancialDetailPanelTrend;
   sources?: FinancialDetailPanelSources;
@@ -172,7 +186,7 @@ function Summary({
   year,
 }: {
   total: FinancialDetailPanelTotal;
-  year: FinancialDetailPanelYear;
+  year?: FinancialDetailPanelYear;
 }) {
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -187,9 +201,11 @@ function Summary({
           <div className={cn(typography.caption, "mt-1")}>{total.details}</div>
         )}
       </div>
-      <div className="sm:ms-auto sm:shrink-0">
-        <YearControl year={year} />
-      </div>
+      {year && (
+        <div className="sm:ms-auto sm:shrink-0">
+          <YearControl year={year} />
+        </div>
+      )}
     </div>
   );
 }
@@ -201,7 +217,7 @@ function FundingBreakdown({
 }) {
   const state = breakdown.state ?? "ready";
   return (
-    <DetailSection heading={breakdown.heading} hint={breakdown.hint}>
+    <FinancialPanelSection heading={breakdown.heading} hint={breakdown.hint}>
       <div aria-busy={state === "loading" || undefined}>
         {breakdown.items.length > 0 ? (
           <ul className="space-y-3">
@@ -261,6 +277,7 @@ function FundingBreakdown({
       >
         {breakdown.status}
       </p>
+      {breakdown.content && <div className="mt-4">{breakdown.content}</div>}
       {breakdown.note && (
         <p
           className={cn(typography.caption, "mt-4 border-t border-border pt-3")}
@@ -268,14 +285,14 @@ function FundingBreakdown({
           {breakdown.note}
         </p>
       )}
-    </DetailSection>
+    </FinancialPanelSection>
   );
 }
 
 function Trend({ trend }: { trend: FinancialDetailPanelTrend }) {
   const state = trend.state ?? "ready";
   return (
-    <DetailSection heading={trend.heading} hint={trend.hint}>
+    <FinancialPanelSection heading={trend.heading} hint={trend.hint}>
       <div aria-busy={state === "loading" || undefined}>{trend.content}</div>
       <p
         aria-live="polite"
@@ -288,7 +305,7 @@ function Trend({ trend }: { trend: FinancialDetailPanelTrend }) {
       >
         {trend.status}
       </p>
-    </DetailSection>
+    </FinancialPanelSection>
   );
 }
 
@@ -361,8 +378,13 @@ function Notice({ notice }: { notice: FinancialDetailPanelNotice }) {
  * composition only standardizes the visible financial regions.
  */
 export function FinancialDetailPanel({
+  overviewHeading,
+  yearSelectorPlacement = "content",
+  yearSelector,
   title,
   titleId,
+  subtitle,
+  contentClassName,
   eyebrow,
   controls,
   metadata,
@@ -381,8 +403,19 @@ export function FinancialDetailPanel({
     <DetailPanel
       title={title}
       titleId={titleId}
+      subtitle={subtitle}
+      contentClassName={contentClassName}
       eyebrow={eyebrow}
-      controls={controls}
+      controls={
+        yearSelector && yearSelectorPlacement === "header" ? (
+          <>
+            <FinancialPanelYearSelector {...yearSelector} variant="pill" />
+            {controls}
+          </>
+        ) : (
+          controls
+        )
+      }
       className={cn("w-full sm:w-lg sm:max-w-full", className)}
     >
       <div aria-busy={busy || undefined}>
@@ -391,8 +424,22 @@ export function FinancialDetailPanel({
             {statusMessage}
           </p>
         )}
+        {yearSelector &&
+          yearSelectorPlacement === "content" &&
+          (overviewHeading ? (
+            <FinancialPanelHeading
+              className="mb-3"
+              controls={<FinancialPanelYearSelector {...yearSelector} />}
+            >
+              {overviewHeading}
+            </FinancialPanelHeading>
+          ) : (
+            <div className="mb-3 flex justify-end">
+              <FinancialPanelYearSelector {...yearSelector} />
+            </div>
+          ))}
         {metadata && <DetailHeader className="mb-5">{metadata}</DetailHeader>}
-        <Summary total={total} year={year} />
+        {total && <Summary total={total} year={year} />}
         {notice && (
           <div className="mt-6">
             <Notice notice={notice} />

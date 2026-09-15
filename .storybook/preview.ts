@@ -27,6 +27,7 @@ const preview: Preview = {
           [
             "Button",
             "Chip",
+            "Two-option toggle",
             "StatTile",
             "DataTable",
             "Filtering & Search",
@@ -38,9 +39,10 @@ const preview: Preview = {
           [
             "Tokens",
             ["Funding sources"],
-            "Treemap",
-            "Funding source labels",
             "Page Structure",
+            "Charts",
+            ["Chart frame", "Chart header", "Chart footer", "Treemap"],
+            "Funding source labels",
           ],
         ],
       },

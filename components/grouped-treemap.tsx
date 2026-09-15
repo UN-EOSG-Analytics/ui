@@ -565,7 +565,7 @@ export function GroupedTreemap<
                   {showRowLabels && (
                     <div
                       className={cn(
-                        "pointer-events-none absolute start-0 top-0 z-20 bg-white/90 px-1.5 py-1 text-xs font-bold motion-safe:transition-[inset-inline-start,top] motion-safe:duration-500 motion-safe:ease-in-out",
+                        "pointer-events-none absolute start-0 top-0 z-20 bg-white/90 px-1.5 py-1 text-sm font-bold motion-safe:transition-[inset-inline-start,top] motion-safe:duration-500 motion-safe:ease-in-out",
                         rowLabelSpace > 0
                           ? "flex w-full items-center"
                           : "max-w-[60%] truncate shadow-sm",
@@ -578,6 +578,16 @@ export function GroupedTreemap<
                           row.labelColor ?? row.color ?? "var(--color-un-blue)",
                       }}
                     >
+                      <span
+                        aria-hidden="true"
+                        className="me-1.5 inline-block size-2.5 shrink-0 rounded-full align-middle"
+                        style={{
+                          backgroundColor:
+                            row.color ??
+                            row.labelColor ??
+                            "var(--color-un-blue)",
+                        }}
+                      />
                       {row.label}{" "}
                       <span className="font-normal tabular-nums">
                         {formatValue(
