@@ -12,6 +12,7 @@ export interface FinancialBreakdownRowProps {
   value: ReactNode;
   bar: ReactNode;
   tooltip: ReactNode;
+  interactiveTooltip?: boolean;
   depth?: number;
   expanded?: boolean;
   onToggle?: () => void;
@@ -25,6 +26,7 @@ export function FinancialBreakdownRow({
   value,
   bar,
   tooltip,
+  interactiveTooltip = false,
   depth = 0,
   expanded,
   onToggle,
@@ -34,7 +36,7 @@ export function FinancialBreakdownRow({
   return (
     <li>
       <div style={{ paddingInlineStart: `${depth * 0.75}rem` }}>
-        <Tooltip width={380} content={tooltip}>
+        <Tooltip width={380} content={tooltip} interactive={interactiveTooltip}>
           <Row
             type={onToggle ? "button" : undefined}
             tabIndex={onToggle ? undefined : 0}

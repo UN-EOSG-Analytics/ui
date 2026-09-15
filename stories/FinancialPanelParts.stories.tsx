@@ -3,6 +3,8 @@ import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import {
   FinancialPanelHeading,
+  FinancialPanelTotalRow,
+  FinancialPanelBreakdownRow,
   FinancialPanelYearSelector,
   FinancialPanelRankedRow,
   FinancialPanelBar,
@@ -211,4 +213,26 @@ function BreakdownExample() {
 }
 export const ExpandableBreakdown: Story = {
   render: () => <BreakdownExample />,
+};
+
+export const FinancialSummary: Story = {
+  render: () => (
+    <div className="max-w-lg space-y-4">
+      <FinancialPanelTotalRow label="Total spending" value="—" />
+      <FinancialPanelTotalRow label="Total funding" value="—" />
+      <FinancialPanelHeading subheading>Funding sources</FinancialPanelHeading>
+      <FinancialPanelBreakdownRow
+        label="Funding source"
+        value="—"
+        percent={75}
+        color="var(--color-un-blue)"
+      />
+      <FinancialPanelBreakdownRow
+        label="Funding source"
+        value="—"
+        percent={40}
+        color="var(--color-faded-jade)"
+      />
+    </div>
+  ),
 };

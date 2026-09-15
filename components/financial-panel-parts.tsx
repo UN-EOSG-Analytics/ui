@@ -34,6 +34,57 @@ export function FinancialPanelHeading({
   );
 }
 
+/** A headline metric uses the same type tier as a financial section heading. */
+export function FinancialPanelTotalRow({
+  label,
+  value,
+}: {
+  label: React.ReactNode;
+  value: React.ReactNode;
+}) {
+  return (
+    <div
+      className={cn(
+        typography.subTitle,
+        "flex items-baseline justify-between gap-4",
+      )}
+    >
+      <span className="min-w-0">{label}</span>
+      <span className="shrink-0 text-end tabular-nums">{value}</span>
+    </div>
+  );
+}
+
+/** The caller supplies the scale; signed amounts remain visible even without a positive bar. */
+export function FinancialPanelBreakdownRow({
+  label,
+  value,
+  percent,
+  color,
+}: {
+  label: React.ReactNode;
+  value: React.ReactNode;
+  percent?: number;
+  color?: string;
+}) {
+  return (
+    <div className="grid grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)_5rem] items-center gap-3">
+      <div className={cn(typography.caption, "min-w-0 text-foreground")}>
+        {label}
+      </div>
+      <FinancialPanelBar percent={percent ?? 0} color={color} />
+      <div
+        className={cn(
+          typography.caption,
+          "text-end tabular-nums text-foreground",
+        )}
+      >
+        {value}
+      </div>
+    </div>
+  );
+}
+
 export interface FinancialPanelYearSelectorProps {
   years: readonly number[];
   selected: number;

@@ -1,5 +1,7 @@
 import {
   FinancialPanelSection,
+  FinancialPanelTotalRow,
+  FinancialPanelBreakdownRow,
   FinancialPanelHeading,
   FinancialPanelYearSelector,
   type FinancialPanelYearSelectorProps,
@@ -45,6 +47,8 @@ export interface FinancialDetailPanelFundingItem {
   value: React.ReactNode;
   /** Caller-owned semantic marker; the panel does not know funding taxonomies. */
   marker: React.ReactNode;
+  percent?: number;
+  color?: string;
   share?: React.ReactNode;
   details?: React.ReactNode;
 }
@@ -189,20 +193,13 @@ function Summary({
   year?: FinancialDetailPanelYear;
 }) {
   return (
-    <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-      <div className="min-w-0">
-        <div className={cn(typography.subTitle, "mb-0.5 text-foreground")}>
-          {total.label}
-        </div>
-        <div className={cn(typography.sectionTitle, "tabular-nums")}>
-          {total.value}
-        </div>
-        {total.details && (
-          <div className={cn(typography.caption, "mt-1")}>{total.details}</div>
-        )}
-      </div>
+    <div>
+      <FinancialPanelTotalRow label={total.label} value={total.value} />
+      {total.details && (
+        <div className={cn(typography.caption, "mt-1")}>{total.details}</div>
+      )}
       {year && (
-        <div className="sm:ms-auto sm:shrink-0">
+        <div className="mt-2 text-end">
           <YearControl year={year} />
         </div>
       )}
@@ -222,44 +219,17 @@ function FundingBreakdown({
         {breakdown.items.length > 0 ? (
           <ul className="space-y-3">
             {breakdown.items.map((item) => (
-              <li
-                key={item.id}
-                className="grid grid-cols-[auto_minmax(0,1fr)_auto] gap-x-3 gap-y-1"
-              >
-                {item.marker && (
-                  <span
-                    aria-hidden="true"
-                    className="mt-1.5 flex size-3 shrink-0 items-center justify-center"
-                  >
-                    {item.marker}
-                  </span>
-                )}
-                <span
-                  className={cn(
-                    "min-w-0 font-medium text-foreground",
-                    !item.marker && "col-span-2",
-                  )}
-                >
-                  {item.label}
-                </span>
-                <span
-                  className={cn(
-                    typography.numeric,
-                    "text-end font-medium text-foreground",
-                  )}
-                >
-                  {item.value}
-                </span>
+              <li key={item.id}>
+                <FinancialPanelBreakdownRow
+                  label={item.label}
+                  value={item.value}
+                  percent={item.percent}
+                  color={item.color}
+                />
                 {(item.share || item.details) && (
-                  <span
-                    className={cn(
-                      typography.caption,
-                      "col-start-2 col-end-4 flex flex-wrap gap-x-2 gap-y-0.5",
-                    )}
-                  >
-                    {item.share && <span>{item.share}</span>}
-                    {item.details && <span>{item.details}</span>}
-                  </span>
+                  <div className={cn(typography.caption, "mt-1 text-end")}>
+                    {item.share} {item.details}
+                  </div>
                 )}
               </li>
             ))}

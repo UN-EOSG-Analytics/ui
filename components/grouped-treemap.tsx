@@ -1,4 +1,5 @@
 "use client";
+import { Tooltip as SharedTooltip } from "./tooltip";
 import { FinancialTooltip } from "./financial-tooltip";
 import { ChartFrame } from "./chart-frame";
 
@@ -177,6 +178,8 @@ export interface GroupedTreemapProps<
   renderTooltip?: (
     context: GroupedTreemapTooltipContext<TRow, TSubgroup, TLeaf, TSegment>,
   ) => React.ReactNode;
+  /** Enable links inside tooltips, including keyboard access. */
+  interactiveTooltip?: boolean;
   emptyContent?: React.ReactNode;
   layout?: GroupedTreemapLayoutOptions;
   leafLabelMinWidth?: number;
@@ -377,6 +380,7 @@ export function GroupedTreemap<
   formatAccessibleValue = (value) => value.toLocaleString(),
   showLeafValues = true,
   renderTooltip,
+  interactiveTooltip = false,
   emptyContent = null,
   layout,
   leafLabelMinWidth,
@@ -490,6 +494,7 @@ export function GroupedTreemap<
       key: string,
       context: GroupedTreemapTooltipContext<TRow, TSubgroup, TLeaf, TSegment>,
     ) => {
+      if (interactiveTooltip) return;
       setActiveTooltip({
         key,
         target: event.currentTarget.getBoundingClientRect(),
@@ -500,7 +505,7 @@ export function GroupedTreemap<
         ),
       });
     },
-    [formatValue, renderTooltip],
+    [formatValue, renderTooltip, interactiveTooltip],
   );
 
   return (
@@ -712,7 +717,7 @@ export function GroupedTreemap<
                             leafLayout.rect.width > (leafValueMinWidth ?? 0) &&
                             leafLayout.rect.height >=
                               (leafValueMinHeight ?? valueLabelHeight);
-                          return (
+                          const tile = (
                             <Element
                               key={leafLayout.key}
                               type={leaf.onActivate ? "button" : undefined}
@@ -834,6 +839,27 @@ export function GroupedTreemap<
                                 {description}
                               </span>
                             </Element>
+                          );
+                          return interactiveTooltip ? (
+                            <SharedTooltip
+                              key={leafLayout.key}
+                              interactive
+                              width={380}
+                              content={
+                                renderTooltip ? (
+                                  renderTooltip(context)
+                                ) : (
+                                  <DefaultTooltip
+                                    context={context}
+                                    formatValue={formatValue}
+                                  />
+                                )
+                              }
+                            >
+                              {tile}
+                            </SharedTooltip>
+                          ) : (
+                            tile
                           );
                         })}
                         {!subgroup.implicit ? (

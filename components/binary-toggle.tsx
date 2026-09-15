@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { SegmentedControl } from "./segmented-control";
 import { cn } from "../lib/utils";
 import { typography } from "../lib/typography";
 
@@ -25,36 +25,16 @@ export function BinaryToggle({
   variant = "switch",
   disabled = false,
 }: BinaryToggleProps) {
-  const name = React.useId();
   const checked = value === options[1].value;
   if (variant === "segmented") {
     return (
-      <fieldset
+      <SegmentedControl
+        label={label}
+        options={options}
+        value={value}
+        onValueChange={onValueChange}
         disabled={disabled}
-        className="m-0 inline-flex min-w-0 overflow-hidden rounded-md border border-border bg-secondary p-0.5"
-      >
-        <legend className="sr-only">{label}</legend>
-        {options.map((option) => (
-          <label key={option.value} className="relative cursor-pointer">
-            <input
-              type="radio"
-              name={name}
-              value={option.value}
-              checked={value === option.value}
-              onChange={() => onValueChange(option.value)}
-              className="peer sr-only"
-            />
-            <span
-              className={cn(
-                typography.caption,
-                "block rounded-sm px-3 py-1 text-muted-foreground peer-checked:bg-un-white peer-checked:text-foreground peer-checked:shadow-sm peer-checked:font-medium peer-focus-visible:outline-2 peer-focus-visible:-outline-offset-2 peer-focus-visible:outline-un-blue peer-disabled:cursor-not-allowed peer-disabled:opacity-50",
-              )}
-            >
-              {option.label}
-            </span>
-          </label>
-        ))}
-      </fieldset>
+      />
     );
   }
   return (

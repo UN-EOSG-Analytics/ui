@@ -8,6 +8,7 @@ import { typography } from "../lib/typography";
 
 export interface LegendLabelProps {
   color: string;
+  showMarker?: boolean;
   /** Optional patterned swatch, such as a striped CSS gradient. */
   swatchBackground?: string;
   label: string;
@@ -24,6 +25,7 @@ export interface LegendLabelProps {
 
 export function LegendLabel({
   color,
+  showMarker = true,
   swatchBackground,
   label,
   explanation,
@@ -45,15 +47,17 @@ export function LegendLabel({
   );
   const content = (
     <>
-      <span
-        aria-hidden="true"
-        className={cn(
-          "shrink-0 rounded-full",
-          variant === "pill" ? "size-2.5" : "size-2",
-          onToggle && !selected && "opacity-35",
-        )}
-        style={{ backgroundColor: color, backgroundImage: swatchBackground }}
-      />
+      {showMarker && (
+        <span
+          aria-hidden="true"
+          className={cn(
+            "shrink-0 rounded-full",
+            variant === "pill" ? "size-2.5" : "size-2",
+            onToggle && !selected && "opacity-35",
+          )}
+          style={{ backgroundColor: color, backgroundImage: swatchBackground }}
+        />
+      )}
       <span
         className={cn(
           variant === "inline" &&
