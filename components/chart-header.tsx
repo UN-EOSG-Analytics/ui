@@ -31,7 +31,7 @@ export function ChartHeader({
           {summaries.map((summary) => (
             <div key={summary.key} className="min-w-0 text-end">
               <dt className={typography.meta}>{summary.label}</dt>
-              <dd className={cn(typography.lead, "font-semibold tabular-nums")}>
+              <dd className={cn(typography.chartTotal, "tabular-nums")}>
                 {summary.value}
               </dd>
             </div>

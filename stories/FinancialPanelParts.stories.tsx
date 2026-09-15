@@ -31,7 +31,9 @@ export const Headings: Story = {
     <div className="max-w-lg space-y-4">
       <FinancialPanelHeading>Overview</FinancialPanelHeading>
       <FinancialPanelHeading>Financials</FinancialPanelHeading>
-      <FinancialPanelHeading subheading>Funding by donor</FinancialPanelHeading>
+      <FinancialPanelHeading subheading>
+        Funding by contributor
+      </FinancialPanelHeading>
     </div>
   ),
 };

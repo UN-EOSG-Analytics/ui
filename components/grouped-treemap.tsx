@@ -1,4 +1,5 @@
 "use client";
+import { FinancialTooltip } from "./financial-tooltip";
 import { ChartFrame } from "./chart-frame";
 
 import * as React from "react";
@@ -319,22 +320,27 @@ function DefaultTooltip<TRow, TSubgroup, TLeaf, TSegment>({
   formatValue: (value: number) => React.ReactNode;
 }) {
   return (
-    <div className="space-y-1">
-      <div className="font-medium">{context.breadcrumb.join(" › ")}</div>
-      <div>
-        {context.leaf.label}: {formatValue(context.leaf.value)}
-      </div>
-      {context.leaf.segments
-        ?.filter(
-          (segment) => Number.isFinite(segment.value) && segment.value > 0,
-        )
-        .map((segment) => (
-          <div key={segment.key} className="flex justify-between gap-4">
-            <span>{segment.label}</span>
-            <span className="tabular-nums">{formatValue(segment.value)}</span>
-          </div>
-        ))}
-    </div>
+    <FinancialTooltip
+      title={context.leaf.label}
+      parents={context.breadcrumb
+        .filter((label) => label !== context.leaf.label)
+        .map((label, index) => ({
+          label,
+          color: index === 0 ? context.row.color : undefined,
+        }))}
+      total={{ label: "Total", value: formatValue(context.leaf.value) }}
+      rows={context.leaf.segments
+        ?.filter((segment) => Number.isFinite(segment.value))
+        .map((segment) => ({
+          label: segment.label,
+          value: formatValue(segment.value),
+          color: segment.color,
+          share:
+            segment.value >= 0 && context.leaf.value > 0
+              ? segment.value / context.leaf.value
+              : undefined,
+        }))}
+    />
   );
 }
 

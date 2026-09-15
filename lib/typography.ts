@@ -37,6 +37,8 @@ export const typography = {
   pageTitle: "text-4xl font-bold tracking-tight text-foreground",
   /** Standalone card titles — error pages, login, empty states. */
   cardTitle: "text-2xl font-semibold text-foreground",
+  /** Main chart totals above the visualization. */
+  chartTotal: "text-2xl font-semibold text-foreground",
   /** Primary content title and peer section headings. The workhorse heading. */
   sectionTitle: "text-xl font-semibold tracking-tight text-foreground",
   /** Sub-section / step titles. */
