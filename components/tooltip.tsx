@@ -138,6 +138,17 @@ function InteractiveTooltip({
           collisionPadding={16}
           onOpenAutoFocus={(event) => event.preventDefault()}
           onCloseAutoFocus={(event) => event.preventDefault()}
+          onFocusOutside={(event) => {
+            // Anchor is intentionally not a Popover.Trigger: clicking a chart
+            // tile must still open its sidebar. Keep focus on that anchor from
+            // being treated as an outside dismissal by Radix.
+            if (
+              event.target instanceof Node &&
+              trigger.current?.contains(event.target)
+            ) {
+              event.preventDefault();
+            }
+          }}
           onMouseEnter={cancelClose}
           onMouseLeave={closeLater}
           onFocusCapture={cancelClose}
@@ -150,16 +161,42 @@ function InteractiveTooltip({
               event.preventDefault();
               trigger.current?.focus();
               setOpen(false);
-            } else if (
-              event.key === "Tab" &&
-              event.shiftKey &&
-              document.activeElement ===
-                panel.current?.querySelector(
+            } else if (event.key === "Tab") {
+              const links = Array.from(
+                panel.current?.querySelectorAll<HTMLElement>(
                   'a[href], button:not([disabled]), [tabindex="0"]',
-                )
-            ) {
-              event.preventDefault();
-              trigger.current?.focus();
+                ) ?? [],
+              );
+              if (event.shiftKey && document.activeElement === links[0]) {
+                event.preventDefault();
+                trigger.current?.focus();
+              } else if (
+                !event.shiftKey &&
+                document.activeElement === links.at(-1)
+              ) {
+                // The panel is portalled at the end of the document. Continue
+                // from the originating chart item rather than the portal.
+                const tabbables = Array.from(
+                  document.querySelectorAll<HTMLElement>(
+                    "a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]",
+                  ),
+                ).filter(
+                  (element) =>
+                    element.tabIndex >= 0 &&
+                    element.getClientRects().length > 0 &&
+                    !element.closest("[inert]") &&
+                    !panel.current?.contains(element),
+                );
+                const index = trigger.current
+                  ? tabbables.indexOf(trigger.current)
+                  : -1;
+                const next = index >= 0 ? tabbables[index + 1] : undefined;
+                if (next) {
+                  event.preventDefault();
+                  next.focus();
+                  setOpen(false);
+                }
+              }
             }
           }}
           className={cn(
