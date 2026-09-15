@@ -26,7 +26,9 @@ const secretariat = secretariatFundingCrosswalk.map(({ key }) => ({
 
 function Examples({
   items,
+  palette = "blue",
 }: {
+  palette?: FundingSourceLabelProps["palette"];
   items: Array<
     Pick<FundingSourceLabelProps, "source" | "label" | "explanation">
   >;
@@ -49,6 +51,7 @@ function Examples({
             <FundingSourceLabel
               key={item.source}
               {...item}
+              palette={palette}
               selected={selected.includes(item.source)}
               onToggle={() =>
                 setSelected((current) =>
@@ -69,7 +72,11 @@ function Examples({
               key={item.source}
               className="flex items-center justify-between gap-4"
             >
-              <FundingSourceLabel {...item} variant="inline" />
+              <FundingSourceLabel
+                {...item}
+                palette={palette}
+                variant="inline"
+              />
               <span className={cn(typography.caption, "tabular-nums")}>
                 ${(index + 1) * 12}M
               </span>
@@ -101,4 +108,11 @@ export const WiderTooltips: Story = {
       />
     </div>
   ),
+};
+
+export const UNSystemGray: Story = {
+  render: () => <Examples items={system} palette="gray" />,
+};
+export const UNSecretariatGray: Story = {
+  render: () => <Examples items={secretariat} palette="gray" />,
 };
