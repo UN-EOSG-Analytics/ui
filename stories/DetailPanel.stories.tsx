@@ -155,3 +155,14 @@ export const WhatChanged: Story = {
     </div>
   ),
 };
+
+/** Metadata and real navigation links originated in Mandates. */
+export const HeaderMetadataAndLinks: Story = {
+  render: () => <div className="h-96 max-w-xl border border-border">
+    <DetailPanel title="Pact for the Future" eyebrow="Resolution"
+      headerMetadata={<><DocumentSymbol>A/RES/79/1</DocumentSymbol><a href="https://docs.un.org/en/A/RES/79/1">View PDF</a></>}
+      controls={<DetailPanelControls close={{ label: "Close", icon: <X />, onClick: () => {} }} expand={{ label: "Open full page", href: "#full-page", icon: <Maximize2 /> }} />}>
+      <Body />
+    </DetailPanel>
+  </div>,
+};

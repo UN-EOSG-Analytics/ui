@@ -11,8 +11,7 @@ export type HeaderTransparency = "none" | "low" | "high";
 const siteHeaderTransparencyClasses: Record<HeaderTransparency, string> = {
   none: "bg-background",
   low: "bg-background/95 backdrop-blur-sm",
-  high:
-    "bg-background/95 backdrop-blur-sm supports-backdrop-filter:bg-background/60",
+  high: "bg-background/95 backdrop-blur-sm supports-backdrop-filter:bg-background/60",
 };
 
 export interface NavItem {
@@ -38,7 +37,7 @@ export interface SiteHeaderProps {
   brand: string;
   descriptor: string;
   /** Optional status pill, e.g. "Public Preview". Translated by the caller. */
-  badge?: string;
+  badge?: React.ReactNode;
   /** Where the lockup links to. */
   href?: string;
   /** Accessible name for the home link. Translated by the caller. */
@@ -170,7 +169,10 @@ export function SiteHeader({
           aria-label={homeLabel}
           className="inline-flex items-center gap-emblem-gap transition-opacity hover:opacity-75"
         >
-          <Emblem src={emblemSrc} className={outboard ? "min-[1408px]:hidden" : undefined} />
+          <Emblem
+            src={emblemSrc}
+            className={outboard ? "min-[1408px]:hidden" : undefined}
+          />
           {/* Mobile stacks wordmark over badge to preserve room beside the
               right-hand slot. */}
           <span className="flex flex-col items-start gap-1 md:flex-row md:items-center md:gap-2.5">
@@ -180,10 +182,12 @@ export function SiteHeader({
               <span className="hidden font-bold md:inline">{brand} </span>
               <span className="font-light">{descriptor}</span>
             </span>
-            {badge && (
+            {typeof badge === "string" ? (
               <span className="rounded-md bg-un-blue/10 px-1.5 py-0.5 text-micro leading-none font-semibold whitespace-nowrap text-un-blue md:px-2 md:py-1 md:text-xs">
                 {badge}
               </span>
+            ) : (
+              badge
             )}
           </span>
         </a>
@@ -248,7 +252,10 @@ export function SiteHeader({
                             {label}
                           </span>
                         ) : (
-                          <a href={itemHref} className="flex items-center gap-2">
+                          <a
+                            href={itemHref}
+                            className="flex items-center gap-2"
+                          >
                             {Icon && <Icon aria-hidden className="size-4" />}
                             {label}
                           </a>

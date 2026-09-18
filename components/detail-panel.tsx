@@ -213,6 +213,8 @@ export function DetailPanel({
   contentClassName,
   eyebrow,
   controls,
+  headerMetadata,
+  bodyClassName,
   children,
   className,
 }: {
@@ -225,6 +227,10 @@ export function DetailPanel({
   eyebrow?: string;
   /** Close, expand — anything acting on the panel itself. */
   controls?: React.ReactNode;
+  /** Identifier and source links kept visible beneath the title. */
+  headerMetadata?: React.ReactNode;
+  /** Consumer scrollbars or body spacing, on the single scroll container. */
+  bodyClassName?: string;
   children: React.ReactNode;
   className?: string;
 }) {
@@ -259,11 +265,17 @@ export function DetailPanel({
             {subtitle}
           </div>
         )}
+        {headerMetadata && (
+          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 pe-2.5">
+            {headerMetadata}
+          </div>
+        )}
       </header>
       <div
         className={cn(
           "min-h-0 flex-1 overflow-y-auto px-4 py-4",
           contentClassName,
+          bodyClassName,
         )}
       >
         {children}
