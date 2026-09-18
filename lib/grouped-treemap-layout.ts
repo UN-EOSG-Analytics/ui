@@ -25,6 +25,8 @@ export interface GroupedTreemapLayoutOptions {
   rowOrder?: "value-desc" | "input";
   /** Pack consecutive input rows into bands, minimizing skinny rectangles. */
   orderedBands?: boolean;
+  /** Prefer individual ordered rows, merging neighbors below this pixel height. */
+  minBandHeight?: number;
   /** Secretariat Overview preserves semantic subgroup order by default. */
   subgroupOrder?: "value-desc" | "input";
   /** Pixel override. The canonical default is 0.4% of plot height. */
@@ -60,6 +62,7 @@ export interface GroupedTreemapRowLayout {
 const DEFAULT_OPTIONS: Required<GroupedTreemapLayoutOptions> = {
   rowOrder: "value-desc",
   orderedBands: false,
+  minBandHeight: 0,
   subgroupOrder: "input",
   rowGap: 0,
   subgroupGap: 0,
@@ -73,8 +76,13 @@ function finiteNonNegative(value: number): number {
   return Number.isFinite(value) && value > 0 ? value : 0;
 }
 
-function finiteNonNegativeOption(value: number | undefined, fallback: number): number {
-  return Number.isFinite(value) && value != null && value >= 0 ? value : fallback;
+function finiteNonNegativeOption(
+  value: number | undefined,
+  fallback: number,
+): number {
+  return Number.isFinite(value) && value != null && value >= 0
+    ? value
+    : fallback;
 }
 
 function cleanRect(rect: TreemapRect): TreemapRect {
@@ -96,7 +104,9 @@ function inset(rect: TreemapRect, top: number): TreemapRect {
   });
 }
 
-function stableValueOrder<T extends { key: string; value: number }>(items: readonly T[]): T[] {
+function stableValueOrder<T extends { key: string; value: number }>(
+  items: readonly T[],
+): T[] {
   return items
     .filter((item) => finiteNonNegative(item.value) > 0)
     .map((item) => ({ item, value: finiteNonNegative(item.value) }))
@@ -114,16 +124,23 @@ export function layoutBalancedTreemap<T extends { key: string; value: number }>(
   gap = 0,
   order: "value-desc" | "input" = "value-desc",
 ): Array<T & { rect: TreemapRect }> {
-  const ordered = order === "input"
-    ? items.filter((item) => finiteNonNegative(item.value) > 0)
-    : stableValueOrder(items);
+  const ordered =
+    order === "input"
+      ? items.filter((item) => finiteNonNegative(item.value) > 0)
+      : stableValueOrder(items);
   const safeBounds = cleanRect(bounds);
 
-  function recurse(nodes: readonly T[], rect: TreemapRect): Array<T & { rect: TreemapRect }> {
+  function recurse(
+    nodes: readonly T[],
+    rect: TreemapRect,
+  ): Array<T & { rect: TreemapRect }> {
     if (nodes.length === 0 || rect.width <= 0 || rect.height <= 0) return [];
     if (nodes.length === 1) return [{ ...nodes[0], rect: cleanRect(rect) }];
 
-    const total = nodes.reduce((sum, node) => sum + finiteNonNegative(node.value), 0);
+    const total = nodes.reduce(
+      (sum, node) => sum + finiteNonNegative(node.value),
+      0,
+    );
     if (total <= 0) return [];
 
     let splitIndex = 0;
@@ -139,7 +156,10 @@ export function layoutBalancedTreemap<T extends { key: string; value: number }>(
 
     const first = nodes.slice(0, splitIndex);
     const second = nodes.slice(splitIndex);
-    const firstValue = first.reduce((sum, node) => sum + finiteNonNegative(node.value), 0);
+    const firstValue = first.reduce(
+      (sum, node) => sum + finiteNonNegative(node.value),
+      0,
+    );
     const ratio = Math.min(1, Math.max(0, firstValue / total));
     const splitVertically = rect.height > 0 && rect.width / rect.height <= 0.7;
     if (!splitVertically) {
@@ -180,10 +200,16 @@ function layoutCanonicalGroupBlock<T extends { key: string; value: number }>(
 ): Array<T & { rect: TreemapRect }> {
   const ordered = stableValueOrder(items);
 
-  function recurse(nodes: readonly T[], rect: TreemapRect): Array<T & { rect: TreemapRect }> {
+  function recurse(
+    nodes: readonly T[],
+    rect: TreemapRect,
+  ): Array<T & { rect: TreemapRect }> {
     if (nodes.length === 0 || rect.width <= 0 || rect.height <= 0) return [];
     if (nodes.length === 1) return [{ ...nodes[0], rect: cleanRect(rect) }];
-    const total = nodes.reduce((sum, node) => sum + finiteNonNegative(node.value), 0);
+    const total = nodes.reduce(
+      (sum, node) => sum + finiteNonNegative(node.value),
+      0,
+    );
     let running = 0;
     let splitIndex = 0;
     for (let index = 0; index < nodes.length; index += 1) {
@@ -196,7 +222,10 @@ function layoutCanonicalGroupBlock<T extends { key: string; value: number }>(
     splitIndex = Math.max(1, Math.min(splitIndex, nodes.length - 1));
     const first = nodes.slice(0, splitIndex);
     const second = nodes.slice(splitIndex);
-    const firstValue = first.reduce((sum, node) => sum + finiteNonNegative(node.value), 0);
+    const firstValue = first.reduce(
+      (sum, node) => sum + finiteNonNegative(node.value),
+      0,
+    );
     const ratio = firstValue / total;
 
     if (rect.width >= rect.height) {
@@ -234,20 +263,35 @@ function horizontalSlices<T extends { key: string; value: number }>(
   gap: number,
   order: "value-desc" | "input",
 ): Array<T & { rect: TreemapRect }> {
-  const ordered = order === "input"
-    ? items.filter((item) => finiteNonNegative(item.value) > 0)
-    : stableValueOrder(items);
-  const total = ordered.reduce((sum, item) => sum + finiteNonNegative(item.value), 0);
-  const safeGap = ordered.length > 1
-    ? Math.min(finiteNonNegativeOption(gap, 0), rect.width / (ordered.length - 1))
-    : 0;
-  const available = Math.max(0, rect.width - Math.max(0, ordered.length - 1) * safeGap);
+  const ordered =
+    order === "input"
+      ? items.filter((item) => finiteNonNegative(item.value) > 0)
+      : stableValueOrder(items);
+  const total = ordered.reduce(
+    (sum, item) => sum + finiteNonNegative(item.value),
+    0,
+  );
+  const safeGap =
+    ordered.length > 1
+      ? Math.min(
+          finiteNonNegativeOption(gap, 0),
+          rect.width / (ordered.length - 1),
+        )
+      : 0;
+  const available = Math.max(
+    0,
+    rect.width - Math.max(0, ordered.length - 1) * safeGap,
+  );
   let x = rect.x;
   return ordered.map((item, index) => {
-    const width = index === ordered.length - 1
-      ? Math.max(0, rect.x + rect.width - x)
-      : available * (finiteNonNegative(item.value) / total);
-    const result = { ...item, rect: cleanRect({ x, y: rect.y, width, height: rect.height }) };
+    const width =
+      index === ordered.length - 1
+        ? Math.max(0, rect.x + rect.width - x)
+        : available * (finiteNonNegative(item.value) / total);
+    const result = {
+      ...item,
+      rect: cleanRect({ x, y: rect.y, width, height: rect.height }),
+    };
     x += width + safeGap;
     return result;
   });
@@ -266,34 +310,54 @@ export function layoutGroupedTreemap(
   const settings: Required<GroupedTreemapLayoutOptions> = {
     rowOrder: options.rowOrder === "input" ? "input" : DEFAULT_OPTIONS.rowOrder,
     orderedBands: options.orderedBands ?? false,
-    subgroupOrder: options.subgroupOrder === "value-desc" ? "value-desc" : DEFAULT_OPTIONS.subgroupOrder,
+    minBandHeight: finiteNonNegativeOption(options.minBandHeight, 0),
+    subgroupOrder:
+      options.subgroupOrder === "value-desc"
+        ? "value-desc"
+        : DEFAULT_OPTIONS.subgroupOrder,
     rowGap: finiteNonNegativeOption(options.rowGap, DEFAULT_OPTIONS.rowGap),
-    subgroupGap: finiteNonNegativeOption(options.subgroupGap, DEFAULT_OPTIONS.subgroupGap),
+    subgroupGap: finiteNonNegativeOption(
+      options.subgroupGap,
+      DEFAULT_OPTIONS.subgroupGap,
+    ),
     leafGap: finiteNonNegativeOption(options.leafGap, DEFAULT_OPTIONS.leafGap),
-    rowLabelHeight: finiteNonNegativeOption(options.rowLabelHeight, DEFAULT_OPTIONS.rowLabelHeight),
-    consolidateSmallRows: options.consolidateSmallRows ?? DEFAULT_OPTIONS.consolidateSmallRows,
-    smallRowThreshold: finiteNonNegativeOption(options.smallRowThreshold, DEFAULT_OPTIONS.smallRowThreshold),
+    rowLabelHeight: finiteNonNegativeOption(
+      options.rowLabelHeight,
+      DEFAULT_OPTIONS.rowLabelHeight,
+    ),
+    consolidateSmallRows:
+      options.consolidateSmallRows ?? DEFAULT_OPTIONS.consolidateSmallRows,
+    smallRowThreshold: finiteNonNegativeOption(
+      options.smallRowThreshold,
+      DEFAULT_OPTIONS.smallRowThreshold,
+    ),
   };
   const normalizedRows = rows.map((row) => {
-    const subgroups = row.subgroups.map((subgroup) => {
-      const leaves = stableValueOrder(
-        subgroup.leaves.map((leaf) => ({ ...leaf, value: finiteNonNegative(leaf.value) })),
-      );
-      return {
-        key: subgroup.key,
-        leaves,
-        value: leaves.reduce((sum, leaf) => sum + leaf.value, 0),
-      };
-    }).filter((subgroup) => subgroup.value > 0);
+    const subgroups = row.subgroups
+      .map((subgroup) => {
+        const leaves = stableValueOrder(
+          subgroup.leaves.map((leaf) => ({
+            ...leaf,
+            value: finiteNonNegative(leaf.value),
+          })),
+        );
+        return {
+          key: subgroup.key,
+          leaves,
+          value: leaves.reduce((sum, leaf) => sum + leaf.value, 0),
+        };
+      })
+      .filter((subgroup) => subgroup.value > 0);
     return {
       key: row.key,
       subgroups,
       value: subgroups.reduce((sum, subgroup) => sum + subgroup.value, 0),
     };
   });
-  const orderedRows = settings.rowOrder === "input"
-    ? normalizedRows.filter((row) => row.value > 0)
-    : stableValueOrder(normalizedRows);
+  const orderedRows =
+    settings.rowOrder === "input"
+      ? normalizedRows.filter((row) => row.value > 0)
+      : stableValueOrder(normalizedRows);
   const safeBounds = cleanRect(bounds);
   const total = orderedRows.reduce((sum, row) => sum + row.value, 0);
   if (total <= 0 || safeBounds.width <= 0 || safeBounds.height <= 0) return [];
@@ -301,124 +365,202 @@ export function layoutGroupedTreemap(
   // Secretariat Overview lays out in a square 0–100 coordinate system and
   // then applies the resulting percentages to the responsive plot.
   const virtualBounds: TreemapRect = { x: 0, y: 0, width: 100, height: 100 };
-  const rowGap = options.rowGap == null
-    ? 0.4
-    : settings.rowGap / safeBounds.height * virtualBounds.height;
-  const smallRowThreshold = options.smallRowThreshold == null
-    ? 5
-    : settings.smallRowThreshold / safeBounds.height * virtualBounds.height;
-  const rowLabelHeight = settings.rowLabelHeight / safeBounds.height * virtualBounds.height;
-  const subgroupGap = settings.subgroupGap / Math.min(safeBounds.width, safeBounds.height) * 100;
-  const leafGap = settings.leafGap / Math.min(safeBounds.width, safeBounds.height) * 100;
+  const rowGap =
+    options.rowGap == null
+      ? 0.4
+      : (settings.rowGap / safeBounds.height) * virtualBounds.height;
+  const smallRowThreshold =
+    options.smallRowThreshold == null
+      ? 5
+      : (settings.smallRowThreshold / safeBounds.height) * virtualBounds.height;
+  const rowLabelHeight =
+    (settings.rowLabelHeight / safeBounds.height) * virtualBounds.height;
+  const subgroupGap =
+    (settings.subgroupGap / Math.min(safeBounds.width, safeBounds.height)) *
+    100;
+  const leafGap =
+    (settings.leafGap / Math.min(safeBounds.width, safeBounds.height)) * 100;
 
   const nominalHeight = (row: (typeof orderedRows)[number]) =>
     virtualBounds.height * (row.value / total);
   let y = virtualBounds.y;
-  const rowRects: Array<(typeof orderedRows)[number] & { rect: TreemapRect }> = [];
+  const rowRects: Array<(typeof orderedRows)[number] & { rect: TreemapRect }> =
+    [];
 
   if (settings.rowOrder === "input" && settings.orderedBands) {
-    // Dynamic programming chooses contiguous bands using on-screen aspect ratios.
     const count = orderedRows.length;
-    const costs = Array<number>(count + 1).fill(Infinity);
     const breaks = Array<number>(count).fill(count);
-    costs[count] = 0;
-    for (let start = count - 1; start >= 0; start--) {
-      let bandValue = 0;
-      for (let end = start; end < count; end++) {
-        bandValue += orderedRows[end].value;
-        const bandHeight = bandValue / total * safeBounds.height;
-        let cost = costs[end + 1];
-        for (let index = start; index <= end; index++) {
-          const width = orderedRows[index].value / bandValue * safeBounds.width;
-          cost += Math.log(width / bandHeight) ** 2;
+    if (settings.minBandHeight > 0) {
+      // Keep standalone rows whenever possible; only merge contiguous neighbors.
+      // Reserve the full gap so an interior band's visible height meets the target.
+      const minimumValue =
+        ((settings.minBandHeight + (rowGap / 100) * safeBounds.height) /
+          safeBounds.height) *
+        total;
+      const bands: Array<{ start: number; end: number }> = [];
+      for (let start = 0; start < count; ) {
+        let end = start;
+        let value = 0;
+        do {
+          value += orderedRows[end].value;
+          end += 1;
+        } while (end < count && value < minimumValue);
+        if (value < minimumValue && bands.length > 0) {
+          bands[bands.length - 1].end = end;
+        } else {
+          bands.push({ start, end });
         }
-        if (cost < costs[start]) {
-          costs[start] = cost;
-          breaks[start] = end + 1;
+        start = end;
+      }
+      for (const band of bands) breaks[band.start] = band.end;
+    } else {
+      // Default ordered layout optimizes on-screen aspect ratios.
+      const costs = Array<number>(count + 1).fill(Infinity);
+      costs[count] = 0;
+      for (let start = count - 1; start >= 0; start--) {
+        let bandValue = 0;
+        for (let end = start; end < count; end++) {
+          bandValue += orderedRows[end].value;
+          const bandHeight = (bandValue / total) * safeBounds.height;
+          let cost = costs[end + 1];
+          for (let index = start; index <= end; index++) {
+            const width =
+              (orderedRows[index].value / bandValue) * safeBounds.width;
+            cost += Math.log(width / bandHeight) ** 2;
+          }
+          if (cost < costs[start]) {
+            costs[start] = cost;
+            breaks[start] = end + 1;
+          }
         }
       }
     }
-    const gapX = rowGap * safeBounds.height / safeBounds.width;
-    for (let start = 0; start < count;) {
+    const gapX = (rowGap * safeBounds.height) / safeBounds.width;
+    for (let start = 0; start < count; ) {
       const end = breaks[start];
       const band = orderedRows.slice(start, end);
       const bandValue = band.reduce((sum, row) => sum + row.value, 0);
-      const bandHeight = bandValue / total * 100;
+      const bandHeight = (bandValue / total) * 100;
       let x = 0;
       band.forEach((row, index) => {
-        const width = row.value / bandValue * 100;
+        const width = (row.value / bandValue) * 100;
         const leftInset = index > 0 ? gapX / 2 : 0;
         const rightInset = index < band.length - 1 ? gapX / 2 : 0;
         const topInset = start > 0 ? rowGap / 2 : 0;
         const bottomInset = end < count ? rowGap / 2 : 0;
-        rowRects.push({ ...row, rect: cleanRect({
-          x: x + leftInset, y: y + topInset,
-          width: Math.max(0, width - leftInset - rightInset),
-          height: Math.max(0, bandHeight - topInset - bottomInset),
-        }) });
+        rowRects.push({
+          ...row,
+          rect: cleanRect({
+            x: x + leftInset,
+            y: y + topInset,
+            width: Math.max(0, width - leftInset - rightInset),
+            height: Math.max(0, bandHeight - topInset - bottomInset),
+          }),
+        });
         x += width;
       });
       y += bandHeight;
       start = end;
     }
-  } else if (settings.rowOrder === "value-desc" && settings.consolidateSmallRows) {
-    const regularRows = orderedRows.filter((row) => nominalHeight(row) >= smallRowThreshold);
-    const smallRows = orderedRows.filter((row) => nominalHeight(row) < smallRowThreshold);
+  } else if (
+    settings.rowOrder === "value-desc" &&
+    settings.consolidateSmallRows
+  ) {
+    const regularRows = orderedRows.filter(
+      (row) => nominalHeight(row) >= smallRowThreshold,
+    );
+    const smallRows = orderedRows.filter(
+      (row) => nominalHeight(row) < smallRowThreshold,
+    );
     regularRows.slice(0, -1).forEach((row) => {
-      const share = row.value / total * virtualBounds.height;
+      const share = (row.value / total) * virtualBounds.height;
       rowRects.push({
         ...row,
-        rect: cleanRect({ x: 0, y, width: 100, height: Math.max(0, share - rowGap) }),
+        rect: cleanRect({
+          x: 0,
+          y,
+          width: 100,
+          height: Math.max(0, share - rowGap),
+        }),
       });
       y += share;
     });
     const bandRows = [...regularRows.slice(-1), ...smallRows];
     const bandValue = bandRows.reduce((sum, row) => sum + row.value, 0);
     if (bandRows.length > 0) {
-      rowRects.push(...layoutCanonicalGroupBlock(
-        bandRows,
-        { x: 0, y, width: 100, height: Math.max(0, bandValue / total * 100 - rowGap) },
-        0.15,
-      ));
+      rowRects.push(
+        ...layoutCanonicalGroupBlock(
+          bandRows,
+          {
+            x: 0,
+            y,
+            width: 100,
+            height: Math.max(0, (bandValue / total) * 100 - rowGap),
+          },
+          0.15,
+        ),
+      );
     }
   } else {
     let firstSmall = orderedRows.length;
-    while (firstSmall > 0 && nominalHeight(orderedRows[firstSmall - 1]) < smallRowThreshold) {
+    while (
+      firstSmall > 0 &&
+      nominalHeight(orderedRows[firstSmall - 1]) < smallRowThreshold
+    ) {
       firstSmall -= 1;
     }
-    const shouldConsolidate = settings.consolidateSmallRows
-      && firstSmall < orderedRows.length
-      && orderedRows.length - firstSmall >= 2;
-    const regularRows = shouldConsolidate ? orderedRows.slice(0, firstSmall) : orderedRows;
+    const shouldConsolidate =
+      settings.consolidateSmallRows &&
+      firstSmall < orderedRows.length &&
+      orderedRows.length - firstSmall >= 2;
+    const regularRows = shouldConsolidate
+      ? orderedRows.slice(0, firstSmall)
+      : orderedRows;
     const smallRows = shouldConsolidate ? orderedRows.slice(firstSmall) : [];
     regularRows.forEach((row) => {
-      const share = row.value / total * 100;
+      const share = (row.value / total) * 100;
       rowRects.push({
         ...row,
-        rect: cleanRect({ x: 0, y, width: 100, height: Math.max(0, share - rowGap) }),
+        rect: cleanRect({
+          x: 0,
+          y,
+          width: 100,
+          height: Math.max(0, share - rowGap),
+        }),
       });
       y += share;
     });
     if (smallRows.length > 0) {
       const bandValue = smallRows.reduce((sum, row) => sum + row.value, 0);
-      rowRects.push(...horizontalSlices(
-        smallRows,
-        { x: 0, y, width: 100, height: Math.max(0, bandValue / total * 100 - rowGap) },
-        rowGap,
-        "input",
-      ));
+      rowRects.push(
+        ...horizontalSlices(
+          smallRows,
+          {
+            x: 0,
+            y,
+            width: 100,
+            height: Math.max(0, (bandValue / total) * 100 - rowGap),
+          },
+          rowGap,
+          "input",
+        ),
+      );
     }
   }
 
-  const scaleRect = (rect: TreemapRect): TreemapRect => cleanRect({
-    x: safeBounds.x + rect.x / 100 * safeBounds.width,
-    y: safeBounds.y + rect.y / 100 * safeBounds.height,
-    width: rect.width / 100 * safeBounds.width,
-    height: rect.height / 100 * safeBounds.height,
-  });
+  const scaleRect = (rect: TreemapRect): TreemapRect =>
+    cleanRect({
+      x: safeBounds.x + (rect.x / 100) * safeBounds.width,
+      y: safeBounds.y + (rect.y / 100) * safeBounds.height,
+      width: (rect.width / 100) * safeBounds.width,
+      height: (rect.height / 100) * safeBounds.height,
+    });
 
   return rowRects.map((row) => {
-    const contentRect = inset(row.rect, Math.min(rowLabelHeight, row.rect.height * 0.35));
+    const contentRect = inset(
+      row.rect,
+      Math.min(rowLabelHeight, row.rect.height * 0.35),
+    );
     const subgroupRects = layoutBalancedTreemap(
       row.subgroups,
       contentRect,
@@ -433,7 +575,11 @@ export function layoutGroupedTreemap(
         key: subgroup.key,
         value: subgroup.value,
         rect: scaleRect(subgroup.rect),
-        leaves: layoutBalancedTreemap(subgroup.leaves, subgroup.rect, leafGap).map((leaf) => ({
+        leaves: layoutBalancedTreemap(
+          subgroup.leaves,
+          subgroup.rect,
+          leafGap,
+        ).map((leaf) => ({
           ...leaf,
           rect: scaleRect(leaf.rect),
         })),

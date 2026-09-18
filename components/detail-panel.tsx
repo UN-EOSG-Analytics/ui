@@ -209,6 +209,8 @@ export function DetailFields({
 export function DetailPanel({
   title,
   titleId,
+  subtitle,
+  contentClassName,
   eyebrow,
   controls,
   headerMetadata,
@@ -220,6 +222,8 @@ export function DetailPanel({
   title: React.ReactNode;
   /** ID for the visible title, so the product's outer dialog can reference it. */
   titleId?: string;
+  subtitle?: React.ReactNode;
+  contentClassName?: string;
   eyebrow?: string;
   /** Close, expand — anything acting on the panel itself. */
   controls?: React.ReactNode;
@@ -233,35 +237,44 @@ export function DetailPanel({
   return (
     // h-full + flex-col is what makes the BODY scroll rather than the page.
     <div className={cn("flex h-full min-h-0 flex-col", className)}>
-      <header className="flex shrink-0 items-start gap-3 border-b border-border px-4 py-2.5">
-        <div className="min-w-0 flex-1">
-          {eyebrow && (
-            <p className={cn(typography.eyebrow, "text-muted-foreground")}>
-              {eyebrow}
-            </p>
-          )}
-          {/* Truncates rather than wrapping: the header is a fixed anchor, so
-              a long title must not change its height as you scroll. */}
-          <h2 id={titleId} className={cn(typography.subTitle, "truncate")}>
+      <header className="shrink-0 border-b border-border ps-4 pe-1.5 py-2.5">
+        {eyebrow && (
+          <p className={cn(typography.eyebrow, "text-muted-foreground")}>
+            {eyebrow}
+          </p>
+        )}
+        <div className="flex items-start gap-3">
+          <h2
+            id={titleId}
+            className={cn(
+              typography.sectionTitle,
+              "min-w-0 flex-1 whitespace-normal break-words",
+              controls && "pt-1",
+            )}
+          >
             {title}
           </h2>
-          {headerMetadata && (
-            <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
-              {headerMetadata}
-            </div>
+          {controls && (
+            <div className="flex shrink-0 items-center gap-1">{controls}</div>
           )}
         </div>
-        {/* pe-1 leaves room for a focus ring. Flush against the edge, a 2px
-            ring with a 2px offset is clipped by the panel boundary. */}
-        {controls && (
-          <div className="flex shrink-0 items-center gap-1 pe-1">
-            {controls}
+        {subtitle && (
+          <div
+            className={cn(typography.meta, "mt-1 pe-2.5 text-muted-foreground")}
+          >
+            {subtitle}
+          </div>
+        )}
+        {headerMetadata && (
+          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 pe-2.5">
+            {headerMetadata}
           </div>
         )}
       </header>
       <div
         className={cn(
-          "min-h-0 flex-1 overflow-y-auto px-6 py-5",
+          "min-h-0 flex-1 overflow-y-auto px-4 py-4",
+          contentClassName,
           bodyClassName,
         )}
       >

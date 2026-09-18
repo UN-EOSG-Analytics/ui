@@ -1,3 +1,11 @@
+import {
+  FinancialPanelSection,
+  FinancialPanelTotalRow,
+  FinancialPanelBreakdownRow,
+  FinancialPanelHeading,
+  FinancialPanelYearSelector,
+  type FinancialPanelYearSelectorProps,
+} from "./financial-panel-parts";
 import * as React from "react";
 import { DetailHeader, DetailPanel, DetailSection } from "./detail-panel";
 import { ExternalLink } from "./external-link";
@@ -35,10 +43,12 @@ export type FinancialDetailPanelYear =
 
 export interface FinancialDetailPanelFundingItem {
   id: string;
-  label: string;
+  label: React.ReactNode;
   value: React.ReactNode;
   /** Caller-owned semantic marker; the panel does not know funding taxonomies. */
   marker: React.ReactNode;
+  percent?: number;
+  color?: string;
   share?: React.ReactNode;
   details?: React.ReactNode;
 }
@@ -47,13 +57,20 @@ export interface FinancialDetailPanelFundingBreakdown {
   heading: string;
   hint?: React.ReactNode;
   items: readonly FinancialDetailPanelFundingItem[];
+  /** Optional chart or supporting content sharing the funding-source labels. */
+  content?: React.ReactNode;
   note?: React.ReactNode;
   state?: FinancialDetailPanelRegionState;
   /** Localized visible/screen-reader status for this region. */
   status: string;
 }
 
-export type FinancialDetailPanelRegionState = "ready" | "loading" | "empty" | "error" | "incomplete";
+export type FinancialDetailPanelRegionState =
+  | "ready"
+  | "loading"
+  | "empty"
+  | "error"
+  | "incomplete";
 
 export interface FinancialDetailPanelTrend {
   heading: string;
@@ -86,14 +103,20 @@ export interface FinancialDetailPanelNotice {
 }
 
 export interface FinancialDetailPanelProps {
+  overviewHeading?: string;
+  yearSelectorPlacement?: "content" | "header";
+  yearSelector?: FinancialPanelYearSelectorProps;
   title: React.ReactNode;
   /** Reference this ID from the product-owned dialog's aria-labelledby. */
   titleId: string;
   eyebrow?: string;
   controls?: React.ReactNode;
   metadata?: React.ReactNode;
-  total: FinancialDetailPanelTotal;
-  year: FinancialDetailPanelYear;
+  /** Omit both total and year when supplying an existing summary through children. */
+  total?: FinancialDetailPanelTotal;
+  year?: FinancialDetailPanelYear;
+  subtitle?: React.ReactNode;
+  contentClassName?: string;
   fundingBreakdown?: FinancialDetailPanelFundingBreakdown;
   trend?: FinancialDetailPanelTrend;
   sources?: FinancialDetailPanelSources;
@@ -110,15 +133,26 @@ function YearControl({ year }: { year: FinancialDetailPanelYear }) {
   if (year.kind === "static") {
     return (
       <div className="sm:text-end">
-        <div className={cn(typography.eyebrow, "mb-0.5 text-muted-foreground")}>{year.label}</div>
-        <div className={cn(typography.numeric, "font-semibold text-foreground")}>{year.value}</div>
+        <div className={cn(typography.subTitle, "mb-0.5 text-foreground")}>
+          {year.label}
+        </div>
+        <div
+          className={cn(typography.numeric, "font-semibold text-foreground")}
+        >
+          {year.value}
+        </div>
       </div>
     );
   }
 
   return (
     <label className="block min-w-32">
-      <span className={cn(typography.eyebrow, "mb-1 block text-muted-foreground sm:text-end")}>
+      <span
+        className={cn(
+          typography.subTitle,
+          "mb-1 block text-foreground sm:text-end",
+        )}
+      >
         {year.label}
       </span>
       <select
@@ -136,58 +170,69 @@ function YearControl({ year }: { year: FinancialDetailPanelYear }) {
         {year.pending && year.pendingLabel && (
           <option value={year.value}>{year.pendingLabel}</option>
         )}
-        {!year.pending && year.options.map((option) => (
-          <option key={option.value} value={option.value} disabled={option.disabled}>
-            {option.label}
-          </option>
-        ))}
+        {!year.pending &&
+          year.options.map((option) => (
+            <option
+              key={option.value}
+              value={option.value}
+              disabled={option.disabled}
+            >
+              {option.label}
+            </option>
+          ))}
       </select>
     </label>
   );
 }
 
-function Summary({ total, year }: {
+function Summary({
+  total,
+  year,
+}: {
   total: FinancialDetailPanelTotal;
-  year: FinancialDetailPanelYear;
+  year?: FinancialDetailPanelYear;
 }) {
   return (
-    <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-      <div className="min-w-0">
-        <div className={cn(typography.eyebrow, "mb-0.5 text-muted-foreground")}>{total.label}</div>
-        <div className={cn(typography.sectionTitle, "tabular-nums")}>{total.value}</div>
-        {total.details && <div className={cn(typography.caption, "mt-1")}>{total.details}</div>}
-      </div>
-      <div className="sm:ms-auto sm:shrink-0">
-        <YearControl year={year} />
-      </div>
+    <div>
+      <FinancialPanelTotalRow label={total.label} value={total.value} />
+      {total.details && (
+        <div className={cn(typography.caption, "mt-1")}>{total.details}</div>
+      )}
+      {year && (
+        <div className="mt-2 text-end">
+          <YearControl year={year} />
+        </div>
+      )}
     </div>
   );
 }
 
-function FundingBreakdown({ breakdown }: { breakdown: FinancialDetailPanelFundingBreakdown }) {
+function FundingBreakdown({
+  breakdown,
+}: {
+  breakdown: FinancialDetailPanelFundingBreakdown;
+}) {
   const state = breakdown.state ?? "ready";
   return (
-    <DetailSection heading={breakdown.heading} hint={breakdown.hint}>
+    <FinancialPanelSection heading={breakdown.heading} hint={breakdown.hint}>
       <div aria-busy={state === "loading" || undefined}>
         {breakdown.items.length > 0 ? (
           <ul className="space-y-3">
-          {breakdown.items.map((item) => (
-            <li key={item.id} className="grid grid-cols-[auto_minmax(0,1fr)_auto] gap-x-3 gap-y-1">
-              <span aria-hidden="true" className="mt-1.5 flex size-3 shrink-0 items-center justify-center">
-                {item.marker}
-              </span>
-              <span className="min-w-0 font-medium text-foreground">{item.label}</span>
-              <span className={cn(typography.numeric, "text-end font-medium text-foreground")}>
-                {item.value}
-              </span>
-              {(item.share || item.details) && (
-                <span className={cn(typography.caption, "col-start-2 col-end-4 flex flex-wrap gap-x-2 gap-y-0.5")}>
-                  {item.share && <span>{item.share}</span>}
-                  {item.details && <span>{item.details}</span>}
-                </span>
-              )}
-            </li>
-          ))}
+            {breakdown.items.map((item) => (
+              <li key={item.id}>
+                <FinancialPanelBreakdownRow
+                  label={item.label}
+                  value={item.value}
+                  percent={item.percent}
+                  color={item.color}
+                />
+                {(item.share || item.details) && (
+                  <div className={cn(typography.caption, "mt-1 text-end")}>
+                    {item.share} {item.details}
+                  </div>
+                )}
+              </li>
+            ))}
           </ul>
         ) : null}
       </div>
@@ -202,22 +247,23 @@ function FundingBreakdown({ breakdown }: { breakdown: FinancialDetailPanelFundin
       >
         {breakdown.status}
       </p>
+      {breakdown.content && <div className="mt-4">{breakdown.content}</div>}
       {breakdown.note && (
-        <p className={cn(typography.caption, "mt-4 border-t border-border pt-3")}>
+        <p
+          className={cn(typography.caption, "mt-4 border-t border-border pt-3")}
+        >
           {breakdown.note}
         </p>
       )}
-    </DetailSection>
+    </FinancialPanelSection>
   );
 }
 
 function Trend({ trend }: { trend: FinancialDetailPanelTrend }) {
   const state = trend.state ?? "ready";
   return (
-    <DetailSection heading={trend.heading} hint={trend.hint}>
-      <div aria-busy={state === "loading" || undefined}>
-        {trend.content}
-      </div>
+    <FinancialPanelSection heading={trend.heading} hint={trend.hint}>
+      <div aria-busy={state === "loading" || undefined}>{trend.content}</div>
       <p
         aria-live="polite"
         aria-atomic="true"
@@ -229,7 +275,7 @@ function Trend({ trend }: { trend: FinancialDetailPanelTrend }) {
       >
         {trend.status}
       </p>
-    </DetailSection>
+    </FinancialPanelSection>
   );
 }
 
@@ -240,20 +286,22 @@ function Sources({ sources }: { sources: FinancialDetailPanelSources }) {
       <div aria-busy={state === "loading" || undefined}>
         {sources.items.length > 0 ? (
           <ul className="space-y-3">
-          {sources.items.map((source) => (
-            <li key={source.id}>
-              <ExternalLink
-                href={source.href}
-                newTabLabel={sources.newTabLabel}
-                className="font-medium text-un-blue-text underline decoration-un-blue/40 underline-offset-2 hover:decoration-un-blue focus-visible:ring-2 focus-visible:ring-un-blue/50 focus-visible:ring-offset-2 focus-visible:outline-none"
-              >
-                {source.label}
-              </ExternalLink>
-              {source.description && (
-                <div className={cn(typography.caption, "mt-1")}>{source.description}</div>
-              )}
-            </li>
-          ))}
+            {sources.items.map((source) => (
+              <li key={source.id}>
+                <ExternalLink
+                  href={source.href}
+                  newTabLabel={sources.newTabLabel}
+                  className="font-medium text-un-blue-text underline decoration-un-blue/40 underline-offset-2 hover:decoration-un-blue focus-visible:ring-2 focus-visible:ring-un-blue/50 focus-visible:ring-offset-2 focus-visible:outline-none"
+                >
+                  {source.label}
+                </ExternalLink>
+                {source.description && (
+                  <div className={cn(typography.caption, "mt-1")}>
+                    {source.description}
+                  </div>
+                )}
+              </li>
+            ))}
           </ul>
         ) : null}
       </div>
@@ -279,12 +327,17 @@ function Notice({ notice }: { notice: FinancialDetailPanelNotice }) {
       className={cn(
         "rounded-md border px-4 py-3",
         notice.tone === "error" && "border-destructive/30 bg-destructive/5",
-        notice.tone === "incomplete" && "border-un-yellow-shade/40 bg-un-yellow/10",
+        notice.tone === "incomplete" &&
+          "border-un-yellow-shade/40 bg-un-yellow/10",
         notice.tone === "empty" && "border-border bg-muted/50",
       )}
     >
-      {notice.title && <p className="text-sm font-semibold text-foreground">{notice.title}</p>}
-      <div className={cn(typography.meta, notice.title && "mt-1")}>{notice.description}</div>
+      {notice.title && (
+        <p className="text-sm font-semibold text-foreground">{notice.title}</p>
+      )}
+      <div className={cn(typography.meta, notice.title && "mt-1")}>
+        {notice.description}
+      </div>
     </div>
   );
 }
@@ -295,8 +348,13 @@ function Notice({ notice }: { notice: FinancialDetailPanelNotice }) {
  * composition only standardizes the visible financial regions.
  */
 export function FinancialDetailPanel({
+  overviewHeading,
+  yearSelectorPlacement = "content",
+  yearSelector,
   title,
   titleId,
+  subtitle,
+  contentClassName,
   eyebrow,
   controls,
   metadata,
@@ -315,17 +373,48 @@ export function FinancialDetailPanel({
     <DetailPanel
       title={title}
       titleId={titleId}
+      subtitle={subtitle}
+      contentClassName={contentClassName}
       eyebrow={eyebrow}
-      controls={controls}
+      controls={
+        yearSelector && yearSelectorPlacement === "header" ? (
+          <>
+            <FinancialPanelYearSelector {...yearSelector} variant="pill" />
+            {controls}
+          </>
+        ) : (
+          controls
+        )
+      }
       className={cn("w-full sm:w-lg sm:max-w-full", className)}
     >
       <div aria-busy={busy || undefined}>
         {statusMessage && (
-          <p className="sr-only" aria-live="polite" aria-atomic="true">{statusMessage}</p>
+          <p className="sr-only" aria-live="polite" aria-atomic="true">
+            {statusMessage}
+          </p>
         )}
+        {yearSelector &&
+          yearSelectorPlacement === "content" &&
+          (overviewHeading ? (
+            <FinancialPanelHeading
+              className="mb-3"
+              controls={<FinancialPanelYearSelector {...yearSelector} />}
+            >
+              {overviewHeading}
+            </FinancialPanelHeading>
+          ) : (
+            <div className="mb-3 flex justify-end">
+              <FinancialPanelYearSelector {...yearSelector} />
+            </div>
+          ))}
         {metadata && <DetailHeader className="mb-5">{metadata}</DetailHeader>}
-        <Summary total={total} year={year} />
-        {notice && <div className="mt-6"><Notice notice={notice} /></div>}
+        {total && <Summary total={total} year={year} />}
+        {notice && (
+          <div className="mt-6">
+            <Notice notice={notice} />
+          </div>
+        )}
         {fundingBreakdown && <FundingBreakdown breakdown={fundingBreakdown} />}
         {trend && <Trend trend={trend} />}
         {children}

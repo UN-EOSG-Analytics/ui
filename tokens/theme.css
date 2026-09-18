@@ -153,6 +153,18 @@
   --color-open-funding-voluntary-earmarked: var(--color-un-blue);
   --color-open-funding-other: var(--color-un-blue-tint);
 
+  /* Neutral swatches for filters spanning several chart group colours.
+     These describe source shading, not the groups' individual hues. */
+  --color-open-funding-assessed-gray: #252525;
+  --color-open-funding-voluntary-unearmarked-gray: #606060;
+  --color-open-funding-voluntary-earmarked-gray: #999999;
+  --color-open-funding-other-gray: #cccccc;
+  --color-open-funding-regular-budget-gray: var(
+    --color-open-funding-assessed-gray
+  );
+  --color-open-funding-other-assessed-gray: #777777;
+  --color-open-funding-extrabudgetary-gray: #bbbbbb;
+
   /* ===============================================================
      TYPE
      ===============================================================
@@ -199,3 +211,5 @@
 /* Tailwind ignores node_modules by default. Register the exported component
    sources so consumers importing this stylesheet generate their utilities. */
 @source "../components";
+/* Semantic token catalogues include complete utility names used by consumers. */
+@source "../lib";

@@ -4,7 +4,9 @@ import {
   GroupedTreemap,
   type GroupedTreemapRow,
 } from "../components/grouped-treemap";
-import { Button } from "../components/button";
+import { BinaryToggle } from "../components/binary-toggle";
+import { YearSlider } from "../components/year-slider";
+import { ChartFooter } from "../components/chart-footer";
 
 const currency = new Intl.NumberFormat("en", {
   style: "currency",
@@ -37,8 +39,18 @@ const rows: GroupedTreemapRow[] = [
             value: 54,
             onActivate: () => {},
             segments: [
-              { key: "assessed", label: "Assessed", value: 34, color: "var(--color-open-funding-assessed)" },
-              { key: "voluntary", label: "Voluntary", value: 20, color: "var(--color-open-funding-voluntary-earmarked)" },
+              {
+                key: "assessed",
+                label: "Assessed",
+                value: 34,
+                color: "var(--color-open-funding-assessed)",
+              },
+              {
+                key: "voluntary",
+                label: "Voluntary",
+                value: 20,
+                color: "var(--color-open-funding-voluntary-earmarked)",
+              },
             ],
           },
           {
@@ -80,7 +92,7 @@ const rows: GroupedTreemapRow[] = [
 ];
 
 const meta = {
-  title: "UI Elements/GroupedTreemap",
+  title: "open.un.org/Charts/Treemap",
   component: GroupedTreemap,
   args: { rows, totalLabel: "Total" },
   parameters: {
@@ -97,63 +109,119 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-function InteractiveExample({ multipleTotals = false }: { multipleTotals?: boolean }) {
+function InteractiveExample({
+  multipleTotals = false,
+}: {
+  multipleTotals?: boolean;
+}) {
   const [query, setQuery] = React.useState("");
+  const [year, setYear] = React.useState(2025);
   const [grouping, setGrouping] = React.useState<"type" | "region">("type");
+  const scaledRows = rows.map((row, rowIndex) => ({
+    ...row,
+    subgroups: row.subgroups?.map((group) => ({
+      ...group,
+      leaves: group.leaves.map((leaf, index) => {
+        const factor = 1 + (year - 2025) * (0.04 + (index + rowIndex) * 0.01);
+        return {
+          ...leaf,
+          value: leaf.value * factor,
+          segments: leaf.segments?.map((segment) => ({
+            ...segment,
+            value: segment.value * factor,
+          })),
+        };
+      }),
+    })),
+  }));
+  const leaves = scaledRows.flatMap((row) =>
+    (row.subgroups ?? []).flatMap((group) => group.leaves),
+  );
+  const displayRows: GroupedTreemapRow[] =
+    grouping === "type"
+      ? scaledRows
+      : [
+          {
+            key: "region-a",
+            label: "Example region A",
+            color: "var(--color-faded-jade)",
+            leaves: leaves.filter((_, index) => index % 2 === 0),
+          },
+          {
+            key: "region-b",
+            label: "Example region B",
+            color: "var(--color-smoky)",
+            leaves: leaves.filter((_, index) => index % 2 === 1),
+          },
+        ];
+  const matches = (label: string) =>
+    label.toLowerCase().includes(query.trim().toLowerCase());
+  const visibleLeaves = leaves.filter((leaf) => matches(leaf.label));
   return (
     <GroupedTreemap
-      rows={rows}
+      rows={displayRows}
       plotClassName="h-[560px] sm:h-[680px] lg:h-[780px]"
       search={{
         value: query,
         onChange: setQuery,
         label: "Search contributors",
         placeholder: "Search contributors",
+        predicate: (label) => matches(label),
       }}
-      searchAccessory={(
-        <div role="group" aria-label="Group contributors" className="inline-flex rounded-md border border-border bg-background p-0.5">
-          <Button
-            type="button"
-            size="xs"
-            variant={grouping === "type" ? "default" : "ghost"}
-            aria-pressed={grouping === "type"}
-            onClick={() => setGrouping("type")}
-          >
-            Type
-          </Button>
-          <Button
-            type="button"
-            size="xs"
-            variant={grouping === "region" ? "default" : "ghost"}
-            aria-pressed={grouping === "region"}
-            onClick={() => setGrouping("region")}
-          >
-            Region
-          </Button>
-        </div>
-      )}
-      summaries={multipleTotals
-        ? [
-            { key: "assessed", label: "Assessed", value: currency.format(120_000_000) },
-            { key: "voluntary", label: "Voluntary", value: currency.format(120_000_000) },
-          ]
-        : undefined}
+      yearControl={
+        <YearSlider
+          years={[2021, 2022, 2023, 2024, 2025]}
+          selectedYear={year}
+          onChange={setYear}
+        />
+      }
+      controls={
+        <BinaryToggle
+          variant="segmented"
+          label="Group contributors"
+          options={[
+            { value: "type", label: "Type" },
+            { value: "region", label: "Region" },
+          ]}
+          value={grouping}
+          onValueChange={(value) => setGrouping(value as "type" | "region")}
+        />
+      }
+      footer={
+        <ChartFooter
+          hint="Click on a contributor to explore details"
+          sourceLabel="Source: illustrative data"
+          sourceDetails="Dummy values for reviewing the shared chart components."
+        />
+      }
+      summaries={
+        multipleTotals
+          ? [
+              {
+                key: "total",
+                label: "Total",
+                value: currency.format(
+                  visibleLeaves.reduce((sum, leaf) => sum + leaf.value, 0) *
+                    1_000_000,
+                ),
+              },
+              {
+                key: "contributors",
+                label: "Contributors",
+                value: String(visibleLeaves.length),
+              },
+            ]
+          : undefined
+      }
       totalLabel="Total"
       formatValue={(value) => currency.format(value * 1_000_000)}
       formatAccessibleValue={(value) => `${value} million US dollars`}
       showLeafValues
-      sourceHeading="Sources"
-      sources={[
-        {
-          key: "financial-statistics",
-          label: "UN System Financial Statistics",
-          href: "https://unsceb.org/financial-statistics",
-          openInNewTab: true,
-          newTabLabel: "opens in a new tab",
-        },
-        { key: "reporting-entities", label: "Reporting entities", description: "2024 submissions" },
-      ]}
-      emptyContent={<div className="grid h-full place-items-center text-sm text-muted-foreground">No contributors match this search.</div>}
+      emptyContent={
+        <div className="grid h-full place-items-center text-sm text-muted-foreground">
+          No contributors match this search.
+        </div>
+      }
     />
   );
 }
@@ -211,7 +279,12 @@ const secretariatRows: GroupedTreemapRow[] = [
     leaves: [
       { key: "DESA", label: "DESA", value: 39, onActivate: () => {} },
       { key: "UNCTAD", label: "UNCTAD", value: 24, onActivate: () => {} },
-      { key: "STA", label: "Staff Assessment", value: 11, onActivate: () => {} },
+      {
+        key: "STA",
+        label: "Staff Assessment",
+        value: 11,
+        onActivate: () => {},
+      },
     ],
   },
 ];
@@ -236,7 +309,9 @@ export const SemanticRowOrder: Story = {
       rows={[rows[1], rows[0]]}
       height={480}
       layout={{ rowOrder: "input" }}
-      summaries={[{ key: "total", label: "Total", value: currency.format(240_000_000) }]}
+      summaries={[
+        { key: "total", label: "Total", value: currency.format(240_000_000) },
+      ]}
       totalLabel="Total"
       formatValue={(value) => currency.format(value * 1_000_000)}
     />
