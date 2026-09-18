@@ -1,6 +1,7 @@
 "use client";
 import * as React from "react";
-import { MousePointerClick, ChevronDown, Download } from "lucide-react";
+import { ChevronDown, Download } from "lucide-react";
+import { InteractionHint } from "./interaction-hint";
 import { cn } from "../lib/utils";
 import { typography } from "../lib/typography";
 
@@ -23,13 +24,7 @@ export function ChartFooter({
   return (
     <footer className={cn(typography.meta, "mt-3")}>
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <span className="inline-flex items-center gap-1.5 text-un-black">
-          <MousePointerClick
-            className="size-4 text-un-blue"
-            aria-hidden="true"
-          />
-          {hint}
-        </span>
+        <InteractionHint text={hint} />
         <div className="ms-auto flex flex-wrap items-center gap-3">
           <button
             type="button"
