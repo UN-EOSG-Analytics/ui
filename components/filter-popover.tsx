@@ -74,7 +74,7 @@ export function FilterPopover({
           size="sm"
           className={cn(
             selected.length > 0 &&
-              "border-un-blue bg-un-blue-tint-50 text-un-blue-text",
+              "border-un-blue bg-un-blue-tint-50 text-accent-foreground",
             className,
           )}
         >
@@ -126,7 +126,7 @@ export function FilterPopover({
                       className={cn(
                         "flex size-4 shrink-0 items-center justify-center rounded-sm border",
                         isSelected
-                          ? "border-un-blue bg-un-blue text-white"
+                          ? "border-un-blue bg-un-blue-text text-white"
                           : "border-input",
                       )}
                     >

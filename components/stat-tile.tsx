@@ -51,7 +51,7 @@ export function StatTile({
   );
 
   const base = cn(
-    "flex w-full items-center gap-2 rounded-lg bg-un-blue/10 px-3 py-1.5 text-start",
+    "flex w-full items-center gap-2 rounded-lg bg-accent px-3 py-1.5 text-start",
     className,
   );
 
@@ -63,7 +63,7 @@ export function StatTile({
       onClick={onClick}
       className={cn(
         base,
-        "transition-colors hover:bg-un-blue/20",
+        "transition-colors hover:bg-accent",
         "focus-visible:ring-focus-ring focus-visible:ring-un-blue/50 focus-visible:outline-none",
       )}
     >

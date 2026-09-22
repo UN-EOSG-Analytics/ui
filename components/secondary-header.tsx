@@ -52,7 +52,7 @@ export function SecondaryHeader({
   return (
     <div
       className={cn(
-        "sticky top-[65px] z-30 border-b border-gray-200 min-[1408px]:top-14",
+        "sticky top-[65px] z-30 border-b border-border min-[1408px]:top-14",
         secondaryHeaderTransparencyClasses[transparency],
         className,
       )}
@@ -69,8 +69,8 @@ export function SecondaryHeader({
             className: cn(
               "shrink-0 border-b-2 px-3 py-3 text-sm whitespace-nowrap transition-colors first:pl-0",
               active
-                ? "border-un-blue font-semibold text-un-blue"
-                : "border-transparent text-gray-600 hover:border-gray-300 hover:text-gray-900",
+                ? "border-un-blue font-semibold text-un-blue-text"
+                : "border-transparent text-gray-600 hover:border-border hover:text-foreground",
             ),
             children: item.label,
           };

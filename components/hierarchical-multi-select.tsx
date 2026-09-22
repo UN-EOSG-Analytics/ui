@@ -172,8 +172,8 @@ export function HierarchicalMultiSelect({
               type="button"
               className={cn(
                 pillStyles,
-                "bg-secondary transition-colors hover:bg-gray-200",
-                open && "border-gray-400 bg-gray-200",
+                "bg-secondary transition-colors hover:bg-muted",
+                open && "border-gray-400 bg-muted",
               )}
             >
               {selectionSummary !== undefined ? (
@@ -208,7 +208,7 @@ export function HierarchicalMultiSelect({
                   }}
                   className={cn(
                     pillStyles,
-                    "group bg-secondary transition-colors hover:bg-gray-200",
+                    "group bg-secondary transition-colors hover:bg-muted",
                   )}
                 >
                   <span
@@ -226,12 +226,12 @@ export function HierarchicalMultiSelect({
             })}
         </div>
         <PopoverContent
-          className="w-[320px] border-gray-300 bg-white p-0"
+          className="w-[320px] border-border bg-white p-0"
           align="start"
           sideOffset={4}
         >
           {/* Search input - minimal style matching ChartSearchInput */}
-          <div className="relative border-b border-gray-200">
+          <div className="relative border-b border-border">
             <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400" />
             <input
               type="text"
@@ -275,7 +275,7 @@ export function HierarchicalMultiSelect({
                   return (
                     <label
                       key={group.id}
-                      className="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm hover:bg-gray-100"
+                      className="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm hover:bg-secondary"
                     >
                       <input
                         type="checkbox"
@@ -305,7 +305,7 @@ export function HierarchicalMultiSelect({
                   <div key={group.id}>
                     {/* Group header (selectable for aggregate) */}
                     <div
-                      className="flex w-full items-center gap-2 px-3 py-2 hover:bg-gray-100 transition-colors cursor-pointer"
+                      className="flex w-full items-center gap-2 px-3 py-2 hover:bg-secondary transition-colors cursor-pointer"
                       onClick={() => hasExpandable && toggleExpanded(group.id)}
                     >
                       {/* Expand/collapse chevron */}
@@ -356,7 +356,7 @@ export function HierarchicalMultiSelect({
                           <div key={subgroup.id}>
                             {/* Subgroup header */}
                             <div
-                              className="flex w-full items-center gap-2 pl-7 pr-3 py-1.5 hover:bg-gray-100 transition-colors cursor-pointer"
+                              className="flex w-full items-center gap-2 pl-7 pr-3 py-1.5 hover:bg-secondary transition-colors cursor-pointer"
                               onClick={() =>
                                 sgHasChildren && toggleExpanded(subgroup.id)
                               }
@@ -405,7 +405,7 @@ export function HierarchicalMultiSelect({
                                 <button
                                   type="button"
                                   key={child}
-                                  className="flex w-full items-center gap-2 pl-14 pr-3 py-1.5 text-left hover:bg-gray-100 transition-colors"
+                                  className="flex w-full items-center gap-2 pl-14 pr-3 py-1.5 text-left hover:bg-secondary transition-colors"
                                   onClick={(e) => toggleItem(child, e)}
                                 >
                                   {/* Colored checkbox */}
@@ -435,7 +435,7 @@ export function HierarchicalMultiSelect({
                         <button
                           type="button"
                           key={child}
-                          className="flex w-full items-center gap-2 pl-10 pr-3 py-1.5 text-left hover:bg-gray-100 transition-colors"
+                          className="flex w-full items-center gap-2 pl-10 pr-3 py-1.5 text-left hover:bg-secondary transition-colors"
                           onClick={(e) => toggleItem(child, e)}
                         >
                           {/* Colored checkbox */}

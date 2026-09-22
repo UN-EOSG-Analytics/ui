@@ -214,7 +214,7 @@ export function YearSlider({
           />
         </div>
       </div>
-      <span className="min-w-[3ch] text-sm font-medium whitespace-nowrap text-gray-900">
+      <span className="min-w-[3ch] text-sm font-medium whitespace-nowrap text-foreground">
         {formatLabel ? formatLabel(displayYear) : displayYear}
       </span>
     </div>

@@ -55,6 +55,17 @@ export const Primary: Story = {
       </Section>
 
       <Section
+        title="Neutral UI colours"
+        note="Shared neutral tokens back the semantic roles in each app. Use neutral-text for supporting text, neutral-surface for quiet surfaces, and neutral-border for dividers. Primary text remains un-black."
+      >
+        <div className="flex flex-wrap gap-5">
+          <Swatch cls="bg-neutral-surface" name="neutral-surface" hex="#F4F4F5" />
+          <Swatch cls="bg-neutral-border" name="neutral-border" hex="#E4E4E7" />
+          <Swatch cls="bg-neutral-text" name="neutral-text" hex="#52525B" />
+        </div>
+      </Section>
+
+      <Section
         title="UN Blue — the full ramp"
         note="The only accent that earns a complete set, because it is the only one used at volume. Tints are for background washes; the shade is for deep fills and text on light; the -text values are the brand's own accessible text colours for white grounds."
       >

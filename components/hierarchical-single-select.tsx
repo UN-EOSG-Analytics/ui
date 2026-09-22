@@ -121,8 +121,8 @@ export function HierarchicalSingleSelect({
             type="button"
             className={cn(
               pillStyles,
-              "bg-secondary transition-colors hover:bg-gray-200",
-              open && "bg-gray-200",
+              "bg-secondary transition-colors hover:bg-muted",
+              open && "bg-muted",
             )}
           >
             <span className="max-w-[180px] truncate font-medium">
@@ -137,12 +137,12 @@ export function HierarchicalSingleSelect({
           </button>
         </PopoverTrigger>
         <PopoverContent
-          className="w-[320px] border-gray-300 bg-white p-0"
+          className="w-[320px] border-border bg-white p-0"
           align="start"
           sideOffset={4}
         >
           {/* Search input */}
-          <div className="relative border-b border-gray-200">
+          <div className="relative border-b border-border">
             <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400" />
             <input
               type="text"
@@ -180,7 +180,7 @@ export function HierarchicalSingleSelect({
                     <div
                       className={cn(
                         "flex w-full items-center gap-2 px-3 py-2 transition-colors cursor-pointer",
-                        isGroupSelected ? "bg-gray-100" : "hover:bg-gray-50",
+                        isGroupSelected ? "bg-secondary" : "hover:bg-muted",
                       )}
                       onClick={() => selectItem(group.id)}
                     >
@@ -216,8 +216,8 @@ export function HierarchicalSingleSelect({
                         className={cn(
                           "flex-1 min-w-0 text-sm truncate",
                           isGroupSelected
-                            ? "font-medium text-gray-900"
-                            : "text-gray-700",
+                            ? "font-medium text-foreground"
+                            : "text-foreground",
                         )}
                       >
                         {group.label}
@@ -242,8 +242,8 @@ export function HierarchicalSingleSelect({
                             className={cn(
                               "flex w-full items-center gap-2 pl-10 pr-3 py-1.5 text-left transition-colors",
                               isChildSelected
-                                ? "bg-gray-100"
-                                : "hover:bg-gray-50",
+                                ? "bg-secondary"
+                                : "hover:bg-muted",
                             )}
                             onClick={() => selectItem(child)}
                           >
@@ -251,7 +251,7 @@ export function HierarchicalSingleSelect({
                               className={cn(
                                 "flex-1 min-w-0 text-sm truncate",
                                 isChildSelected
-                                  ? "font-medium text-gray-900"
+                                  ? "font-medium text-foreground"
                                   : "text-gray-600",
                               )}
                             >

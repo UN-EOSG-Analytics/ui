@@ -23,9 +23,9 @@ export function DocumentSymbol({
   const classes = cn(
     typography.label,
     "inline-block rounded px-2 py-0.5",
-    subdued ? "bg-gray-100 text-gray-700" : "bg-blue-50 text-un-blue",
+    subdued ? "bg-secondary text-foreground" : "bg-accent text-accent-foreground",
     href &&
-      "transition-colors hover:bg-blue-100 focus-visible:ring-2 focus-visible:ring-un-blue focus-visible:ring-offset-1 focus-visible:outline-none",
+      "transition-colors hover:bg-un-blue-tint focus-visible:ring-2 focus-visible:ring-un-blue focus-visible:ring-offset-1 focus-visible:outline-none",
     className,
   );
   return href ? (

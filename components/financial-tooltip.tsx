@@ -158,7 +158,7 @@ export function FinancialTooltip({
         >
           <MousePointerClick
             aria-hidden="true"
-            className="size-3.5 shrink-0 text-un-blue"
+            className="size-3.5 shrink-0 text-un-blue-text"
           />
           {actionHint}
         </p>

@@ -116,7 +116,7 @@ export function FinancialPanelYearSelector({
               "inline-flex shrink-0 items-center gap-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-un-blue/50",
               variant === "pill"
                 ? "h-8 rounded-full bg-secondary px-3 text-muted-foreground hover:bg-muted hover:text-foreground"
-                : "border-b border-gray-400 text-gray-600 hover:text-gray-900",
+                : "border-b border-gray-400 text-gray-600 hover:text-foreground",
             )}
           >
             <span className="font-medium">{selected}</span>
@@ -132,7 +132,7 @@ export function FinancialPanelYearSelector({
           <Popover.Content
             align="start"
             sideOffset={4}
-            className="z-[100] min-w-20 rounded-md border border-gray-300 bg-white p-1 shadow-md"
+            className="z-[100] min-w-20 rounded-md border border-border bg-white p-1 shadow-md"
           >
             <div className="flex flex-col">
               {years.map((year) => (
@@ -148,8 +148,8 @@ export function FinancialPanelYearSelector({
                     typography.body,
                     "rounded px-3 py-1.5 text-start",
                     year === selected
-                      ? "bg-gray-100 font-medium text-gray-900"
-                      : "text-gray-600 hover:bg-gray-50",
+                      ? "bg-secondary font-medium text-foreground"
+                      : "text-gray-600 hover:bg-muted",
                   )}
                 >
                   {year}
@@ -225,7 +225,7 @@ export function FinancialPanelRankedRow({
       onClick={badge ? onClick : undefined}
       className={cn(
         "flex w-full items-center gap-2",
-        badge && onClick && "group rounded hover:bg-gray-50",
+        badge && onClick && "group rounded hover:bg-muted",
       )}
     >
       {onClick && !badge ? (
@@ -235,7 +235,7 @@ export function FinancialPanelRankedRow({
           title={title ?? label}
           className={cn(
             typography.label,
-            "w-24 shrink-0 truncate text-start text-gray-700 hover:text-un-blue hover:underline",
+            "w-24 shrink-0 truncate text-start text-foreground hover:text-un-blue-text hover:underline",
             labelClassName,
           )}
         >
@@ -246,7 +246,7 @@ export function FinancialPanelRankedRow({
           title={title ?? label}
           className={cn(
             typography.label,
-            "w-24 shrink-0 truncate text-start text-gray-700 group-hover:text-un-blue group-hover:underline",
+            "w-24 shrink-0 truncate text-start text-foreground group-hover:text-un-blue-text group-hover:underline",
             labelClassName,
           )}
         >

@@ -52,7 +52,7 @@ const DENSITY: Record<ChipDensity, string> = {
 
 const TONE: Record<ChipTone, string> = {
   neutral: "border-border bg-secondary text-secondary-foreground",
-  selected: "border-un-blue bg-un-blue font-medium text-white",
+  selected: "border-un-blue bg-un-blue-text font-medium text-white",
   ghost: "border-dashed border-border bg-transparent text-muted-foreground",
 };
 

@@ -60,25 +60,25 @@
   --popover: var(--color-un-white);
   --popover-foreground: var(--color-un-black);
 
-  --primary: var(--color-un-blue);
+  --primary: var(--color-un-blue-text);
   --primary-foreground: var(--color-un-white);
 
   /* Neutrals are pure greys — the brand's ground is white and black, so the
      scale between them carries no hue. */
-  --secondary: #f4f4f5;
-  --secondary-foreground: #27272a;
-  --muted: #f4f4f5;
-  --muted-foreground: #52525b;
+  --secondary: var(--color-neutral-surface);
+  --secondary-foreground: var(--color-un-black);
+  --muted: var(--color-neutral-surface);
+  --muted-foreground: var(--color-neutral-text);
 
   /* The accent surface is a UN Blue wash, from the brand's own tint ramp. */
   --accent: var(--color-un-blue-tint-50);
-  --accent-foreground: var(--color-un-blue-text);
+  --accent-foreground: var(--color-un-blue-shade);
 
   --destructive: var(--color-un-red-text);
   --destructive-foreground: var(--color-un-white);
 
-  --border: #e4e4e7;
-  --input: #e4e4e7;
+  --border: var(--color-neutral-border);
+  --input: var(--color-neutral-border);
   --ring: var(--color-un-blue);
 }
 

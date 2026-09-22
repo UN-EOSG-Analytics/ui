@@ -29,6 +29,13 @@
   --color-un-blue: #009edb;
   --color-un-black: #000000;
   --color-un-white: #ffffff;
+  /* Neutral UI reference values, shared with Storybook and consuming apps. */
+  --color-neutral-surface: #f4f4f5;
+  --color-neutral-border: #e4e4e7;
+  --color-neutral-text: #52525b;
+  /* Existing co-citation chart hue; retained so token adoption does not change data encoding. */
+  --color-un80-warm-gray: #9b8b7a;
+
 
   /* UN Blue's full ramp. This is the only accent that earns a complete set,
      because it is the only one used at any volume. */

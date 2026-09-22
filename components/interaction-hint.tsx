@@ -18,7 +18,7 @@ export function InteractionHint({ text, className }: InteractionHintProps) {
       )}
     >
       <MousePointerClick
-        className="size-4 shrink-0 text-un-blue"
+        className="size-4 shrink-0 text-un-blue-text"
         aria-hidden="true"
       />
       {text}

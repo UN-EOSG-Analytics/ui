@@ -183,7 +183,7 @@ export function SiteHeader({
               <span className="font-light">{descriptor}</span>
             </span>
             {typeof badge === "string" ? (
-              <span className="rounded-md bg-un-blue/10 px-1.5 py-0.5 text-micro leading-none font-semibold whitespace-nowrap text-un-blue md:px-2 md:py-1 md:text-xs">
+              <span className="rounded-md bg-accent px-1.5 py-0.5 text-micro leading-none font-semibold whitespace-nowrap text-accent-foreground md:px-2 md:py-1 md:text-xs">
                 {badge}
               </span>
             ) : (
@@ -205,7 +205,7 @@ export function SiteHeader({
                     className={cn(
                       "inline-flex items-center gap-2 rounded-md px-3 py-1.5 text-sm whitespace-nowrap transition-colors",
                       active
-                        ? "bg-un-blue/10 font-medium text-un-blue"
+                        ? "bg-accent font-medium text-accent-foreground"
                         : "text-foreground/80 hover:bg-muted hover:text-foreground",
                     )}
                   >
@@ -243,7 +243,7 @@ export function SiteHeader({
                         className={cn(
                           "relative flex cursor-default items-center rounded-sm px-2 py-1.5 text-sm text-foreground outline-none select-none focus:bg-accent focus:text-accent-foreground",
                           active &&
-                            "bg-un-blue/10 font-medium text-un-blue-text focus:bg-un-blue/10 focus:text-un-blue-text",
+                            "bg-accent font-medium text-accent-foreground focus:bg-accent focus:text-accent-foreground",
                         )}
                       >
                         {active ? (
