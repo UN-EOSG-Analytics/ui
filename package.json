@@ -10,7 +10,8 @@
     "./funding-sources": "./lib/funding-sources.ts",
     "./components/*": "./components/*.tsx",
     "./assets/*": "./assets/*",
-    "./format-budget": "./lib/format-budget.ts"
+    "./format-budget": "./lib/format-budget.ts",
+    "./sankey": "./lib/sankey.ts"
   },
   "files": [
     "assets",
