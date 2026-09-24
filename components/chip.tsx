@@ -58,8 +58,8 @@ const TONE: Record<ChipTone, string> = {
 
 /** Hover only exists for chips that actually do something. */
 const TONE_HOVER: Record<ChipTone, string> = {
-  neutral: "hover:border-un-blue hover:bg-un-blue-tint-50",
-  selected: "hover:bg-un-blue-shade",
+  neutral: "hover:border-un-blue hover:bg-un-blue-surface",
+  selected: "hover:inset-ring-2 hover:inset-ring-white/70",
   ghost: "hover:border-un-blue",
 };
 

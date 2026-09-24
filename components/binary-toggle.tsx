@@ -57,8 +57,8 @@ export function BinaryToggle({
         disabled={disabled}
         onClick={() => onValueChange(options[checked ? 0 : 1].value)}
         className={cn(
-          "inline-flex h-5 w-9 shrink-0 items-center rounded-full border-2 border-transparent shadow-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-un-blue disabled:cursor-not-allowed",
-          checked ? "bg-un-blue" : "bg-muted",
+          "inline-flex h-5 w-9 shrink-0 items-center rounded-full border border-border px-px shadow-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-un-blue disabled:cursor-not-allowed",
+          checked ? "border-un-blue bg-un-blue" : "bg-secondary",
         )}
       >
         <span

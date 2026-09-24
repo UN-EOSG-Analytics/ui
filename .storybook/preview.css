@@ -71,8 +71,8 @@
   --muted-foreground: var(--color-neutral-text);
 
   /* The accent surface is a UN Blue wash, from the brand's own tint ramp. */
-  --accent: var(--color-un-blue-tint-50);
-  --accent-foreground: var(--color-un-blue-shade);
+  --accent: var(--color-un-blue-surface);
+  --accent-foreground: var(--color-un-blue-text);
 
   --destructive: var(--color-un-red-text);
   --destructive-foreground: var(--color-un-white);

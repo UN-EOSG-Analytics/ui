@@ -22,10 +22,12 @@ export function DocumentSymbol({
 }: DocumentSymbolProps) {
   const classes = cn(
     typography.label,
-    "inline-block rounded px-2 py-0.5",
-    subdued ? "bg-secondary text-foreground" : "bg-accent text-accent-foreground",
+    "inline-block rounded border px-2 py-0.5",
+    subdued
+      ? "border-border bg-secondary text-foreground"
+      : "border-un-blue-text/30 bg-un-blue-surface text-un-blue-text",
     href &&
-      "transition-colors hover:bg-un-blue-tint focus-visible:ring-2 focus-visible:ring-un-blue focus-visible:ring-offset-1 focus-visible:outline-none",
+      "transition-colors hover:bg-un-blue-surface hover:underline focus-visible:ring-2 focus-visible:ring-un-blue focus-visible:ring-offset-1 focus-visible:outline-none",
     className,
   );
   return href ? (

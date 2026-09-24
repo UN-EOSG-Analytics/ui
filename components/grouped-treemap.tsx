@@ -892,7 +892,7 @@ export function GroupedTreemap<
               <span className="inline-flex flex-wrap gap-x-1">
                 {source.href ? (
                   <a
-                    className="text-un-blue-text underline underline-offset-2 hover:text-un-blue-shade focus-visible:ring-2 focus-visible:ring-un-blue/50 focus-visible:outline-none"
+                    className="text-un-blue-text underline underline-offset-2 hover:decoration-2 focus-visible:ring-2 focus-visible:ring-un-blue/50 focus-visible:outline-none"
                     href={source.href}
                     target={source.openInNewTab ? "_blank" : undefined}
                     rel={

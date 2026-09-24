@@ -74,7 +74,7 @@ export function FilterPopover({
           size="sm"
           className={cn(
             selected.length > 0 &&
-              "border-un-blue bg-un-blue-tint-50 text-accent-foreground",
+              "border-un-blue bg-un-blue-surface text-accent-foreground",
             className,
           )}
         >
@@ -119,7 +119,7 @@ export function FilterPopover({
                     className={cn(
                       "flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-start transition-colors",
                       "hover:bg-accent focus-visible:ring-focus-ring focus-visible:ring-un-blue/50 focus-visible:outline-none",
-                      isSelected && "bg-un-blue-tint-50",
+                      isSelected && "bg-un-blue-surface",
                     )}
                   >
                     <span

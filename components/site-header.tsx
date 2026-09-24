@@ -183,7 +183,7 @@ export function SiteHeader({
               <span className="font-light">{descriptor}</span>
             </span>
             {typeof badge === "string" ? (
-              <span className="rounded-md bg-accent px-1.5 py-0.5 text-micro leading-none font-semibold whitespace-nowrap text-accent-foreground md:px-2 md:py-1 md:text-xs">
+              <span className="rounded-md border border-un-blue-text/30 bg-un-blue-surface px-1.5 py-0.5 text-micro leading-none font-semibold whitespace-nowrap text-un-blue-text md:px-2 md:py-1 md:text-xs">
                 {badge}
               </span>
             ) : (
@@ -192,9 +192,9 @@ export function SiteHeader({
           </span>
         </a>
 
-        <div className="ms-auto flex items-center gap-3">
+        <div className="ms-auto flex self-stretch items-center gap-3">
           {navItems.length > 0 && (
-            <nav className="hidden items-center gap-1 lg:flex">
+            <nav className="hidden self-stretch items-stretch gap-1 lg:flex">
               {navItems.map(({ href: itemHref, label, icon: Icon }) => {
                 const active = activeHref === itemHref;
                 return (
@@ -203,10 +203,10 @@ export function SiteHeader({
                     href={itemHref}
                     aria-current={active ? "page" : undefined}
                     className={cn(
-                      "inline-flex items-center gap-2 rounded-md px-3 py-1.5 text-sm whitespace-nowrap transition-colors",
+                      "-my-3 inline-flex items-center gap-2 border-b-2 px-3 py-3 text-sm whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-un-blue focus-visible:ring-offset-2",
                       active
-                        ? "bg-accent font-medium text-accent-foreground"
-                        : "text-foreground/80 hover:bg-muted hover:text-foreground",
+                        ? "border-un-blue font-semibold text-un-blue-text"
+                        : "border-transparent text-foreground/80 hover:border-border hover:text-foreground",
                     )}
                   >
                     {Icon && <Icon className="size-4" />}
@@ -241,9 +241,9 @@ export function SiteHeader({
                         asChild={!active}
                         aria-current={active ? "page" : undefined}
                         className={cn(
-                          "relative flex cursor-default items-center rounded-sm px-2 py-1.5 text-sm text-foreground outline-none select-none focus:bg-accent focus:text-accent-foreground",
+                          "relative flex cursor-default items-center border-s-2 border-transparent px-2 py-1.5 text-sm text-foreground outline-none select-none focus:bg-un-blue-surface focus:text-un-blue-text",
                           active &&
-                            "bg-accent font-medium text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+                            "border-un-blue font-semibold text-un-blue-text focus:text-un-blue-text",
                         )}
                       >
                         {active ? (

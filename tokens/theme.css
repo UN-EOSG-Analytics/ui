@@ -32,6 +32,8 @@
   /* Neutral UI reference values, shared with Storybook and consuming apps. */
   --color-neutral-surface: #f4f4f5;
   --color-neutral-border: #e4e4e7;
+  /* Control tracks need more contrast than decorative dividers (3.43:1 on white). */
+  --color-neutral-control: #8a8a92;
   --color-neutral-text: #52525b;
   /* Existing co-citation chart hue; retained so token adoption does not change data encoding. */
   --color-un80-warm-gray: #9b8b7a;
@@ -44,6 +46,10 @@
   --color-un-blue-shade: #004987; /* Pantone 301 — text on light, deep fills */
   --color-un-blue-text: #0077b8; /* AA on white */
   --color-un-blue-text-aaa: #005392; /* AAA on white */
+  /* Opaque UI surfaces: text-blue clears AA even inside a tinted parent.
+     Blue surface 4.62:1; yellow surface 4.72:1. Brand/chart tints stay intact. */
+  --color-un-blue-surface: #f5faff;
+  --color-un-yellow-surface: #fffcef;
 
   /* ===============================================================
      ACCENTS — used sparingly, per the brand guide
