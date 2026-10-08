@@ -1,6 +1,8 @@
 "use client";
 
 import { useCallback, useRef, useState, useEffect, useMemo } from "react";
+import { cn } from "../lib/utils";
+import { typography } from "../lib/typography";
 
 export interface YearSliderProps {
   years: number[];
@@ -27,7 +29,7 @@ export function YearSlider({
   // Track the visual position during drag (only commits on release)
   const [dragYear, setDragYear] = useState<number | null>(null);
 
-  const sortedYears = useMemo(() => [...years].sort((a, b) => a - b), [years]);
+  const sortedYears = useMemo(() => [...new Set(years.filter(Number.isFinite))].sort((a, b) => a - b), [years]);
   const minYear = sortedYears[0];
   const maxYear = sortedYears[sortedYears.length - 1];
 
@@ -77,12 +79,12 @@ export function YearSlider({
   );
 
   const handleMouseUp = useCallback(() => {
-    if (isDragging && dragYear !== null && dragYear !== selectedYear) {
+    if (!disabled && isDragging && dragYear !== null && dragYear !== selectedYear) {
       onChange(dragYear);
     }
     setIsDragging(false);
     setDragYear(null);
-  }, [isDragging, dragYear, selectedYear, onChange]);
+  }, [disabled, isDragging, dragYear, selectedYear, onChange]);
 
   useEffect(() => {
     if (isDragging) {
@@ -120,24 +122,31 @@ export function YearSlider({
   );
 
   const handleTouchEnd = useCallback(() => {
-    if (isDragging && dragYear !== null && dragYear !== selectedYear) {
+    if (!disabled && isDragging && dragYear !== null && dragYear !== selectedYear) {
       onChange(dragYear);
     }
     setIsDragging(false);
     setDragYear(null);
-  }, [isDragging, dragYear, selectedYear, onChange]);
+  }, [disabled, isDragging, dragYear, selectedYear, onChange]);
+
+  const handleTouchCancel = useCallback(() => {
+    setIsDragging(false);
+    setDragYear(null);
+  }, []);
 
   useEffect(() => {
     if (isDragging) {
       // Use passive: false to allow preventDefault in touch handlers
       window.addEventListener("touchmove", handleTouchMove, { passive: false });
       window.addEventListener("touchend", handleTouchEnd);
+      window.addEventListener("touchcancel", handleTouchCancel);
       return () => {
         window.removeEventListener("touchmove", handleTouchMove);
         window.removeEventListener("touchend", handleTouchEnd);
+        window.removeEventListener("touchcancel", handleTouchCancel);
       };
     }
-  }, [isDragging, handleTouchMove, handleTouchEnd]);
+  }, [isDragging, handleTouchMove, handleTouchEnd, handleTouchCancel]);
 
   // Keyboard support
   const handleKeyDown = useCallback(
@@ -203,18 +212,18 @@ export function YearSlider({
         onKeyDown={handleKeyDown}
       >
         {/* Visual track line */}
-        <div className="h-0.5 w-full bg-gray-300" />
+        <div className="h-0.5 w-full bg-neutral-control" />
         {/* Thumb - larger touch target */}
         <div
           className={`absolute top-1/2 flex ${compact ? "h-6.5" : "h-9"} w-6 -translate-x-1/2 -translate-y-1/2 items-center justify-center`}
           style={{ left: `${thumbPosition}%` }}
         >
           <div
-            className={`h-4 w-0.5 ${isDragging ? "bg-un-blue" : "bg-gray-600"} ${disabled ? "" : "group-hover:bg-un-blue"}`}
+            className={`h-4 w-0.5 ${isDragging ? "bg-un-blue" : "bg-neutral-text"} ${disabled ? "" : "group-hover:bg-un-blue"}`}
           />
         </div>
       </div>
-      <span className="min-w-[3ch] text-sm font-medium whitespace-nowrap text-gray-900">
+      <span className={cn(typography.numeric, "min-w-[3ch] font-medium whitespace-nowrap text-foreground")}>
         {formatLabel ? formatLabel(displayYear) : displayYear}
       </span>
     </div>

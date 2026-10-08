@@ -372,6 +372,104 @@
           "type": "registry:lib"
         }
       ]
+    },
+    {
+      "name": "tooltip",
+      "type": "registry:component",
+      "title": "Tooltip",
+      "description": "Accessible explanation tooltip with optional interactive source links.",
+      "files": [
+        {
+          "path": "components/tooltip.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "lib/typography.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "dependencies": [
+        "@radix-ui/react-popover",
+        "@radix-ui/react-tooltip",
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "segmented-control",
+      "type": "registry:component",
+      "title": "Segmented control",
+      "description": "Labelled single-choice control using native radio keyboard behaviour.",
+      "files": [
+        {
+          "path": "components/segmented-control.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "components/tooltip.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "lib/typography.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "dependencies": [
+        "@radix-ui/react-popover",
+        "@radix-ui/react-tooltip",
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "binary-toggle",
+      "type": "registry:component",
+      "title": "Binary toggle",
+      "description": "Two exclusive choices with switch or segmented presentation.",
+      "files": [
+        {
+          "path": "components/binary-toggle.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "components/segmented-control.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "components/tooltip.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "lib/typography.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "dependencies": [
+        "@radix-ui/react-popover",
+        "@radix-ui/react-tooltip",
+        "clsx",
+        "tailwind-merge"
+      ]
+    },
+    {
+      "name": "year-slider",
+      "type": "registry:component",
+      "title": "Year slider",
+      "description": "Discrete available values with custom labels and release-to-commit dragging.",
+      "files": [
+        {
+          "path": "components/year-slider.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "lib/typography.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
     }
   ]
 }
