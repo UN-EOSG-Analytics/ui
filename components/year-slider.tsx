@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState, useEffect, useMemo } from "react";
+import { useCallback, useRef, useState, useEffect, useMemo, type ReactNode } from "react";
 import { cn } from "../lib/utils";
 import { typography } from "../lib/typography";
 
@@ -13,6 +13,8 @@ export interface YearSliderProps {
   /** Caption for a year. Peacekeeping runs July-June, so 2024 reads "2024/25". */
   label?: string;
   formatLabel?: (year: number) => string;
+  /** Optional visual caption; formatLabel still supplies accessible value text. */
+  renderLabel?: (year: number) => ReactNode;
 }
 
 export function YearSlider({
@@ -22,6 +24,7 @@ export function YearSlider({
   disabled = false,
   compact = false,
   formatLabel,
+  renderLabel,
   label = "Select year",
 }: YearSliderProps) {
   const trackRef = useRef<HTMLDivElement>(null);
@@ -224,7 +227,7 @@ export function YearSlider({
         </div>
       </div>
       <span className={cn(typography.numeric, "min-w-[3ch] font-medium whitespace-nowrap text-foreground")}>
-        {formatLabel ? formatLabel(displayYear) : displayYear}
+        {renderLabel ? renderLabel(displayYear) : formatLabel ? formatLabel(displayYear) : displayYear}
       </span>
     </div>
   );
