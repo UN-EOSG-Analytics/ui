@@ -73,6 +73,9 @@ export interface SiteHeaderProps {
   className?: string;
   /** Container width/padding, matched to the app's <main> column. */
   containerClassName?: string;
+  /** Let the wordmark/badge determine row height while preserving the emblem
+   * and menu hit areas. Defaults to true; false restores the spacious layout. */
+  compact?: boolean;
   /** Background transparency. Defaults to the original treatment. */
   transparency?: HeaderTransparency;
   /**
@@ -131,13 +134,16 @@ export function SiteHeader({
   children,
   className,
   containerClassName = "max-w-4xl px-8 sm:px-12 lg:max-w-6xl lg:px-16",
+  compact = true,
   transparency = "high",
   emblemSrc = DEFAULT_EMBLEM_SRC,
 }: SiteHeaderProps) {
   const outboard = emblemPlacement === "outboard";
+  const hasMobileMenu = showMobileMenu && navItems.length > 0;
 
   return (
     <header
+      data-header-layout={compact ? "compact" : "comfortable"}
       className={cn(
         "sticky top-0 z-40 w-full border-b border-border py-3",
         siteHeaderTransparencyClasses[transparency],
@@ -167,11 +173,19 @@ export function SiteHeader({
         <a
           href={href}
           aria-label={homeLabel}
-          className="inline-flex items-center gap-emblem-gap transition-opacity hover:opacity-75"
+          className={cn(
+            "inline-flex items-center gap-emblem-gap transition-opacity hover:opacity-75",
+            compact &&
+              "relative ps-[calc(var(--spacing-emblem-w)+var(--spacing-emblem-gap))]",
+            compact && outboard && "min-[1408px]:ps-0",
+          )}
         >
           <Emblem
             src={emblemSrc}
-            className={outboard ? "min-[1408px]:hidden" : undefined}
+            className={cn(
+              compact && "absolute start-0 top-1/2 -translate-y-1/2",
+              outboard && "min-[1408px]:hidden",
+            )}
           />
           {/* Mobile stacks wordmark over badge to preserve room beside the
               right-hand slot. */}
@@ -192,7 +206,13 @@ export function SiteHeader({
           </span>
         </a>
 
-        <div className="ms-auto flex self-stretch items-center gap-3">
+        <div
+          className={cn(
+            "ms-auto flex self-stretch items-center gap-3",
+            compact && hasMobileMenu && "relative min-w-9",
+            compact && hasMobileMenu && children && "pe-12 lg:pe-0",
+          )}
+        >
           {navItems.length > 0 && (
             <nav className="hidden self-stretch items-stretch gap-1 lg:flex">
               {navItems.map(({ href: itemHref, label, icon: Icon }) => {
@@ -216,13 +236,16 @@ export function SiteHeader({
               })}
             </nav>
           )}
-          {showMobileMenu && navItems.length > 0 && (
+          {hasMobileMenu && (
             <DropdownMenu.Root modal={false}>
               <DropdownMenu.Trigger asChild>
                 <button
                   type="button"
                   aria-label={mobileMenuLabel}
-                  className="inline-flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-md text-foreground/80 transition-colors hover:text-foreground focus-visible:ring-focus-ring focus-visible:ring-un-blue/50 focus-visible:outline-none lg:hidden"
+                  className={cn(
+                    "inline-flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-md text-foreground/80 transition-colors hover:text-foreground focus-visible:ring-focus-ring focus-visible:ring-un-blue/50 focus-visible:outline-none lg:hidden",
+                    compact && "absolute end-0 top-1/2 -translate-y-1/2",
+                  )}
                 >
                   <Menu aria-hidden className="size-6" />
                 </button>

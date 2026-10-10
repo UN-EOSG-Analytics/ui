@@ -14,6 +14,13 @@ import { typography } from "../lib/typography";
 import { cn } from "../lib/utils";
 import { ChartHeader } from "./chart-header";
 import { SearchInput } from "./search-input";
+import {
+  TreemapTileInteractionCue,
+  treemapTileBaseBorderClassName,
+  treemapTileFillInteractionClassName,
+  treemapTileInteractionClassName,
+  treemapTileLayoutTransitionClassName,
+} from "./treemap-tile-interaction";
 
 export {
   layoutBalancedTreemap,
@@ -50,6 +57,8 @@ export interface GroupedTreemapLeaf<TLeaf = unknown, TSegment = unknown> {
   color?: string;
   /** CSS text colour for pale or otherwise exceptional fills; defaults to white. */
   textColor?: string;
+  /** Pale fills need a contrasting keyboard-only outline; hover stays white. */
+  paleFill?: boolean;
   /** Optional inset outline for leaves with pale fills. */
   borderColor?: string;
   /** Localized context appended only to the assistive leaf description. */
@@ -763,25 +772,34 @@ export function GroupedTreemap<
                               }
                               className={cn(
                                 "group absolute isolate overflow-hidden p-0 text-start text-white",
-                                "motion-safe:transition-[inset-inline-start,top,width,height,background-color,filter] motion-safe:duration-500 motion-safe:ease-in-out",
-                                "focus-visible:z-20 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-inset focus-visible:outline-none",
-                                leaf.onActivate && "hover:brightness-90",
+                                treemapTileLayoutTransitionClassName,
+                                "focus-visible:z-20 focus-visible:outline-none",
+                                !leaf.onActivate &&
+                                  "focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-inset",
+                                leaf.onActivate &&
+                                  treemapTileInteractionClassName,
                               )}
                               style={{
                                 ...rectStyle(leafLayout.rect),
-                                backgroundColor:
-                                  leaf.color ??
-                                  row.color ??
-                                  "var(--color-un-blue)",
                                 color: leaf.textColor,
                               }}
                             >
-                              {segmentDenominator > 0 && (
-                                <span
-                                  aria-hidden
-                                  className="absolute inset-0 flex flex-col"
-                                >
-                                  {visibleSegments.map((segment) => (
+                              <span
+                                aria-hidden
+                                className={cn(
+                                  "pointer-events-none absolute inset-0 flex flex-col",
+                                  leaf.onActivate &&
+                                    treemapTileFillInteractionClassName,
+                                )}
+                                style={{
+                                  backgroundColor:
+                                    leaf.color ??
+                                    row.color ??
+                                    "var(--color-un-blue)",
+                                }}
+                              >
+                                {segmentDenominator > 0 &&
+                                  visibleSegments.map((segment) => (
                                     <span
                                       key={segment.key}
                                       className="shrink-0 motion-safe:transition-[height,background-color] motion-safe:duration-500 motion-safe:ease-in-out"
@@ -791,11 +809,14 @@ export function GroupedTreemap<
                                       }}
                                     />
                                   ))}
-                                </span>
-                              )}
+                              </span>
                               <span
                                 aria-hidden="true"
-                                className="pointer-events-none absolute inset-0 z-[1] shadow-[inset_0_0_0_0.5px_rgba(255,255,255,0.8)]"
+                                className={cn(
+                                  "pointer-events-none absolute inset-0 z-[1] shadow-[inset_0_0_0_0.5px_rgba(255,255,255,0.8)]",
+                                  leaf.onActivate &&
+                                    treemapTileBaseBorderClassName,
+                                )}
                                 style={
                                   leaf.borderColor
                                     ? {
@@ -834,6 +855,11 @@ export function GroupedTreemap<
                                     ) : null}
                                   </span>
                                 </span>
+                              )}
+                              {leaf.onActivate && (
+                                <TreemapTileInteractionCue
+                                  contrastingFocus={leaf.paleFill}
+                                />
                               )}
                               <span id={descriptionId} className="sr-only">
                                 {description}
