@@ -244,7 +244,12 @@ export function SiteHeader({
                   aria-label={mobileMenuLabel}
                   className={cn(
                     "inline-flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-md text-foreground/80 transition-colors hover:text-foreground focus-visible:ring-focus-ring focus-visible:ring-un-blue/50 focus-visible:outline-none lg:hidden",
-                    compact && "absolute end-0 top-1/2 -translate-y-1/2",
+                    // A 36px target centers a 24px SVG. Menu's rounded 2px
+                    // stroke ends 3px inside that SVG, so move the target
+                    // outward by 6 + 3px to align its ink with the emblem.
+                    compact
+                      ? "absolute -end-[9px] top-1/2 -translate-y-1/2"
+                      : "-me-[9px]",
                   )}
                 >
                   <Menu aria-hidden className="size-6" />

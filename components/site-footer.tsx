@@ -200,10 +200,13 @@ export function SiteFooter({
             />
           </ExternalLink>
 
-          <div className="ms-auto flex items-center ps-4">
+          <div className="ms-auto flex min-w-0 max-w-full flex-wrap items-center gap-x-7 gap-y-4 sm:ps-4">
             {social.length > 0 && (
-              <nav aria-label={labels.socialNavigation}>
-                <ul className="flex items-center gap-7">
+              <nav
+                aria-label={labels.socialNavigation}
+                className="min-w-0 max-w-full"
+              >
+                <ul className="flex flex-wrap items-center gap-7">
                   {social.map(([network, href]) => (
                     <li key={network}>
                       <ExternalLink
@@ -222,7 +225,7 @@ export function SiteFooter({
             <ExternalLink
               href={donateHref}
               newTabLabel={labels.newTab}
-              className="ms-7 inline-block rounded border border-un-blue bg-white px-5 pt-[9px] pb-[10px] text-xs leading-3 font-bold tracking-[1.27px] whitespace-nowrap text-[#454545] uppercase transition-colors hover:bg-[#e6e6e6]"
+              className="inline-block rounded border border-un-blue bg-white px-5 pt-[9px] pb-[10px] text-xs leading-3 font-bold tracking-[1.27px] whitespace-nowrap text-[#454545] uppercase transition-colors hover:bg-[#e6e6e6]"
             >
               {labels.donate}
             </ExternalLink>
