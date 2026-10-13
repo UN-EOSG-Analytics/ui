@@ -10,6 +10,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "./selector-popover";
 import { pillStyles } from "../lib/pill-styles";
 import { cn } from "../lib/utils";
+import { typography } from "../lib/typography";
 
 export interface HierarchicalGroup {
   id: string;
@@ -35,6 +36,8 @@ export interface HierarchicalSingleSelectProps {
   searchPlaceholder?: string;
   clearSearchLabel?: string;
   noResultsLabel?: string;
+  /** Optional content pinned below the scrolling options while open. */
+  footer?: React.ReactNode;
 }
 
 /**
@@ -54,6 +57,7 @@ export function HierarchicalSingleSelect({
   searchPlaceholder = "Search...",
   clearSearchLabel = "Clear search",
   noResultsLabel = "No results found",
+  footer,
 }: HierarchicalSingleSelectProps) {
   const flat = groups.every((group) => group.children.length === 0);
   const [open, setOpen] = React.useState(false);
@@ -150,12 +154,20 @@ export function HierarchicalSingleSelect({
         </PopoverTrigger>
         <PopoverContent
           aria-label={label ?? selectedLabel}
-          className="w-[320px] border-border bg-white p-0"
+          className={cn(
+            "w-[320px] border-border bg-white p-0",
+            footer && "flex flex-col overflow-hidden",
+          )}
           align="start"
           sideOffset={4}
         >
           {/* Search input */}
-          <div className="relative border-b border-border">
+          <div
+            className={cn(
+              "relative border-b border-border",
+              footer && "shrink-0",
+            )}
+          >
             <SearchIcon className="pointer-events-none absolute start-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400" />
             <input
               type="text"
@@ -177,7 +189,12 @@ export function HierarchicalSingleSelect({
             )}
           </div>
 
-          <div className="max-h-[300px] overflow-y-auto py-1">
+          <div
+            className={cn(
+              "max-h-[300px] overflow-y-auto py-1",
+              footer && "min-h-0",
+            )}
+          >
             {filteredGroups.length === 0 ? (
               <div className="px-3 py-4 text-center text-sm text-gray-500">
                 {noResultsLabel}
@@ -289,6 +306,16 @@ export function HierarchicalSingleSelect({
               })
             )}
           </div>
+          {footer && (
+            <div
+              className={cn(
+                typography.caption,
+                "shrink-0 border-t border-border px-3 py-2",
+              )}
+            >
+              {footer}
+            </div>
+          )}
         </PopoverContent>
       </Popover>
     </div>
