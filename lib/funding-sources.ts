@@ -53,8 +53,8 @@ export const secretariatFundingCrosswalk = [
     explanation:
       "Funded by assessed contributions: mandatory payments from Member States, calculated using an agreed scale broadly based on their capacity to pay.",
     mapsTo: "Assessed",
-    className: "bg-open-funding-assessed",
-    token: "--color-open-funding-assessed",
+    className: "bg-open-funding-regular-budget",
+    token: "--color-open-funding-regular-budget",
   },
   {
     key: "other_assessed",
@@ -75,8 +75,8 @@ export const secretariatFundingCrosswalk = [
     explanation:
       "Voluntary contributions and other resources outside assessed budgets, generally earmarked for specific purposes or programmes (non-core funding).",
     mapsTo: "Voluntary earmarked",
-    className: "bg-open-funding-voluntary-earmarked",
-    token: "--color-open-funding-voluntary-earmarked",
+    className: "bg-open-funding-extrabudgetary",
+    token: "--color-open-funding-extrabudgetary",
   },
 ] as const;
 
