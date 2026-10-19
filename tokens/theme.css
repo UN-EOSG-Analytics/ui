@@ -159,9 +159,10 @@
      OPEN.UN.ORG — FUNDING SOURCES
      ===============================================================
      Semantic aliases into the primary UN Blue ramp, ordered dark to light.
-     In the Secretariat crosswalk, regular budget and other assessed map to
-     `assessed`; extrabudgetary maps to `voluntary-earmarked`. */
+     In the Secretariat crosswalk, regular budget uses `assessed`, other
+     assessed has its own blue, and extrabudgetary uses `voluntary-earmarked`. */
   --color-open-funding-assessed: var(--color-un-blue-shade);
+  --color-open-funding-other-assessed: rgb(0, 119, 184);
   --color-open-funding-voluntary-unearmarked: var(--color-un-blue-text);
   --color-open-funding-voluntary-earmarked: var(--color-un-blue);
   --color-open-funding-other: var(--color-un-blue-tint);

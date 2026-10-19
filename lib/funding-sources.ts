@@ -64,8 +64,8 @@ export const secretariatFundingCrosswalk = [
     explanation:
       "Mandatory Member State contributions to budgets outside the regular budget, including the peacekeeping budget and the International Residual Mechanism for Criminal Tribunals.",
     mapsTo: "Assessed",
-    className: "bg-open-funding-assessed",
-    token: "--color-open-funding-assessed",
+    className: "bg-open-funding-other-assessed",
+    token: "--color-open-funding-other-assessed",
   },
   {
     key: "extrabudgetary",

@@ -128,10 +128,11 @@ export const Catalogue: Story = {
         </h2>
         <p className="mb-4 max-w-3xl text-sm leading-relaxed text-muted-foreground">
           This crosswalk maps Secretariat categories to the closest system-wide
-          financing token. Regular and other assessed funding share one assessed
-          blue colour; extrabudgetary funding maps to voluntary earmarked. The
-          gray palette distinguishes all three chart shades: regular budget,
-          other assessed, and extrabudgetary.
+          financing category. Regular budget uses the assessed blue; other
+          assessed has its own blue token, rgb(0, 119, 184), while remaining
+          classified as assessed. Extrabudgetary uses voluntary earmarked blue.
+          Both the blue and gray palettes distinguish regular budget, other
+          assessed, and extrabudgetary.
         </p>
         <div className="flex flex-wrap gap-5">
           {secretariatFundingCrosswalk.map(({ key, ...source }) => (
