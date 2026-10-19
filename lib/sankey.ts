@@ -5,6 +5,8 @@ export interface SankeyNode {
 }
 export interface SankeyLink {
   source: string; target: string; value: number;
+  /** Optional ribbon color; defaults to the existing intermediate-node palette. */
+  color?: string;
   /** Gross positive activity before signed corrections. */
   positiveValue?: number;
 }
@@ -102,7 +104,7 @@ export function layoutSankey(graph: SankeyGraph, columnCount = 3) {
         control = (x + end) / 2;
       return {
         ...link, x, end, sy, ty, h,
-        color: source.column === 0 ? target.color : source.color,
+        color: link.color ?? (source.column === 0 ? target.color : source.color),
         path: `M${x},${sy} C${control},${sy} ${control},${ty} ${end},${ty} L${end},${ty + h} C${control},${ty + h} ${control},${sy + h} ${x},${sy + h} Z`,
       };
     });

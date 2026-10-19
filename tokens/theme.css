@@ -155,6 +155,11 @@
   --color-tier-3: #2aa392;
   --color-tier-4: #276b35;
 
+}
+
+/* Funding colors are read dynamically by SVG charts and labels. Keep these
+   variables even when no matching Tailwind utility appears in source. */
+@theme static {
   /* ===============================================================
      OPEN.UN.ORG — FUNDING SOURCES
      ===============================================================
@@ -179,6 +184,9 @@
   --color-open-funding-other-assessed-gray: #777777;
   --color-open-funding-extrabudgetary-gray: #bbbbbb;
 
+}
+
+@theme {
   /* ===============================================================
      TYPE
      ===============================================================
