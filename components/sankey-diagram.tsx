@@ -9,13 +9,20 @@ export interface SankeyDiagramProps {
   describeNode: (id: string) => string;
   describeLink: (source: string, target: string, value: number, within?: FlowSelection) => string;
   renderDetails: (selection: FlowSelection, compact: boolean, within?: FlowSelection) => ReactNode;
+  /** Idle ribbon opacity; matching ribbons retain this opacity during selection. */
+  linkOpacity?: number;
+  /** Horizontal space between ribbons and their source/destination bars. */
+  linkGap?: number;
+  /** Space for full, wrapped labels after the final column, in SVG units. */
+  endLabelWidth?: number;
   highlightedValue?: (selection: FlowSelection, source: string, target: string) => number;
 }
 export function SankeyDiagram({
   graph, columnControls, ariaLabel, selectionLabel, clearLabel,
   formatValue: formatBudget, describeNode: nodeDescription, describeLink,
-  renderDetails, highlightedValue,
+  renderDetails, highlightedValue, linkOpacity, linkGap = 0, endLabelWidth,
 }: SankeyDiagramProps) {
+  const chartWidth = Math.max(1200, columnPosition(columnControls.length - 1, columnControls.length) + 48 + (endLabelWidth ?? 0) + 24);
   const layout = useMemo(() => layoutSankey(graph, columnControls.length), [graph, columnControls.length]);
   const [hoverState, setHover] = useState<{
     graph: FlowGraph;
@@ -95,7 +102,7 @@ export function SankeyDiagram({
                 key={index}
                 className="absolute bottom-0 w-max -translate-x-1/2"
                 style={{
-                  left: `${((columnPosition(index, columnControls.length) + 20) / 1200) * 100}%`,
+                  left: `${((columnPosition(index, columnControls.length) + 20) / chartWidth) * 100}%`,
                 }}
               >
                 {control}
@@ -103,7 +110,7 @@ export function SankeyDiagram({
             ))}
           </div>
           <svg
-            viewBox={`0 0 1200 ${layout.height}`}
+            viewBox={`0 0 ${chartWidth} ${layout.height}`}
             className="w-full"
             role="group"
             aria-label={ariaLabel}
@@ -127,9 +134,9 @@ export function SankeyDiagram({
               return (
                 <path
                   key={`${link.source}/${link.target}`}
-                  d={active && highlightedValue ? ribbon(link.x, link.end, link.sy, link.ty, link.h * Math.min(1, highlightedValue(active, link.source, link.target) / (link.positiveValue ?? link.value))) : link.path}
+                  d={ribbon(link.x + linkGap, link.end - linkGap, link.sy, link.ty, active && highlightedValue ? link.h * Math.min(1, highlightedValue(active, link.source, link.target) / (link.positiveValue ?? link.value)) : link.h)}
                   fill={link.color}
-                  opacity={related ? (active ? 0.65 : 0.3) : 0.06}
+                  opacity={related ? (linkOpacity ?? (active ? 0.65 : 0.3)) : 0.06}
                   className="cursor-pointer transition-opacity focus:stroke-black focus:stroke-2 focus:outline-none motion-reduce:transition-none"
                   role="button"
                   tabIndex={0}
@@ -182,6 +189,8 @@ export function SankeyDiagram({
                 node.label.length > 26
                   ? `${node.label.slice(0, 24)}…`
                   : node.label;
+              const labelLines = endLabelWidth && node.column === columnControls.length - 1
+                ? wrapLabel(node.label, Math.floor(endLabelWidth / 8)) : [label];
               return (
                 <g
                   key={node.id}
@@ -253,11 +262,11 @@ export function SankeyDiagram({
                     paintOrder="stroke"
                     strokeLinejoin="round"
                   >
-                    {label}
+                    {labelLines.map((line, index) => <tspan key={index} x={x} dy={index ? 16 : 0}>{line}</tspan>)}
                   </text>
                   <text
                     x={x}
-                    y={node.y + 25}
+                    y={node.y + 25 + (labelLines.length - 1) * 16}
                     textAnchor={node.column === 0 ? "end" : "start"}
                     fontSize={12}
                     fill="currentColor"
@@ -310,4 +319,17 @@ export function SankeyDiagram({
       )}
     </div>
   );
+}
+
+function wrapLabel(label: string, maxLength: number): string[] {
+  const lines: string[] = [];
+  for (const word of label.split(/\s+/)) {
+    const last = lines.length - 1;
+    if (last >= 0 && lines[last].length + word.length + 1 <= maxLength) {
+      lines[last] += " " + word;
+    } else {
+      lines.push(word);
+    }
+  }
+  return lines;
 }

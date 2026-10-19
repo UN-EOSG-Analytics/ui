@@ -11,3 +11,8 @@ Links may set `color` to override the default intermediate-node ribbon palette. 
 Keyboard: nodes and ribbons receive focus; Enter/Space pins; Escape and the supplied clear control unpin. Narrow displays scroll horizontally. Financial taxonomies, donor attribution, source joins and domain navigation belong in consumers.
 
 The open repository supplies graph-contract regression checks against actual System and Secretariat exports. This repository typechecks the generic renderer; no persistent UI tests were added.
+
+`linkOpacity` overrides ribbon opacity (for example, `1` for solid flows).
+`linkGap` leaves horizontal space between ribbons and bars at both ends.
+`endLabelWidth` reserves additional canvas width and wraps full final-column
+labels within it. These options preserve the default layout for other consumers.
