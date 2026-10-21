@@ -202,7 +202,14 @@ export function AccountMenu({
 }: AccountMenuProps) {
   const [open, setOpen] = React.useState(false);
   return (
-    <DropdownMenu.Root open={open} onOpenChange={setOpen} dir={props.dir}>
+    // Action menus leave the page scrollable; modal scroll locking would add
+    // scrollbar compensation even when the host already reserves a gutter.
+    <DropdownMenu.Root
+      modal={false}
+      open={open}
+      onOpenChange={setOpen}
+      dir={props.dir}
+    >
       <DropdownMenu.Trigger
         aria-label={props.labels.accountMenu}
         className={cn(
