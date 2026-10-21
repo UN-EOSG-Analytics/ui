@@ -93,3 +93,17 @@ function SummaryExample() {
 export const SingleSelection: Story = { render: () => <SingleExample /> };
 export const MultipleSelection: Story = { render: () => <MultipleExample /> };
 export const CollapsedSelection: Story = { render: () => <SummaryExample /> };
+
+function WithoutSearchExample() {
+  const [selected, setSelected] = React.useState(priorities[0]);
+  return (
+    <HierarchicalSingleSelect
+      groups={priorities.map((label) => ({ id: label, label, children: [] }))}
+      selected={selected}
+      onChange={setSelected}
+      searchable={false}
+    />
+  );
+}
+
+export const WithoutSearch: Story = { render: () => <WithoutSearchExample /> };

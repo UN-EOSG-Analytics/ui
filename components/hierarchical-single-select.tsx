@@ -28,6 +28,8 @@ export interface HierarchicalSingleSelectProps {
   onChange: (selected: string) => void;
   /** Function to get display label for a value */
   getLabel?: (id: string) => string;
+  /** Show the search field. Defaults to true. */
+  searchable?: boolean;
   /** Additional class names */
   className?: string;
 }
@@ -37,13 +39,14 @@ export interface HierarchicalSingleSelectProps {
  * - Level 1: Groups (selectable for aggregate)
  * - Level 2: Individual items within each group (expandable, collapsed by default)
  *
- * Includes search functionality.
+ * Search is enabled by default; disable it for short lists of choices.
  */
 export function HierarchicalSingleSelect({
   groups,
   selected,
   onChange,
   getLabel,
+  searchable = true,
   className,
 }: HierarchicalSingleSelectProps) {
   const [open, setOpen] = React.useState(false);
@@ -72,7 +75,7 @@ export function HierarchicalSingleSelect({
   };
 
   // Filter children based on search query
-  const normalizedQuery = searchQuery.toLowerCase().trim();
+  const normalizedQuery = searchable ? searchQuery.toLowerCase().trim() : "";
   const filteredGroups = React.useMemo(() => {
     if (!normalizedQuery) return groups;
 
@@ -137,31 +140,38 @@ export function HierarchicalSingleSelect({
           </button>
         </PopoverTrigger>
         <PopoverContent
-          className="w-[320px] border-border bg-white p-0"
+          className={cn(
+            "max-w-[calc(100vw-2rem)] border-border bg-white p-0",
+            searchable
+              ? "w-[320px]"
+              : "w-max min-w-[var(--radix-popover-trigger-width)]",
+          )}
           align="start"
           sideOffset={4}
         >
           {/* Search input */}
-          <div className="relative border-b border-border">
-            <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className={`block w-full border-0 bg-transparent py-2 pl-8 text-sm placeholder-gray-400 outline-none ${searchQuery ? "pr-8" : "pr-3"}`}
-            />
-            {searchQuery && (
-              <button
-                type="button"
-                onClick={() => setSearchQuery("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 transition-colors hover:text-gray-600"
-                aria-label="Clear search"
-              >
-                <XIcon className="h-3.5 w-3.5" />
-              </button>
+          {searchable && (
+            <div className="relative border-b border-border">
+              <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className={`block w-full border-0 bg-transparent py-2 pl-8 text-sm placeholder-gray-400 outline-none ${searchQuery ? "pr-8" : "pr-3"}`}
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 transition-colors hover:text-gray-600"
+                  aria-label="Clear search"
+                >
+                  <XIcon className="h-3.5 w-3.5" />
+                </button>
             )}
           </div>
+          )}
 
           <div className="max-h-[300px] overflow-y-auto py-1">
             {filteredGroups.length === 0 ? (
