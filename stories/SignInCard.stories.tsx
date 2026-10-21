@@ -11,11 +11,12 @@ const en: SignInCardLabels = {
   submitting: "Sending…",
   sentTitle: "Please check your email",
   sentBody: "We have sent a sign-in link to",
+  errorMessage: "Could not send the sign-in link. Please try again.",
   sentHint: "If it hasn't arrived in a minute, check your spam folder.",
 };
 
 const meta = {
-  title: "UI Elements/SignInCard",
+  title: "Page Structure/LoginSystem/SignInCard",
   component: SignInCard,
   parameters: {
     layout: "centered",
@@ -65,14 +66,25 @@ export const French: Story = {
     onSubmit: ok,
     labels: {
       title: "Connexion",
-      intro: "Saisissez l'adresse électronique de votre entité pour recevoir un lien de connexion.",
+      intro:
+        "Saisissez l'adresse électronique de votre entité pour recevoir un lien de connexion.",
       emailLabel: "Adresse électronique",
       emailPlaceholder: "prenom.nom@un.org",
       submit: "Envoyer le lien",
       submitting: "Envoi…",
       sentTitle: "Consultez votre messagerie",
       sentBody: "Nous avons envoyé un lien de connexion à",
+      errorMessage: "Impossible d’envoyer le lien. Veuillez réessayer.",
       sentHint: "S'il n'arrive pas, vérifiez vos courriers indésirables.",
+    },
+  },
+};
+
+/** Network failures use a localized fallback and leave the form retryable. */
+export const NetworkError: Story = {
+  args: {
+    onSubmit: async () => {
+      throw new globalThis.Error("Offline");
     },
   },
 };

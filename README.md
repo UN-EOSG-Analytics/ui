@@ -308,3 +308,22 @@ pnpm typecheck
 ```
 
 Every push to `main` rebuilds and redeploys the catalogue.
+
+## Login system
+
+Storybook groups account and sign-in UI under **Page Structure / LoginSystem**.
+Import `AccountMenu` or the inline `AccountSection` from
+`@un-eosg/ui/components/account-menu`, and `SignInCard` from
+`@un-eosg/ui/components/sign-in-card`.
+
+The account components accept an email, optional labelled entity and role,
+translated labels, additional actions and an `onSignOut` callback. Use the menu
+in a header and the section inside an existing mobile navigation panel. Logout
+failures keep the control retryable; the application owns clearing the session
+and navigating afterwards.
+
+`SignInCard` accepts an async `onSubmit(email)` result and translated labels,
+including `errorMessage` for rejected requests. `sentBody` can be a function
+so translators control where the address appears. Set `headingLevel="h1"` on
+a standalone login page. Session retrieval, permissions, routes, email delivery
+and entity changes remain application code.

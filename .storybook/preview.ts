@@ -18,6 +18,7 @@ const preview: Preview = {
           [
             "SiteHeader",
             "SecondaryHeader",
+            "LoginSystem",
             "DetailPanel",
             "SiteFooter",
             "AnimatedCornerLogo",
@@ -32,7 +33,6 @@ const preview: Preview = {
             "DataTable",
             "Filtering & Search",
             "Modal",
-            "SignInCard",
           ],
           // Product-specific catalogues follow the shared design system.
           "open.un.org",

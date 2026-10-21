@@ -372,6 +372,59 @@
           "type": "registry:lib"
         }
       ]
+    },
+    {
+      "name": "account-menu",
+      "type": "registry:component",
+      "title": "Account menu",
+      "dependencies": [
+        "@radix-ui/react-dropdown-menu",
+        "lucide-react",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/account-menu.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "lib/typography.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "sign-in-card",
+      "type": "registry:component",
+      "title": "Magic-link sign-in card",
+      "dependencies": [
+        "class-variance-authority",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/sign-in-card.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "components/button.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "lib/typography.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        }
+      ]
     }
   ]
 }

@@ -39,7 +39,9 @@ export interface SignInCardLabels {
   submitting: string;
   sentTitle: string;
   /** Rendered with the address appended. */
-  sentBody: string;
+  sentBody: string | ((email: string) => React.ReactNode);
+  /** Localized fallback if onSubmit rejects or returns no error message. */
+  errorMessage: string;
   /** Optional "check your spam folder" hint on the sent state. */
   sentHint?: string;
 }
@@ -49,30 +51,51 @@ export interface SignInCardProps {
   /** Resolve `{ success: true }` or `{ success: false, error }`. */
   onSubmit: (email: string) => Promise<{ success: boolean; error?: string }>;
   className?: string;
+  headingLevel?: "h1" | "h2";
 }
 
-export function SignInCard({ labels, onSubmit, className }: SignInCardProps) {
+export function SignInCard({
+  labels,
+  onSubmit,
+  className,
+  headingLevel: Heading = "h2",
+}: SignInCardProps) {
+  const id = React.useId();
+  const emailId = `${id}-email`;
+  const errorId = `${id}-error`;
+  const submittingRef = React.useRef(false);
   const [email, setEmail] = React.useState("");
   const [status, setStatus] = React.useState<SignInStatus>("idle");
   const [error, setError] = React.useState("");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (submittingRef.current) return;
+    submittingRef.current = true;
     setStatus("loading");
     setError("");
-    const result = await onSubmit(email);
-    if (result.success) {
-      setStatus("sent");
-    } else {
-      setError(result.error ?? "");
+    try {
+      const result = await onSubmit(email);
+      if (result.success) {
+        setStatus("sent");
+      } else {
+        setError(result.error || labels.errorMessage);
+        setStatus("error");
+      }
+    } catch {
+      setError(labels.errorMessage);
       setStatus("error");
+    } finally {
+      submittingRef.current = false;
     }
   }
 
   return (
     <div className={cn("w-full max-w-sm", className)}>
       <div className="rounded-xl border border-border bg-card p-8 shadow-sm">
-        <h2 className={cn(typography.cardTitle, "mb-1")}>{labels.title}</h2>
+        <Heading className={cn(typography.cardTitle, "mb-1")}>
+          {labels.title}
+        </Heading>
         <p className={cn(typography.meta, "mb-8")}>{labels.intro}</p>
 
         {status === "sent" ? (
@@ -87,20 +110,31 @@ export function SignInCard({ labels, onSubmit, className }: SignInCardProps) {
               {labels.sentTitle}
             </p>
             <p className={cn(typography.body, "mt-2")}>
-              {labels.sentBody} <span className="font-medium">{email}</span>
+              {typeof labels.sentBody === "function" ? (
+                labels.sentBody(email)
+              ) : (
+                <>
+                  {labels.sentBody} <bdi className="font-medium">{email}</bdi>
+                </>
+              )}
             </p>
             {labels.sentHint && (
-              <p className={cn(typography.caption, "mt-2")}>{labels.sentHint}</p>
+              <p className={cn(typography.caption, "mt-2")}>
+                {labels.sentHint}
+              </p>
             )}
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <label htmlFor="signin-email" className={cn(typography.label, "block")}>
+              <label
+                htmlFor={emailId}
+                className={cn(typography.label, "block")}
+              >
                 {labels.emailLabel}
               </label>
               <input
-                id="signin-email"
+                id={emailId}
                 type="email"
                 name="email"
                 value={email}
@@ -108,11 +142,12 @@ export function SignInCard({ labels, onSubmit, className }: SignInCardProps) {
                 placeholder={labels.emailPlaceholder}
                 required
                 autoComplete="email"
+                disabled={status === "loading"}
                 // The error is linked to the field, not just displayed near it:
                 // without these a screen reader reaches the input, hears
                 // nothing wrong, and the message goes unread.
                 aria-invalid={status === "error" ? true : undefined}
-                aria-describedby={status === "error" ? "signin-error" : undefined}
+                aria-describedby={status === "error" ? errorId : undefined}
                 className={cn(
                   "w-full rounded-md border border-input px-4 py-2.5 text-sm transition-colors",
                   "placeholder:text-muted-foreground",
@@ -124,15 +159,22 @@ export function SignInCard({ labels, onSubmit, className }: SignInCardProps) {
             {status === "error" && (
               // aria-live so the failure is announced, not just shown.
               <div
-                id="signin-error"
+                id={errorId}
                 role="alert"
                 className="rounded-lg border border-un-red/40 bg-un-red/10 p-3"
               >
-                <p className={cn(typography.body, "text-un-red-text")}>{error}</p>
+                <p className={cn(typography.body, "text-un-red-text")}>
+                  {error}
+                </p>
               </div>
             )}
 
-            <Button type="submit" disabled={status === "loading"} className="w-full">
+            <Button
+              type="submit"
+              disabled={status === "loading"}
+              aria-busy={status === "loading"}
+              className="w-full"
+            >
               {status === "loading" ? labels.submitting : labels.submit}
             </Button>
           </form>

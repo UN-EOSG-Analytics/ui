@@ -169,8 +169,8 @@ export function HierarchicalSingleSelect({
                 >
                   <XIcon className="h-3.5 w-3.5" />
                 </button>
-            )}
-          </div>
+              )}
+            </div>
           )}
 
           <div className="max-h-[300px] overflow-y-auto py-1">
@@ -192,26 +192,40 @@ export function HierarchicalSingleSelect({
                         "flex w-full items-center gap-2 px-3 py-2 transition-colors cursor-pointer",
                         isGroupSelected ? "bg-secondary" : "hover:bg-muted",
                       )}
+                      role={hasChildren ? undefined : "button"}
+                      tabIndex={hasChildren ? undefined : 0}
+                      aria-pressed={hasChildren ? undefined : isGroupSelected}
+                      onKeyDown={(event) => {
+                        if (
+                          !hasChildren &&
+                          (event.key === "Enter" || event.key === " ")
+                        ) {
+                          event.preventDefault();
+                          selectItem(group.id);
+                        }
+                      }}
                       onClick={() => selectItem(group.id)}
                     >
-                      {/* Expand/collapse chevron */}
-                      <button
-                        type="button"
-                        className="flex-shrink-0 w-4"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (hasChildren) toggleExpanded(group.id, e);
-                        }}
-                      >
-                        {hasChildren && (
-                          <ChevronRightIcon
-                            className={cn(
-                              "h-4 w-4 text-gray-400 transition-transform duration-200 hover:text-gray-600",
-                              isExpanded && "rotate-90",
-                            )}
-                          />
-                        )}
-                      </button>
+                      {/* Flat choices have no empty focusable expand button. */}
+                      {hasChildren && (
+                        <button
+                          type="button"
+                          className="flex-shrink-0 w-4"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (hasChildren) toggleExpanded(group.id, e);
+                          }}
+                        >
+                          {hasChildren && (
+                            <ChevronRightIcon
+                              className={cn(
+                                "h-4 w-4 text-gray-400 transition-transform duration-200 hover:text-gray-600",
+                                isExpanded && "rotate-90",
+                              )}
+                            />
+                          )}
+                        </button>
+                      )}
 
                       {/* Color indicator */}
                       {group.color && (
