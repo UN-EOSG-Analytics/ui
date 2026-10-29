@@ -425,6 +425,22 @@
           "type": "registry:lib"
         }
       ]
+    },
+    {
+      "name": "entity-select",
+      "type": "registry:component",
+      "title": "Entity selector",
+      "description": "Accessible entity search with an optional explicit custom affiliation. Data and labels are supplied by the consumer.",
+      "files": [
+        {
+          "path": "components/entity-select.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "lib/typography.ts",
+          "type": "registry:lib"
+        }
+      ]
     }
   ]
 }

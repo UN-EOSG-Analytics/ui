@@ -327,3 +327,15 @@ including `errorMessage` for rejected requests. `sentBody` can be a function
 so translators control where the address appears. Set `headingLevel="h1"` on
 a standalone login page. Session retrieval, permissions, routes, email delivery
 and entity changes remain application code.
+
+### Entity selection
+
+`EntitySelect` is a controlled, searchable affiliation picker. Pass `entities`
+(`entity` and optional `entity_long`), `value`, `onChange`, and `labels`.
+It has no database, fetch, or authentication dependencies. `allowCustom` defaults
+to true: choosing the explicit custom option saves the typed affiliation.
+Typing alone never changes the selected value. Set `allowCustom={false}` to
+restrict selection to supplied entities. `required` communicates the requirement
+to assistive technology; the calling form must validate the committed value.
+See **Concepts / EntitySelect** in Storybook for keyboard, empty, disabled and RTL
+examples. Data loading and server validation remain the application's job.
