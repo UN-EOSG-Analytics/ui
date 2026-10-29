@@ -79,7 +79,7 @@ export function EntitySelect({
         onClick={() => { if (!open) { setSearch(""); setActive(0); setOpen(true); } }}
         onChange={(event) => { setSearch(event.target.value); setActive(0); setOpen(true); }}
         onKeyDown={(event) => {
-          if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); setOpen(false); }
+          if (event.key === "Escape" && open) { event.preventDefault(); event.stopPropagation(); setOpen(false); }
           else if (event.key === "ArrowDown" || event.key === "ArrowUp") {
             event.preventDefault();
             if (!open) { setSearch(""); setOpen(true); setActive(0); }

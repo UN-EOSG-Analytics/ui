@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { useState } from "react";
+import { Modal } from "../components/modal";
 import { EntitySelect } from "../components/entity-select";
 
 const meta = {
@@ -27,4 +28,13 @@ export const Disabled: Story = { args: { disabled: true } };
 export const Arabic: Story = {
   args: { labels: { input: "الكيان التنظيمي", placeholder: "ابحث عن كيان", empty: "لا توجد نتائج", custom: (value) => `أخرى: ${value}` } },
   decorators: [(Story) => <div dir="rtl" lang="ar"><Story /></div>],
+};
+
+export const InsideModal: Story = {
+  render: function InModal(args) {
+    const [value, setValue] = useState(args.value);
+    return <Modal title="Update entity" description="Escape closes the entity list before the dialog." trigger={<button>Change entity</button>}>
+      <EntitySelect {...args} value={value} onChange={setValue} />
+    </Modal>;
+  },
 };
