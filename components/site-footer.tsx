@@ -25,14 +25,12 @@ import { unUrl, normalizeUnLocale } from "../lib/un-links";
  * doubles as that link.
  */
 
-export type FooterLinkKey =
-  | "siteIndex"
-  | "contact"
-  | "copyright"
-  | "faq"
-  | "fraudAlert"
-  | "privacyNotice"
-  | "termsOfUse";
+import {
+  getFooterLabels,
+  type FooterLabels,
+  type FooterLinkKey,
+} from "../lib/footer-labels";
+export type { FooterLabels, FooterLinkKey } from "../lib/footer-labels";
 
 const LINK_PATHS: Record<FooterLinkKey, string> = {
   siteIndex: "site-index",
@@ -132,22 +130,11 @@ const LOGO_WIDTHS: Record<string, number> = {
   ru: 177,
 };
 
-export interface FooterLabels {
-  /** Accessible name for the lockup back-link to un.org. */
-  home: string;
-  donate: string;
-  /** Optional translated names for navigation landmarks. */
-  socialNavigation?: string;
-  linksNavigation?: string;
-  newTab: string;
-  links: Record<FooterLinkKey, string>;
-}
-
 export interface SiteFooterProps {
   /** Active UI locale. Unknown values fall back to English. */
   locale?: string;
-  /** Translated strings. Everything visible arrives here. */
-  labels: FooterLabels;
+  /** Optional complete override; official localized copy is provided by default. */
+  labels?: FooterLabels;
   /** Extra links appended to the bottom row — e.g. an /llms.txt index. */
   extraLinks?: { label: string; href: string }[];
   /** Override when the application uses another official donation destination. */
@@ -163,7 +150,7 @@ export interface SiteFooterProps {
 
 export function SiteFooter({
   locale = "en",
-  labels,
+  labels: customLabels,
   extraLinks = [],
   donateHref = "https://www.un.org/en/donate",
   logoBasePath: _logoBasePath,
@@ -171,12 +158,15 @@ export function SiteFooter({
   className,
 }: SiteFooterProps) {
   const lang = normalizeUnLocale(locale);
+  const labels = customLabels ?? getFooterLabels(lang);
   const social = SOCIAL_ACCOUNTS[lang] ?? SOCIAL_ACCOUNTS.en;
   const order = LINK_ORDER[lang] ?? DEFAULT_LINK_ORDER;
   const logoWidth = LOGO_WIDTHS[lang] ?? LOGO_WIDTHS.en;
 
   return (
     <footer
+      lang={lang}
+      dir={lang === "ar" ? "rtl" : "ltr"}
       className={cn(
         "mt-auto border-t-4 border-un-blue bg-[#333333] text-white",
         className,

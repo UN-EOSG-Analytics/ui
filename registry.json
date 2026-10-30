@@ -300,6 +300,10 @@
           "path": "assets/un-logo-zh-reverse.svg",
           "type": "registry:file",
           "target": "~/src/assets/un-logo-zh-reverse.svg"
+        },
+        {
+          "path": "lib/footer-labels.ts",
+          "type": "registry:lib"
         }
       ]
     },
@@ -422,6 +426,22 @@
         },
         {
           "path": "lib/utils.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "entity-select",
+      "type": "registry:component",
+      "title": "Entity selector",
+      "description": "Accessible entity search with an optional explicit custom affiliation. Data and labels are supplied by the consumer.",
+      "files": [
+        {
+          "path": "components/entity-select.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "lib/typography.ts",
           "type": "registry:lib"
         }
       ]

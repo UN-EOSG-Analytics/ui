@@ -327,3 +327,31 @@ including `errorMessage` for rejected requests. `sentBody` can be a function
 so translators control where the address appears. Set `headingLevel="h1"` on
 a standalone login page. Session retrieval, permissions, routes, email delivery
 and entity changes remain application code.
+
+### Entity selection
+
+`EntitySelect` is a controlled, searchable affiliation picker. Pass `entities`
+(`entity` and optional `entity_long`), `value`, `onChange`, and `labels`.
+It has no database, fetch, or authentication dependencies. `allowCustom` defaults
+to true: choosing the explicit custom option saves the typed affiliation.
+Typing alone never changes the selected value. Set `allowCustom={false}` to
+restrict selection to supplied entities. `required` communicates the requirement
+to assistive technology; the calling form must validate the committed value.
+See **Concepts / EntitySelect** in Storybook for keyboard, empty, disabled and RTL
+examples. Data loading and server validation remain the application's job.
+
+### Official footer copy
+
+`<SiteFooter locale="fr" />` includes the official footer labels in Arabic,
+Chinese, English, French, Russian and Spanish. Applications do not need to copy
+these translations or supply `labels`; existing full overrides remain supported.
+Arabic automatically sets the footer's direction to RTL. Unknown locales fall
+back to English. `getFooterLabels` and `officialFooterLabels` are also exported
+from `@un-eosg/ui/footer-labels` for other compositions. Product-specific links
+still belong in `extraLinks`.
+
+The seven standard link labels and Donate copy come from the localized un.org
+footer previously incorporated in UN Transcripts' six message files. The landmark
+and new-tab announcements are localized accessibility copy. Update those shared
+labels after reviewing the corresponding un.org edition, rather than translating
+or changing the official footer separately in every application.
