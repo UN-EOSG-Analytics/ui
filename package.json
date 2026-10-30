@@ -11,7 +11,8 @@
     "./components/*": "./components/*.tsx",
     "./assets/*": "./assets/*",
     "./format-budget": "./lib/format-budget.ts",
-    "./sankey": "./lib/sankey.ts"
+    "./sankey": "./lib/sankey.ts",
+    "./footer-labels": "./lib/footer-labels.ts"
   },
   "files": [
     "assets",

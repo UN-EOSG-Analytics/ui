@@ -83,6 +83,14 @@ export function Modal({
           )}
         />
         <DialogPrimitive.Content
+          onEscapeKeyDown={(event) => {
+            // Radix listens in document capture, before a nested combobox can
+            // close its list. Escape should dismiss that list first.
+            if (event.target instanceof Element &&
+                event.target.closest('[role="combobox"][aria-expanded="true"]')) {
+              event.preventDefault();
+            }
+          }}
           className={cn(
             // The mobile inset mandates is missing: never wider than the
             // viewport minus a 1rem gutter each side.
