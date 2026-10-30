@@ -300,6 +300,10 @@
           "path": "assets/un-logo-zh-reverse.svg",
           "type": "registry:file",
           "target": "~/src/assets/un-logo-zh-reverse.svg"
+        },
+        {
+          "path": "lib/footer-labels.ts",
+          "type": "registry:lib"
         }
       ]
     },
