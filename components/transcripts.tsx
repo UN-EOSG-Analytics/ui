@@ -92,7 +92,7 @@ export function TranscriptContent({
   return (
     <section
       aria-label={labels.transcript}
-      className={cn("space-y-4", className)}
+      className={cn("space-y-3", className)}
     >
       {visible.length === 0 && (
         <p className={typography.meta}>{labels.empty}</p>
@@ -108,6 +108,7 @@ export function TranscriptContent({
               info?.affiliation ? countryNames.get(info.affiliation) : null
             }
             fallback={labels.speaker((first ?? segmentIndex) + 1)}
+            className="gap-1.5 [&_.text-muted-foreground]:font-medium [&_.rounded-md]:py-0.5 [&_.bg-muted]:bg-purple-100 [&_.bg-muted]:text-purple-800 [&_.text-un-blue-text]:bg-blue-100 [&_.text-un-blue-text]:text-blue-800"
           />
         );
         const timecode = (
@@ -121,15 +122,19 @@ export function TranscriptContent({
         );
         const content = (
           <div
+            data-transcript-bubble
+            data-active={
+              playback?.segmentIndex === segmentIndex ? "true" : undefined
+            }
             className={cn(
-              "space-y-3 rounded-lg border p-3",
+              "space-y-2 rounded-lg border p-3",
               playback?.segmentIndex === segmentIndex
                 ? "border-un-blue/40 bg-un-blue/5"
-                : "border-transparent bg-muted/40",
+                : "border-transparent bg-neutral-surface/40",
             )}
           >
             {segment.statementIndices.map((statementIndex) => (
-              <Fragment key={statementIndex}>
+              <div key={statementIndex} className="space-y-3">
                 {statements[statementIndex]?.paragraphs.map(
                   (paragraph, paragraphIndex) => (
                     <p
@@ -222,7 +227,7 @@ export function TranscriptContent({
                     </p>
                   ),
                 )}
-              </Fragment>
+              </div>
             ))}
           </div>
         );
@@ -235,9 +240,16 @@ export function TranscriptContent({
             {content}
           </details>
         ) : (
-          <div key={segmentIndex} className="space-y-2">
+          <div key={segmentIndex} className="space-y-1 pt-2">
             <div className="flex flex-wrap items-center gap-2">
-              {speaker}
+              <div
+                className={cn(
+                  typography.body,
+                  "font-semibold tracking-wide text-foreground",
+                )}
+              >
+                {speaker}
+              </div>
               {timecode}
             </div>
             {content}
@@ -262,7 +274,7 @@ export function TranscriptSpeakerIndex({
   statements?: TranscriptStatement[];
 }) {
   return (
-    <nav aria-label={labels.speakers} className="space-y-1">
+    <nav aria-label={labels.speakers} className="space-y-0.5">
       {segments.map((segment, index) => {
         const first = segment.statementIndices[0];
         const info = speakerMappings[String(first)];
@@ -277,6 +289,10 @@ export function TranscriptSpeakerIndex({
                 info?.affiliation ? countryNames.get(info.affiliation) : null
               }
               fallback={labels.speaker((first ?? index) + 1)}
+              className={cn(
+                typography.caption,
+                "gap-1 text-foreground [&_.rounded-md]:rounded [&_.rounded-md]:px-1 [&_.rounded-md]:py-px [&_.bg-muted]:bg-purple-100 [&_.bg-muted]:text-purple-800 [&_.text-un-blue-text]:bg-blue-100 [&_.text-un-blue-text]:text-blue-800",
+              )}
             />
             {selectedTopic &&
               statements &&
@@ -289,7 +305,8 @@ export function TranscriptSpeakerIndex({
           </>
         );
         const rowClass = cn(
-          "flex w-full items-center gap-2 rounded p-2 text-start",
+          typography.caption,
+          "flex w-full items-center gap-2 rounded px-2 py-1 text-start text-foreground",
           playback?.segmentIndex === index && "bg-un-blue/10",
         );
         return onSeek && segment.timestamp != null ? (
@@ -327,28 +344,29 @@ export function TranscriptTopics({
   labels: Pick<TranscriptLabels, "topics" | "allTopics">;
 }) {
   return (
-    <nav aria-label={labels.topics} className="space-y-1">
-      {[{ key: null, label: labels.allTopics, description: "" }, ...topics].map(
-        (topic) => (
-          <button
-            type="button"
-            key={topic.key ?? "__all"}
-            aria-pressed={selectedTopic === topic.key}
-            onClick={() => onSelectTopic(topic.key)}
-            className={cn(
-              "block w-full rounded p-2 text-start hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring",
-              selectedTopic === topic.key && "bg-un-blue/10",
-            )}
-          >
-            <span className={typography.body}>{topic.label}</span>
-            {topic.description && (
-              <span className={cn(typography.caption, "mt-1 block")}>
-                {topic.description}
-              </span>
-            )}
-          </button>
-        ),
-      )}
+    <nav
+      aria-label={labels.topics}
+      className="flex flex-wrap gap-x-1 gap-y-1.5"
+    >
+      {topics.map((topic) => (
+        <button
+          key={topic.key}
+          type="button"
+          aria-pressed={selectedTopic === topic.key}
+          onClick={() =>
+            onSelectTopic(selectedTopic === topic.key ? null : topic.key)
+          }
+          className={cn(
+            typography.label,
+            "inline-block max-w-full rounded-full border px-2 py-0.5 text-start text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
+            selectedTopic === topic.key
+              ? "border-un-blue bg-un-blue/30"
+              : "border-transparent bg-un-blue/15 opacity-70 hover:opacity-100",
+          )}
+        >
+          {topic.label}
+        </button>
+      ))}
     </nav>
   );
 }
@@ -357,29 +375,53 @@ export function TranscriptTopics({
 export function TranscriptReader({
   video,
   navigation,
+  topics,
   children,
   className,
 }: {
   video?: ReactNode;
+  /** Compact speaker index, placed in the leading column. */
   navigation?: ReactNode;
+  /** Topic pills, placed below the trailing player. */
+  topics?: ReactNode;
   children: ReactNode;
   className?: string;
 }) {
+  const hasAside = !!(video || topics);
   return (
-    <div className={cn("grid min-w-0 gap-6 lg:grid-cols-3", className)}>
-      {(video || navigation) && (
-        <aside className="min-w-0 space-y-4">
-          {video}
-          {navigation}
-        </aside>
-      )}
+    <div className={cn("@container/transcript min-w-0", className)}>
       <div
         className={cn(
-          "min-w-0",
-          video || navigation ? "lg:col-span-2" : "lg:col-span-3",
+          "grid min-w-0 items-start gap-4",
+          hasAside &&
+            "@[640px]/transcript:grid-cols-[minmax(0,1fr)_minmax(220px,280px)]",
+          navigation &&
+            hasAside &&
+            "@[920px]/transcript:grid-cols-[minmax(136px,168px)_minmax(0,1fr)_minmax(220px,280px)]",
+          navigation &&
+            !hasAside &&
+            "@[640px]/transcript:grid-cols-[minmax(136px,168px)_minmax(0,1fr)]",
         )}
       >
-        {children}
+        {navigation && (
+          <aside
+            className={cn(
+              "min-w-0 max-h-48 overflow-y-auto",
+              hasAside &&
+                "@[640px]/transcript:col-span-2 @[920px]/transcript:col-span-1",
+              "@[920px]/transcript:sticky @[920px]/transcript:top-4 @[920px]/transcript:max-h-[calc(100dvh-10rem)]",
+            )}
+          >
+            {navigation}
+          </aside>
+        )}
+        <div className="min-w-0">{children}</div>
+        {hasAside && (
+          <aside className="min-w-0 space-y-4 @[640px]/transcript:sticky @[640px]/transcript:top-4">
+            {video}
+            {topics}
+          </aside>
+        )}
       </div>
     </div>
   );

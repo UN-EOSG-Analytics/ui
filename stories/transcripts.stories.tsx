@@ -182,10 +182,12 @@ function Demo({
   locale = "en",
   collapsible = false,
   empty = false,
+  width,
 }: {
   locale?: keyof typeof messages;
   collapsible?: boolean;
   empty?: boolean;
+  width?: number;
 }) {
   const [seconds, setSeconds] = useState(0);
   const [topic, setTopic] = useState<string | null>(null);
@@ -250,6 +252,7 @@ function Demo({
       dir={locale === "ar" ? "rtl" : "ltr"}
       lang={locale}
       className={collapsible ? "max-w-sm" : "max-w-6xl"}
+      style={width ? { width, maxWidth: "100%" } : undefined}
     >
       <TranscriptReader
         video={
@@ -270,9 +273,15 @@ function Demo({
         navigation={
           collapsible ? undefined : (
             <>
-              <h2 className={typography.subTitle}>{labels.speakers}</h2>
+              <h2 className={typography.body}>{labels.speakers}</h2>
               <TranscriptSpeakerIndex {...props} />
-              <h2 className={typography.subTitle}>{labels.topics}</h2>
+            </>
+          )
+        }
+        topics={
+          collapsible ? undefined : (
+            <>
+              <h2 className={typography.body}>{labels.topics}</h2>
               <TranscriptTopics
                 topics={localizedTopics}
                 selectedTopic={topic}
@@ -305,3 +314,8 @@ export const SixLanguages: Story = {
     </div>
   ),
 };
+
+/** A 1440px page minus 48px page gutters, 320px meeting list and 32px reader padding. */
+export const DailyWorkspace: Story = { render: () => <Demo width={1040} /> };
+export const NarrowReader: Story = { render: () => <Demo width={720} /> };
+export const CompactReader: Story = { render: () => <Demo width={560} /> };
