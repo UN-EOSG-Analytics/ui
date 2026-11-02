@@ -28,6 +28,8 @@ export interface UnReverseWordmarkProps
   extends Omit<ImgHTMLAttributes<HTMLImageElement>, "alt" | "src"> {
   /** Active UN locale. Unknown values fall back to English. */
   locale?: string;
+  /** Host-served asset URL for bundlers that cannot resolve package assets. */
+  src?: string;
 }
 
 /** Official UN emblem, bundled by default so consumers do not need public assets. */
@@ -42,6 +44,7 @@ export function UnEmblem({
 /** Official per-locale reverse UN lockups, bundled as package assets. */
 export function UnReverseWordmark({
   locale,
+  src,
   draggable = false,
   ...props
 }: UnReverseWordmarkProps) {
@@ -49,7 +52,7 @@ export function UnReverseWordmark({
 
   return (
     <img
-      src={WORDMARK_SOURCES[lang] ?? WORDMARK_SOURCES.en}
+      src={src ?? WORDMARK_SOURCES[lang] ?? WORDMARK_SOURCES.en}
       alt=""
       draggable={draggable}
       {...props}

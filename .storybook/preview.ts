@@ -35,6 +35,7 @@ const preview: Preview = {
             "Modal",
           ],
           // Product-specific catalogues follow the shared design system.
+          "Transcripts",
           "open.un.org",
           [
             "Tokens",

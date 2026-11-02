@@ -445,6 +445,58 @@
           "type": "registry:lib"
         }
       ]
+    },
+    {
+      "name": "transcript",
+      "type": "registry:lib",
+      "title": "Transcript helpers",
+      "description": "Native-safe public speaker display, speaker turn grouping, playback indices, timecodes, and lossless sentence alignment. Content timestamps are milliseconds; video clocks use seconds.",
+      "files": [
+        {
+          "path": "lib/transcript.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "lib/transcript-weave.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "transcripts",
+      "type": "registry:component",
+      "title": "Read-only transcripts",
+      "description": "Transcript text, speaker badges, timecodes, speaker index, topic navigation and player composition. All interface labels and playback state are supplied by the host.",
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "components/transcripts.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "components/transcripts-speaker.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "lib/transcript.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "lib/transcript-weave.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "lib/typography.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:lib"
+        }
+      ]
     }
   ]
 }
