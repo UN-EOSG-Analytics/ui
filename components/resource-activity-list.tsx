@@ -11,6 +11,7 @@ import { Tooltip } from "./tooltip";
 import { formatBudget } from "../lib/format-budget";
 import { typography } from "../lib/typography";
 import { cn } from "../lib/utils";
+import { formatDataTitle } from "../lib/data-title";
 
 export interface ResourceActivity extends ResourceMetrics {
   row_key: string;
@@ -69,7 +70,7 @@ export function ResourceActivityList({
                     "mt-0.5 block line-clamp-2 group-open:line-clamp-none",
                   )}
                 >
-                  {activity.name}
+                  {formatDataTitle(activity.name)}
                 </span>
               </span>
               <span
@@ -118,7 +119,7 @@ export function ResourceActivityList({
                 {activity.start} – {activity.end}
               </p>
             )}
-            {activity.outcome && <p>{activity.outcome}</p>}
+            {activity.outcome && <p>{formatDataTitle(activity.outcome)}</p>}
             {activity.description && (
               <p className="whitespace-pre-line">{activity.description}</p>
             )}

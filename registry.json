@@ -446,7 +446,7 @@
       "name": "results-framework",
       "type": "registry:component",
       "title": "Results Framework",
-      "registryDependencies": ["resource-funding-bar", "tooltip"],
+      "registryDependencies": ["resource-funding-bar", "tooltip", "data-title"],
       "files": [
         {
           "path": "components/results-framework.tsx",
@@ -458,7 +458,7 @@
       "name": "resource-activity-list",
       "type": "registry:component",
       "title": "Resource Activity List",
-      "registryDependencies": ["resource-funding-bar", "tooltip"],
+      "registryDependencies": ["resource-funding-bar", "tooltip", "data-title"],
       "files": [
         {
           "path": "components/resource-activity-list.tsx",
@@ -475,6 +475,18 @@
         {
           "path": "components/detail-drawer.tsx",
           "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "data-title",
+      "type": "registry:lib",
+      "title": "Data title formatting",
+      "description": "Convert fully uppercase source titles to title case while retaining agency names and codes.",
+      "files": [
+        {
+          "path": "lib/data-title.ts",
+          "type": "registry:lib"
         }
       ]
     }

@@ -11,6 +11,7 @@ import { Tooltip } from "./tooltip";
 import { typography } from "../lib/typography";
 import { cn } from "../lib/utils";
 import { formatBudget } from "../lib/format-budget";
+import { formatDataTitle } from "../lib/data-title";
 
 export interface ResultsFrameworkNode extends ResourceMetrics {
   id: string | number;
@@ -40,9 +41,11 @@ function FrameworkBranch({
   const [expanded, setExpanded] = useState(false);
   const childrenId = useId();
   const hasDetails = Boolean(node.children?.length || node.description);
-  const name = node.name.replace(
-    /^(?:SP|OC|OU|Strategic priority|Outcome|Output)\s*\d+(?:\.\d+)*\s*[:.-]?\s+/i,
-    "",
+  const name = formatDataTitle(
+    node.name.replace(
+      /^(?:SP|OC|OU|Strategic priority|Outcome|Output)\s*\d+(?:\.\d+)*\s*[:.-]?\s+/i,
+      "",
+    ),
   );
   const hasFinance = node.has_financial_data !== false;
   const width =
@@ -57,7 +60,7 @@ function FrameworkBranch({
   );
   const content = (
     <div className="max-w-sm space-y-3">
-      <p className={typography.body}>{node.name}</p>
+      <p className={typography.body}>{formatDataTitle(node.name)}</p>
       {hasFinance && <ResourceFundingBar {...node} labels={labels} compact />}
     </div>
   );
@@ -96,6 +99,9 @@ function FrameworkBranch({
                 {node.code}
               </span>
             )}
+            <span className={cn(typography.caption, "shrink-0")}>
+              {labels.levels[node.level ?? level]}
+            </span>
             <span className="min-w-0 flex-1">
               {hasFinance && (
                 <span className="block" style={{ width: `${width}%` }}>
@@ -125,15 +131,22 @@ function FrameworkBranch({
               "ms-12 mt-1.5 block line-clamp-2 font-medium text-foreground/80",
             )}
           >
-            <span className="sr-only">
-              {labels.levels[node.level ?? level]}{" "}
-            </span>
             {name}
           </span>
         </button>
       </Tooltip>
       {expanded && (
         <div id={childrenId}>
+          {node.description && (
+            <p
+              className={cn(
+                typography.body,
+                "my-3 ms-14 me-2 whitespace-pre-line",
+              )}
+            >
+              {node.description}
+            </p>
+          )}
           {node.children?.map((child) => (
             <FrameworkBranch
               key={child.id}
@@ -143,11 +156,6 @@ function FrameworkBranch({
               labels={labels}
             />
           ))}
-          {node.description && (
-            <p className={cn(typography.body, "my-3 whitespace-pre-line px-2")}>
-              {node.description}
-            </p>
-          )}
         </div>
       )}
     </div>

@@ -6,6 +6,7 @@ import {
   FinancialPanelTotalRow,
   FinancialPanelBreakdownRow,
   FinancialPanelYearSelector,
+  FinancialPanelPeriodSelector,
   FinancialPanelRankedRow,
   FinancialPanelBar,
   FinancialPanelGoalBadge,
@@ -52,6 +53,23 @@ function YearExample() {
   );
 }
 export const YearSelector: Story = { render: () => <YearExample /> };
+
+function PeriodExample() {
+  const [selected, setSelected] = React.useState("current");
+  return (
+    <FinancialPanelPeriodSelector
+      label="Select plan period"
+      options={[
+        { value: "current", label: "Jul 2025–Jun 2030" },
+        { value: "previous", label: "Jul 2020–Jun 2025" },
+      ]}
+      selected={selected}
+      onChange={setSelected}
+      variant="pill"
+    />
+  );
+}
+export const PlanPeriods: Story = { render: () => <PeriodExample /> };
 
 export const RankedRows: Story = {
   render: () => (

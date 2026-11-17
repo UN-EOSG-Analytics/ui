@@ -94,15 +94,44 @@ export interface FinancialPanelYearSelectorProps {
   pending?: boolean;
   pendingLabel?: string;
 }
+export interface FinancialPanelPeriodSelectorProps {
+  options: readonly { value: string; label: string }[];
+  selected: string;
+  onChange: (value: string) => void;
+  variant?: "underline" | "pill";
+  label: string;
+  pending?: boolean;
+  pendingLabel?: string;
+}
+
 export function FinancialPanelYearSelector({
   years,
+  selected,
+  onChange,
+  ...props
+}: FinancialPanelYearSelectorProps) {
+  return (
+    <FinancialPanelPeriodSelector
+      {...props}
+      options={years.map((year) => ({
+        value: String(year),
+        label: String(year),
+      }))}
+      selected={String(selected)}
+      onChange={(value) => onChange(Number(value))}
+    />
+  );
+}
+
+export function FinancialPanelPeriodSelector({
+  options,
   selected,
   onChange,
   label,
   pending,
   pendingLabel,
   variant = "underline",
-}: FinancialPanelYearSelectorProps) {
+}: FinancialPanelPeriodSelectorProps) {
   const [open, setOpen] = React.useState(false);
   return (
     <div className="flex items-center gap-2">
@@ -119,7 +148,10 @@ export function FinancialPanelYearSelector({
                 : "border-b border-gray-400 text-gray-600 hover:text-foreground",
             )}
           >
-            <span className="font-medium">{selected}</span>
+            <span className="font-medium">
+              {options.find((option) => option.value === selected)?.label ??
+                selected}
+            </span>
             <ChevronDown
               className={cn(
                 "size-3.5 transition-transform",
@@ -135,24 +167,24 @@ export function FinancialPanelYearSelector({
             className="z-[100] min-w-20 rounded-md border border-border bg-white p-1 shadow-md"
           >
             <div className="flex flex-col">
-              {years.map((year) => (
+              {options.map((option) => (
                 <button
-                  key={year}
+                  key={option.value}
                   type="button"
-                  aria-pressed={year === selected}
+                  aria-pressed={option.value === selected}
                   onClick={() => {
-                    onChange(year);
+                    onChange(option.value);
                     setOpen(false);
                   }}
                   className={cn(
                     typography.body,
                     "rounded px-3 py-1.5 text-start",
-                    year === selected
+                    option.value === selected
                       ? "bg-secondary font-medium text-foreground"
                       : "text-gray-600 hover:bg-muted",
                   )}
                 >
-                  {year}
+                  {option.label}
                 </button>
               ))}
             </div>
