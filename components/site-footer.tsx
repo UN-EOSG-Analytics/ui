@@ -139,6 +139,8 @@ export interface SiteFooterProps {
   extraLinks?: { label: string; href: string }[];
   /** Override when the application uses another official donation destination. */
   donateHref?: string;
+  /** Host-served wordmark URL; supply the asset for the active locale. */
+  wordmarkSrc?: string;
   /**
    * @deprecated Footer wordmarks are bundled in the component. This prop is
    * accepted as a no-op so existing consumers do not break.
@@ -154,6 +156,7 @@ export function SiteFooter({
   extraLinks = [],
   donateHref = "https://www.un.org/en/donate",
   logoBasePath: _logoBasePath,
+  wordmarkSrc,
   containerClassName = "max-w-4xl px-4 sm:px-8 lg:max-w-6xl",
   className,
 }: SiteFooterProps) {
@@ -184,6 +187,7 @@ export function SiteFooter({
           >
             <UnReverseWordmark
               locale={lang}
+              src={wordmarkSrc}
               width={logoWidth}
               height={52}
               className="h-[52px] w-auto select-none"

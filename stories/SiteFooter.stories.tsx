@@ -38,3 +38,11 @@ export const CustomLabels: Story = {
   },
 };
 export const UnknownLocale: Story = { args: { locale: "xx" } };
+
+/** Public assets work in hosts such as Metro that cannot resolve import.meta.url. */
+export const HostServedWordmark: Story = {
+  args: {
+    locale: "en",
+    wordmarkSrc: `${import.meta.env.BASE_URL}images/un-logo-en-reverse.svg`,
+  },
+};
