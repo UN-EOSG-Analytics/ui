@@ -49,11 +49,7 @@
       "type": "registry:component",
       "title": "Button",
       "description": "Button with the full size set and the 3px focus-ring token.",
-      "dependencies": [
-        "class-variance-authority",
-        "clsx",
-        "tailwind-merge"
-      ],
+      "dependencies": ["class-variance-authority", "clsx", "tailwind-merge"],
       "files": [
         {
           "path": "components/button.tsx",
@@ -66,9 +62,7 @@
       "type": "registry:component",
       "title": "Search input",
       "description": "Full-text search field with icon, clear affordance and three variants.",
-      "dependencies": [
-        "lucide-react"
-      ],
+      "dependencies": ["lucide-react"],
       "files": [
         {
           "path": "components/search-input.tsx",
@@ -126,10 +120,7 @@
       "type": "registry:component",
       "title": "Modal",
       "description": "Accessible dialog composition with a required title and a mobile inset.",
-      "dependencies": [
-        "@radix-ui/react-dialog",
-        "lucide-react"
-      ],
+      "dependencies": ["@radix-ui/react-dialog", "lucide-react"],
       "files": [
         {
           "path": "components/modal.tsx",
@@ -221,10 +212,7 @@
       "type": "registry:component",
       "title": "Site header",
       "description": "UN emblem + wordmark lockup, responsive nav and a right-hand slot. All copy via props.",
-      "dependencies": [
-        "@radix-ui/react-dropdown-menu",
-        "lucide-react"
-      ],
+      "dependencies": ["@radix-ui/react-dropdown-menu", "lucide-react"],
       "files": [
         {
           "path": "components/site-header.tsx",
@@ -406,11 +394,7 @@
       "name": "sign-in-card",
       "type": "registry:component",
       "title": "Magic-link sign-in card",
-      "dependencies": [
-        "class-variance-authority",
-        "clsx",
-        "tailwind-merge"
-      ],
+      "dependencies": ["class-variance-authority", "clsx", "tailwind-merge"],
       "files": [
         {
           "path": "components/sign-in-card.tsx",
@@ -443,6 +427,54 @@
         {
           "path": "lib/typography.ts",
           "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "resource-funding-bar",
+      "type": "registry:component",
+      "title": "Resource Funding Bar",
+      "registryDependencies": ["typography"],
+      "files": [
+        {
+          "path": "components/resource-funding-bar.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "results-framework",
+      "type": "registry:component",
+      "title": "Results Framework",
+      "registryDependencies": ["resource-funding-bar", "tooltip"],
+      "files": [
+        {
+          "path": "components/results-framework.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "resource-activity-list",
+      "type": "registry:component",
+      "title": "Resource Activity List",
+      "registryDependencies": ["resource-funding-bar", "tooltip"],
+      "files": [
+        {
+          "path": "components/resource-activity-list.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "detail-drawer",
+      "type": "registry:component",
+      "title": "Detail Drawer",
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "components/detail-drawer.tsx",
+          "type": "registry:component"
         }
       ]
     }
