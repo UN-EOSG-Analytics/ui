@@ -10,6 +10,7 @@ import {
 import { Tooltip } from "./tooltip";
 import { typography } from "../lib/typography";
 import { cn } from "../lib/utils";
+import { formatBudget } from "../lib/format-budget";
 
 export interface ResultsFrameworkNode extends ResourceMetrics {
   id: string | number;
@@ -39,6 +40,10 @@ function FrameworkBranch({
   const [expanded, setExpanded] = useState(false);
   const childrenId = useId();
   const hasDetails = Boolean(node.children?.length || node.description);
+  const name = node.name.replace(
+    /^(?:SP|OC|OU|Strategic priority|Outcome|Output)\s*\d+(?:\.\d+)*\s*[:.-]?\s+/i,
+    "",
+  );
   const hasFinance = node.has_financial_data !== false;
   const width =
     (Math.max(0, node.required, node.available, node.spent) / maximum) * 100;
@@ -68,8 +73,8 @@ function FrameworkBranch({
             if (hasDetails) setExpanded(!expanded);
           }}
           className={cn(
-            "mb-1 w-full rounded-lg bg-muted p-2 text-start focus-visible:outline-2 focus-visible:outline-un-blue",
-            hasDetails && "cursor-pointer hover:bg-secondary",
+            "mb-1 w-full rounded-lg bg-muted/40 p-2 text-start focus-visible:outline-2 focus-visible:outline-un-blue",
+            hasDetails && "cursor-pointer hover:bg-muted",
           )}
         >
           <span className="flex items-center gap-2">
@@ -102,27 +107,33 @@ function FrameworkBranch({
                 </span>
               )}
             </span>
+            {hasFinance && (
+              <span
+                className={cn(
+                  typography.caption,
+                  "w-20 shrink-0 text-end tabular-nums",
+                )}
+                aria-label={`${labels.available} ${formatBudget(node.available)}`}
+              >
+                {formatBudget(node.available)}
+              </span>
+            )}
           </span>
           <span
             className={cn(
               typography.caption,
-              "ms-5 mt-1.5 block line-clamp-2 text-foreground",
+              "ms-12 mt-1.5 block line-clamp-2 font-medium text-foreground/80",
             )}
           >
             <span className="sr-only">
               {labels.levels[node.level ?? level]}{" "}
             </span>
-            {node.name}
+            {name}
           </span>
         </button>
       </Tooltip>
       {expanded && (
         <div id={childrenId}>
-          {node.description && (
-            <p className={cn(typography.body, "mb-3 whitespace-pre-line px-2")}>
-              {node.description}
-            </p>
-          )}
           {node.children?.map((child) => (
             <FrameworkBranch
               key={child.id}
@@ -132,6 +143,11 @@ function FrameworkBranch({
               labels={labels}
             />
           ))}
+          {node.description && (
+            <p className={cn(typography.body, "my-3 whitespace-pre-line px-2")}>
+              {node.description}
+            </p>
+          )}
         </div>
       )}
     </div>
