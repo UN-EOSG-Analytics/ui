@@ -475,6 +475,10 @@
         {
           "path": "components/detail-drawer.tsx",
           "type": "registry:component"
+        },
+        {
+          "path": "components/detail-panel-expansion.tsx",
+          "type": "registry:component"
         }
       ]
     },

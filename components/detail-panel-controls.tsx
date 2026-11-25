@@ -1,4 +1,8 @@
+"use client";
+
 import * as React from "react";
+import { Maximize2, Minimize2 } from "lucide-react";
+import { useDetailPanelExpansion } from "./detail-panel-expansion";
 import { cn } from "../lib/utils";
 
 interface DetailPanelActionBase {
@@ -6,6 +10,7 @@ interface DetailPanelActionBase {
   title?: string;
   icon: React.ReactNode;
   disabled?: boolean;
+  pressed?: boolean;
 }
 
 export type DetailPanelAction = DetailPanelActionBase &
@@ -18,6 +23,8 @@ interface DetailPanelControlsProps {
   close: DetailPanelAction;
   share?: DetailPanelAction;
   expand?: DetailPanelAction;
+  /** In-place resizing when nested inside DetailPanelExpansion. */
+  resize?: { expandLabel: string; collapseLabel: string };
   className?: string;
 }
 
@@ -42,6 +49,7 @@ function DetailPanelControl({ action }: { action: DetailPanelAction }) {
       type="button"
       aria-label={action.label}
       title={action.title ?? action.label}
+      aria-pressed={action.pressed}
       disabled={action.disabled}
       onClick={action.href === undefined ? action.onClick : undefined}
       className={className}
@@ -56,12 +64,28 @@ export function DetailPanelControls({
   close,
   share,
   expand,
+  resize,
   className,
 }: DetailPanelControlsProps) {
+  const expansion = useDetailPanelExpansion();
+  const expandAction =
+    expand ??
+    (resize && expansion
+      ? {
+          label: expansion.expanded ? resize.collapseLabel : resize.expandLabel,
+          onClick: expansion.toggle,
+          pressed: expansion.expanded,
+          icon: expansion.expanded ? (
+            <Minimize2 aria-hidden className="size-4" />
+          ) : (
+            <Maximize2 aria-hidden className="size-4" />
+          ),
+        }
+      : undefined);
   return (
     <div className={cn("flex shrink-0 items-center gap-2 pe-1", className)}>
       {share && <DetailPanelControl action={share} />}
-      {expand && <DetailPanelControl action={expand} />}
+      {expandAction && <DetailPanelControl action={expandAction} />}
       <DetailPanelControl action={close} />
     </div>
   );
