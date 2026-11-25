@@ -27,7 +27,8 @@
   "scripts": {
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test:formatting": "node --test tests/number-formatting.test.mjs"
   },
   "peerDependencies": {
     "react": ">=19",

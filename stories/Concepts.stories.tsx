@@ -132,12 +132,12 @@ export const InheritanceFlow: Story = {
       </p>
       <div className="mb-10 max-w-lg space-y-2">
         <div className="flex justify-between border-b border-border py-2">
-          <span className={typography.body}>Standard</span>
+          <span className={typography.body}>USD</span>
           <BudgetFigure amount={3592184000} className={typography.body} />
         </div>
         <div className="flex justify-between border-b border-border py-2">
-          <span className={typography.body}>Compact (hover for exact)</span>
-          <BudgetFigure amount={3592184000} compact className={typography.body} />
+          <span className={typography.body}>CHF</span>
+          <BudgetFigure amount={12534567} currency="CHF" className={typography.body} />
         </div>
         <div className="flex justify-between border-b border-border py-2">
           <span className={typography.body}>Count — plural</span>

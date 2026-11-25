@@ -1,6 +1,7 @@
 import * as React from "react";
 import { cn } from "../lib/utils";
 import { typography } from "../lib/typography";
+import { formatCurrency } from "../lib/format-budget";
 import { Chip, type ChipDensity } from "./chip";
 
 /**
@@ -104,9 +105,8 @@ export { DocumentSymbol, type DocumentSymbolProps } from "./document-symbol";
 /* ---------------------------------------------------------------------------
  * BUDGET FIGURE — money.
  *
- * `open` alone reimplements `Intl.NumberFormat` in six places. Currency
- * formatting is a concept, not a call-site decision: the same figure should
- * not be "$1,234,567" in a table and "$1.2M" in a tooltip by accident.
+ * Use the shared rounding policy in totals, tables and tooltips. Original
+ * precision belongs in data downloads, rather than a separate hover display.
  *
  * Always tabular figures — budget numbers stack in columns.
  * ------------------------------------------------------------------------- */
@@ -114,7 +114,7 @@ export { DocumentSymbol, type DocumentSymbolProps } from "./document-symbol";
 export interface BudgetFigureProps {
   amount: number;
   currency?: string;
-  /** Abbreviate to $1.2M. Use in tight spaces; never in a total. */
+  /** @deprecated All monetary figures now use the shared compact display. */
   compact?: boolean;
   className?: string;
 }
@@ -122,29 +122,19 @@ export interface BudgetFigureProps {
 export function formatBudget(
   amount: number,
   currency = "USD",
-  compact = false,
+  _compact = true,
 ) {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency,
-    notation: compact ? "compact" : "standard",
-    maximumFractionDigits: compact ? 1 : 0,
-  }).format(amount);
+  return formatCurrency(amount, currency);
 }
 
 export function BudgetFigure({
   amount,
   currency = "USD",
-  compact,
   className,
 }: BudgetFigureProps) {
   return (
-    <span
-      className={cn("tabular-nums", className)}
-      // The exact figure stays available when the display is abbreviated.
-      title={compact ? formatBudget(amount, currency, false) : undefined}
-    >
-      {formatBudget(amount, currency, compact)}
+    <span className={cn("tabular-nums", className)}>
+      {formatCurrency(amount, currency)}
     </span>
   );
 }

@@ -37,6 +37,9 @@ jobs:
       - name: Type-check
         run: pnpm typecheck
 
+      - name: Test number formatting
+        run: pnpm test:formatting
+
       - name: Configure Pages
         id: pages
         uses: actions/configure-pages@v5
